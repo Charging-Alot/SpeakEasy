@@ -1,0 +1,28 @@
+{
+  "name": "speakeasy",
+  "version": "1.0.0",
+  "description": "A machine learning project dedicated to mastering the intricacies of human speech.",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Charging-Alot/SpeakEasy.git"
+  },
+  "keywords": [
+    "machine",
+    "learning",
+    "synapticjs",
+    "chrome",
+    "extensions",
+    "chrome",
+    "javascript"
+  ],
+  "author": "The Charging Alot Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Charging-Alot/SpeakEasy/issues"
+  },
+  "homepage": "https://github.com/Charging-Alot/SpeakEasy#readme"
+}
