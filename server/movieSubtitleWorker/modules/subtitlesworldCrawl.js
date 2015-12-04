@@ -1,8 +1,8 @@
 var request = require('request');
 var cheerio = require('cheerio');
-var parser = require('./srtParse.js');
+var srtParser = require('./srtParse.js');
 var AdmZip = require('adm-zip');
-
+var fs = require("fs");
 
 var subtitleWorldPrimaryIndex = "http://movie.subtitlesworld.com/lists";
 
@@ -43,6 +43,12 @@ function parse_AlphabeticalList (url) { //takes a url that returns a page contai
 
 function retrieveSub (url) {
 
-
-	
+	request({url: "http://movie.subtitlesworld.com/download/12", encoding: null},function(err,response,body){
+		var zip = new AdmZip(body);
+		var zipEntries = zip.getEntries();
+		var newSrtFile=srtParser(zip.readAsText(zipEntries[0]));
+		console.log(newSrtFile)
+	});
 }
+retrieveSub()
+// build_AlphabeticalLists();
