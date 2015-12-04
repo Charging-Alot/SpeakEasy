@@ -1,6 +1,5 @@
 angular.module('speakEasy', [
   'ngMaterial',
-
   'ui.router',
 
   'starter.home'
@@ -15,11 +14,17 @@ angular.module('speakEasy', [
     })
     .state('home', {
       url: '/home',
-      templateUrl: 'client/home/home.html',
-      controller: 'HomeController'
+      templateUrl: '/home/home.html',
+      controller: 'HomeCtrl'
     })
 })
-
+/**
+ * Create an array of all the right files in the source dir
+ * @param      {String}   Some stuffff
+ * @param      {Object}   Some more stuffff
+ * @param      {Function} Some callback stufff
+ * @return     {Array} return a thing that is arrr
+ */
 
 .factory('AttachTokens', function ($window,user,$rootScope) {
   var attach = {

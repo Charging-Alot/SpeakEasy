@@ -8,41 +8,57 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- our CSS file -->
   <link rel="stylesheet" type="text/css" href="styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="styles/tooltips.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
 </head>
 <body>
-  <div ng-view></div>
-<!--
-<div layout="row">
-  <div flex>First item in row</div>
-  <div flex>Second item in row</div>
-</div>
-<div layout="column">
-  <div flex>First item in column</div>
-  <div flex>Second item in column</div>
-</div>
--->
-<!--
-<img class="mainLogo" src="./assets/img/neuronLogo1.png">
--->
 
+<div ng-cloak>
+  <md-fab-toolbar md-direction="right">
+    <md-fab-trigger class="align-with-text">
+      <md-button aria-label="menu" class="md-fab md-primary">
+        <md-icon>list</md-icon>
+      </md-button>
+    </md-fab-trigger>
+    <md-toolbar>
+      <md-fab-actions class="md-toolbar-tools md-36">
+        <md-button aria-label="comment" class="md-icon-button">
+          <md-icon tooltip-template="tooltip">account_circle</md-icon>
+        </md-button>
+        <md-button aria-label="label" class="md-icon-button">
+          <md-icon>info_outline</md-icon>
+        </md-button>
+        <md-button aria-label="photo" class="md-icon-button">
+          <md-icon>question_answer</md-icon>
+        </md-button>
+        </md-button>
+        <md-button aria-label="photo" class="md-icon-button">
+          <md-icon>get_app</md-icon>
+        </md-button>
+        </md-button>
+        <md-button aria-label="photo" class="md-icon-button">
+          <md-icon>equalizer</md-icon>
+        </md-button>
+        </md-button>
+      </md-fab-actions>
+    </md-toolbar>
+  </md-fab-toolbar>
+</div>
+<div ui-view>
+  <!-- stuff goes here (our app) -->
+</div>
 </body>
-
-
-
-
-<!-- Our App Stuff -->
-<script src="app/app.js"></script>
-<script src="home/home.js"></script>
-
-
-
-
-
-<!-- Angular Material Stuff -->
-<script type="bower_components/angular/angular.min.js"></script>
-<script type="bower_components/angular-animate/angular-animate.min.js"></script>
-<script type="bower_components/angular-aria/angular-aria.min.js"></script>
-<script type="bower_components/angular-material/angular-material.min.js"></script>
-<script type="bower_components/angular-ui-router/src/angular-ui-router.min.js"></script>
+  <!-- Angular Material Stuff -->
+  <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-aria/angular-aria.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <!-- Our App Stuff -->
+  <script type="text/javascript" src="app/app.js"></script>
+  <script type="text/javascript" src="home/home.js"></script>
 </html>
+
+
+
+
