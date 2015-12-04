@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/Charging-Alot/SpeakEasy/issues"
   },
-  "homepage": "https://github.com/Charging-Alot/SpeakEasy#readme"
+  "homepage": "https://github.com/Charging-Alot/SpeakEasy#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
 }

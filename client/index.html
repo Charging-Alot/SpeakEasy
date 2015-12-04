@@ -4,9 +4,15 @@
 	<title>
 		Speak Easy | Machine Learning
 	</title>
+  <!-- icon font for Material -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- our CSS file -->
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
 </head>
 <body>
+  <div ng-view></div>
+<!--
 <div layout="row">
   <div flex>First item in row</div>
   <div flex>Second item in row</div>
@@ -15,7 +21,10 @@
   <div flex>First item in column</div>
   <div flex>Second item in column</div>
 </div>
-<img src="./assets/img/neuronLogo1.png">
+-->
+<!--
+<img class="mainLogo" src="./assets/img/neuronLogo1.png">
+-->
 
 </body>
 
@@ -23,7 +32,8 @@
 
 
 <!-- Our App Stuff -->
-<script type="app/app.js"></script>
+<script src="app/app.js"></script>
+<script src="home/home.js"></script>
 
 
 
