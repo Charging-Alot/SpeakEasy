@@ -1,7 +1,9 @@
 angular.module('speakEasy', [
   'ngMaterial',
 
-  'ui.router'
+  'ui.router',
+
+  'starter.home'
 ])
 
 .config( function($stateProvider, $urlRouterProvider) {
@@ -13,7 +15,7 @@ angular.module('speakEasy', [
     })
     .state('home', {
       url: '/home',
-      templateUrl: 'app/home/home.html',
+      templateUrl: 'client/home/home.html',
       controller: 'HomeController'
     })
 })
