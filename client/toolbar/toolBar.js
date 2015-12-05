@@ -1,6 +1,6 @@
 angular.module('speakEasy')
 
-.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', function ($scope, $mdDialog, $mdMedia) {
+.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', function ($scope, $mdDialog, $mdMedia, $state) {
 	$scope.goToUser = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
@@ -24,7 +24,7 @@ angular.module('speakEasy')
 
 	$scope.goToInfo = function () {
 		console.log("GOING TO goToInfo")
-
+    $state.go('about');
 
 	}
 
