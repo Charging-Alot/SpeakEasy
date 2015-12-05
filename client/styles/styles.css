@@ -1,0 +1,44 @@
+.viewContentBox {
+	margin:-68px 0 0 0;
+  background-size: cover;
+  display: block;
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+  height: 800px;
+  left: 0;
+  position: fixed;
+  right: 0;
+  z-index: 1;
+}
+.loginDivider{
+	border-color: #E1E1E1;
+	border-top: 0px;
+}
+
+.landingPageBackground{
+  background-image: url('../assets/img/output.gif');
+  background-position: bottom 0px right 0px;
+}
+.speakEzLogo{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.landingRowOneContent {
+	background: rgba(255, 255, 255, 0.35);
+	border-radius: 3px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	top: 10px;
+	left: 0;
+	position: fixed;
+	margin:10% 10% 0 10%;
+	right: 0;
+	z-index: 2;
+	padding: 0 10px 0 0;
+}
+
+.whiteframeHeader {
+	box-shadow: 0 0px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
