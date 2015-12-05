@@ -1,8 +1,7 @@
 angular.module('speakEasy', [
   'ngMaterial',
   'ui.router',
-
-  'starter.home'
+  'starter.home' //should need as a separate module
 ])
 
 .config( function($stateProvider, $urlRouterProvider) {
@@ -10,21 +9,24 @@ angular.module('speakEasy', [
 
   $stateProvider
     .state('/', {
-      redirectTo: '/home'
+      redirectTo: '/landing'
     })
     .state('home', {
       url: '/home',
       templateUrl: '/home/home.html',
       controller: 'HomeCtrl'
     })
+    .state('landing', {
+      url: '/landing',
+      templateUrl: '/landing/landing.html',
+      controller: 'LandingCtrl'
+    })
+    .state('about', {
+      url: '/about',
+      templateUrl: '/about/about.html',
+      controller: 'AboutCtrl'
+    })
 })
-/**
- * Create an array of all the right files in the source dir
- * @param      {String}   Some stuffff
- * @param      {Object}   Some more stuffff
- * @param      {Function} Some callback stufff
- * @return     {Array} return a thing that is arrr
- */
 
 .factory('AttachTokens', function ($window,user,$rootScope) {
   var attach = {
