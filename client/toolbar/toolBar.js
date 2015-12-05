@@ -4,7 +4,7 @@ angular.module('speakEasy')
 	$scope.goToUser = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
-      templateUrl: 'toolbar/toolBar.html',
+      templateUrl: 'user/login.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose:true,
@@ -46,6 +46,33 @@ angular.module('speakEasy')
   // methods to be used inside home.html
 }]);
 
-function userCtrl ($scope, $mdDialog) {
-  //
+function userCtrl ($scope, $mdDialog, $mdMedia) {
+  $scope.goToSignup = function(ev) {
+    $mdDialog.show({
+      controller: userCtrl,
+      templateUrl: 'user/signup.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: $mdMedia('sm') && $scope.customFullscreen
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });
+    $scope.$watch(function() {
+      return $mdMedia('sm');
+    }, function(sm) {
+      $scope.customFullscreen = (sm === true);
+    });
+  }
+
+  $scope.login = function () {
+    console.log('logging into SkyNet!')
+  }
+
+  $scope.signup = function () {
+    console.log('signing up to build SkyNet!')
+  }
 }
