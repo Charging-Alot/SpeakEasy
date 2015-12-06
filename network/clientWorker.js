@@ -17,14 +17,26 @@ var actions = [
   'gain' //7
 ]
 
-var runCommand = function (commandArr, argArr) {
-  var role = roles[commandArr[0]];
+var role = '';
+
+var startCommand = function (commandArr, argArr) {
+  role = roles[commandArr[0]];
   var action = actions[commandArr[1]];
-  return actions[role][command](argArr);
 }
+
+var sendModel = function () {
+  return actions[role][command](argArr); //this actually needs to be emitted to upstream manager, but this'll work for now
+}
+
+var sigStack = [];
+
+var model = [];
 
 var actions = {
   mother: {
+    init: function (argArr) {
+
+    },
     activate: function (argArr) {
 
     },
@@ -36,6 +48,9 @@ var actions = {
     }
   },
   branchCtrl: {
+    init: function (argArr) {
+
+    },
     activate: function (argArr) {
 
     },
@@ -47,6 +62,9 @@ var actions = {
     }
   },
   nodeCtrl: {
+    init: function (argArr) {
+
+    },
     activate: function (argArr) {
 
     },
@@ -59,10 +77,21 @@ var actions = {
   },
   pleb: {
     activation: function (argArr) {
-      //input: array of objects.  Sub arrays format {}
+      // input: array of arrays.  
+      //   sub array format: 
+      //     [
+      //       <input connection weight>,
+      //       <input connection gain>,
+      //       <activation of upstream neuron>
+      //     ]
+      model = 0;
+      for (var i = 0; i < argArr.length; ++i) {
+        model += argArr[0]*argArr[1]*argArr[2];
+      }
+      sendModel();
     },
     influence: function (argArr) {
-
+      
     },
     elegibility: function (argArr) {
 
