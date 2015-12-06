@@ -1,6 +1,6 @@
 angular.module('speakEasy')
 
-.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', function ($scope, $mdDialog, $mdMedia, $state) {
+.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', function ($scope, $mdDialog, $mdMedia, $state, Auth) {
 	$scope.goToUser = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
@@ -46,7 +46,7 @@ angular.module('speakEasy')
   // methods to be used inside home.html
 }]);
 
-function userCtrl ($scope, $mdDialog, $mdMedia) {
+function userCtrl ($scope, $mdDialog, $mdMedia, $state, Auth) {
   $scope.goToSignup = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
@@ -67,12 +67,29 @@ function userCtrl ($scope, $mdDialog, $mdMedia) {
       $scope.customFullscreen = (sm === true);
     });
   }
-
+  
+  $scope.user = {};
   $scope.login = function () {
-    console.log('logging into SkyNet!')
+    console.log('logging into SkyNet!', $scope.user);
+    Auth.login($scope.user)
+      .then(function (token) {
+        $window.localStorage.setItem('com.speakEasy', token);
+        $location.path('/links'); // this path is wrong... where should it go?
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   }
 
   $scope.signup = function () {
-    console.log('signing up to build SkyNet!')
+    console.log('signing up to build SkyNet!', $scope.user);
+    Auth.signup($scope.user)
+      .then(function (token) {
+        $window.localStorage.setItem('com.speakEasy', token);
+        $location.path('/links'); // this path is wrong... where should it go?
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   }
 }

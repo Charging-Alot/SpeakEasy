@@ -1,11 +1,12 @@
 angular.module('speakEasy', [
   'ngMaterial',
   'ui.router',
-  'starter.home' //should need as a separate module
+  'speakEasy.home', //should need as a separate module
+  'speakEasy.services'
 ])
 
-.config( function($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/home');
+.config( function ($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/landing');
 
   $stateProvider
     .state('/', {
@@ -26,6 +27,8 @@ angular.module('speakEasy', [
       templateUrl: '/about/about.html',
       controller: 'AboutCtrl'
     })
+
+    //$httpProvider.interceptors.push('AttachTokens');
 })
 
 .factory('AttachTokens', function ($window,user,$rootScope) {
