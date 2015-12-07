@@ -34,14 +34,14 @@ function parse_AlphabeticalList (url) { //takes a url that returns a page contai
 		for(var tag in aTags){
 			if(aTags[tag].attribs){
 				if(aTags[tag].attribs.href){
-					retrieveSub(aTags[tag].attribs.href);	
+					retrieveSubFile(aTags[tag].attribs.href);	
 				}
 			}
 		}
 	});
 }
 
-function retrieveSub (url) {
+function retrieveSubFile (url) {
 
 	request({url: "http://movie.subtitlesworld.com/download/12", encoding: null},function(err,response,body){
 		var zip = new AdmZip(body);
@@ -50,5 +50,5 @@ function retrieveSub (url) {
 		console.log(newSrtFile)
 	});
 }
-retrieveSub()
+// retrieveSub()
 // build_AlphabeticalLists();
