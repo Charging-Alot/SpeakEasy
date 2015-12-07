@@ -32,25 +32,12 @@ var appendFile = __dirname+'/../srtFiles/testTextFile.txt';
 function buildFile(dataArr){
   var nextLine = '';
   for(var i = 0; i < dataArr.length;i++){
-    // var curArrLine = dataArr[i].text.replace("...",".");
     var curArrLine = dataArr[i].text.replace("...",".").replace("-","");
     if(curArrLine.substr(curArrLine.length-1) === "." || curArrLine.substr(curArrLine.length-1) === "!" || curArrLine.substr(curArrLine.length-1) === "?") {
-      fs.appendFileSync(appendFile,((nextLine + " " + curArrLine) + '\n'));
+      fs.appendFileSync(appendFile,((nextLine + " " + curArrLine)).trim() + "\n");
       nextLine='';
     }else{
       nextLine = nextLine + " " + curArrLine;
     }
   }
 }
-
-
-// var testFile = [
-
-// {text:"Hello"},
-// {text:"I am a line"},
-// {text:"and I continue til here."},
-// {text:"We are two lines."},
-// {text:"We are two lines."},
-// ]
-
-// buildFile(testFile)
