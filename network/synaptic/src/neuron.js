@@ -167,8 +167,7 @@ Neuron.prototype = {
       var gradient = this.error.projected * this.trace.elegibility[input.ID];
       for (var id in this.trace.extended) {
         var neuron = this.neighboors[id];
-        gradient += neuron.error.responsibility * this.trace.extended[
-          neuron.ID][input.ID];
+        gradient += neuron.error.responsibility * this.trace.extended[neuron.ID][input.ID];
       }
       input.weight += rate * gradient; // adjust weights - aka learn
     }

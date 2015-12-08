@@ -265,7 +265,7 @@ var Architect = {
 
 // Extend prototype chain (so every architectures is an instance of Network)
 for (var architecture in Architect) {
-  Architect[architecture].prototype = new Network();
+  Architect[architecture].prototype = Object.create(Network.prototype);
   Architect[architecture].prototype.constructor = Architect[architecture];
 }
 
