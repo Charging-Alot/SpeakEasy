@@ -1,0 +1,31 @@
+<md-dialog flex="50" aria-label="SpeakEasy Download" ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Download</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="closeDialog()">
+          <md-icon>highlight_off</md-icon>
+          <md-tooltip md-direction="bottom">
+            Close
+          </md-tooltip>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-content flex layout-padding layout-margin layout-fill>
+      <p class="downloadContent">
+        Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.
+      </p> 
+      <p class="downloadContent">
+        You'll be able to turn this off at any time with the click of a button within the Extension's menu.
+      </p>
+      <div layout="row" layout-align="center center">
+        <md-button layout-align="center" class="md-fab md-primary" aria-label="downloadExtension" ng-click="downloadExtension()">
+          <md-icon>get_app</md-icon>
+          <md-tooltip md-direction="bottom">
+            Download
+          </md-tooltip>
+        </md-button>
+      </div>
+    </md-content>
+    
+</md-dialog>

@@ -1,5 +1,6 @@
 angular.module('speakEasy', [
   'ngMaterial',
+  'ngMessages',
   'ui.router',
   'speakEasy.home', //should need as a separate module
   'speakEasy.services'

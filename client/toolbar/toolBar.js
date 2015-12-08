@@ -22,6 +22,11 @@ angular.module('speakEasy')
     });
   }
 
+  $scope.goToLanding = function () {
+    console.log("GOING TO goToLanding")
+    $state.go('landing');
+  }
+
 	$scope.goToInfo = function () {
 		console.log("GOING TO goToInfo")
     $state.go('about');
@@ -33,9 +38,26 @@ angular.module('speakEasy')
 		
 	}
 
-	$scope.goToDownload = function () {
+	$scope.goToDownload = function (ev) {
 		console.log("GOING TO goToDownload")
-
+    $mdDialog.show({
+      controller: userCtrl,
+      templateUrl: 'download/download.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: $mdMedia('sm') && $scope.customFullscreen
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });
+    $scope.$watch(function() {
+      return $mdMedia('sm');
+    }, function(sm) {
+      $scope.customFullscreen = (sm === true);
+    });
 	}
 	
 	$scope.goToMetrics = function () {
@@ -43,7 +65,6 @@ angular.module('speakEasy')
 
 	}
 
-  // methods to be used inside home.html
 }]);
 
 function userCtrl ($scope, $mdDialog, $mdMedia, $state, Auth) {
@@ -92,4 +113,13 @@ function userCtrl ($scope, $mdDialog, $mdMedia, $state, Auth) {
         console.error(error);
       });
   }
+
+  $scope.closeDialog = function () {
+    $mdDialog.hide();
+  }
+
+  $scope.downloadExtension = function () {
+    console.log("Downloading Chrome Extension!");
+  }
+
 }

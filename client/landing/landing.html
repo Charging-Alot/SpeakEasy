@@ -1,7 +1,90 @@
-<div class="viewContentBox landingPageBackground" layout="row">
+<div ng-controller="toolBarCtrl" ng-cloak>
+  <div class="viewContentBox landingPageBackground" layout="row">
 
+  </div>
+
+  <div class="mainLandingText">
+    <h2 class="landingHeader">SpeakEasy</h2>
+    <h1 class="landingSubheader">Get the extension. Help it learn.<h1>
+    <h3 class="landingInfo">SpeakEasy is designed to interpret and respond to human speech.<br> 
+      The more computers in the network, the faster it learns.</h3>
+    <button ng-controller="toolBarCtrl" class="mainDLButton" ng-click="goToDownload()">Download</button>
+  </div>
+
+  <div>
+    <md-content class="md-padding" layout="row" layout-wrap layout-align="center start">
+      <div flex="95" layout="row">
+        <md-card>
+          <img ng-src="https://s-media-cache-ak0.pinimg.com/236x/c8/4a/3e/c84a3ec1066dfeb938a32b503aafa0b7.jpg" class="md-card-image landingCardImage" alt="Washed Out">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline landingCardContent">A Chat With SpeakEasy</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <p class="landingCardContent">
+              SpeakEasy has been taught to speak thanks to users like you. Stop by and chat with it!
+            </p>
+          </md-card-content>
+          <div layout="row" layout-align="center center">
+            <md-button layout-align="center" class="md-fab md-primary" aria-label="Login" ng-click="goToChat()">
+              <md-icon>question_answer</md-icon>
+              <md-tooltip md-direction="bottom">
+                Chat with SpeakEasy
+              </md-tooltip>
+            </md-button>
+          </div>
+        </md-card>
+        <div flex="5"></div>
+        <md-card>
+          <img ng-src="http://www.hec.edu/var/corporate/storage/images/knowledge/technologies-et-operations/technologies-et-systemes-d-information/reseaux-de-communication-comment-l-information-se-transmet-elle/398509-6-eng-GB/Communication-Networks-How-is-Information-Transmitted_knowledge_standard.jpg" class="md-card-image landingCardImage" alt="Washed Out">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline landingCardContent">More about SpeakEasy</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <p class="landingCardContent">
+              What is SpeakEasy? How, exactly, does it work? Learn all you could want (and probably more, honestly).
+            </p>
+          </md-card-content>
+          <div layout="row" layout-align="center center">
+            <md-button layout-align="center" class="md-fab md-primary" aria-label="Login" ng-click="goToInfo()">
+              <md-icon>info_outline</md-icon>
+              <md-tooltip md-direction="bottom">
+                About
+              </md-tooltip>
+            </md-button>
+          </div>
+        </md-card>
+        <div flex="5"></div>
+        <md-card>
+          <img ng-src="http://images.freeimages.com/images/previews/60e/bar-graph-1165986.jpg" class="md-card-image landingCardImage" alt="Washed Out">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline landingCardContent">SpeakEasy's Metrics</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <p class="landingCardContent">
+              We carefully collect all kinds of data as SpeakEasy works. We think it's pretty sweet, and we hope you do too!
+            </p>
+          </md-card-content>
+          <div layout="row" layout-align="center center">
+            <md-button layout-align="center" class="md-fab md-primary" aria-label="Login" ng-click="goToMetrics()">
+              <md-icon>equalizer</md-icon>
+              <md-tooltip md-direction="bottom">
+                See our data
+              </md-tooltip>
+            </md-button>
+          </div>
+        </md-card>
+    </md-content>
+  </div>
 </div>
+<!-- The stuff below is the original SpeakEasy logo, we can definitely revisit using it!
 <div class="landingRowOneContent">
 
-	<img class="speakEzLogo" src="assets/img/neuronLogo.png">
+  <img class="speakEzLogo" src="assets/img/neuronLogo.png">
 </div>
+-->

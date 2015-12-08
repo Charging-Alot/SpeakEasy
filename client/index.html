@@ -6,6 +6,8 @@
 	</title>
   <!-- icon font for Material -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Lora font for coolness -->
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
   <!-- our CSS file -->
   <link rel="stylesheet" type="text/css" href="styles/styles.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
@@ -21,6 +23,9 @@
     </md-fab-trigger>
     <md-toolbar>
       <md-fab-actions class="md-toolbar-tools md-36">
+        <md-button aria-label="label" class="md-icon-button" ng-click="goToLanding()">
+          <md-icon>home</md-icon>
+        </md-button>
         <md-button aria-label="comment" class="md-icon-button" ng-click="goToUser($event)" flex-sm="100" flex-md="100" flex-gt-md="auto">
           <md-icon tooltip-template="tooltip">account_circle</md-icon>
         </md-button>
@@ -53,6 +58,8 @@
   <script type="text/javascript" src="bower_components/angular-aria/angular-aria.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <!-- Additional angular stuff -->
+  <script type="text/javascript" src="bower_components/angular-messages/angular-messages.js"></script>
   <!-- Our App Stuff -->
   <script type="text/javascript" src="app/app.js"></script>
   <script type="text/javascript" src="home/home.js"></script>

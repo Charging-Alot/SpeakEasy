@@ -54,9 +54,9 @@ module.exports = {
           // console.log('creating user', create(newUser))
           newDBUser = new User(newUser);
           console.log("ABOUT TO SAVE THE USER",newDBUser)
-          
+
           newDBUser.save(function(err,DBresp) {
-            if(err) return console.log("THERE WAS AN ERROR IN CREATE USER",err);
+            if(err) return console.log("THERE WAS AN ERROR IN CREATE USER", err);
             console.log("SUCESS IN SAVE YER",DBresp)
             return DBresp;
           })
