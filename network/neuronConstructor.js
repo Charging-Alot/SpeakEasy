@@ -6,12 +6,13 @@ var Neuron = function (partialNeuron) {
   this.gatedConns.selfConned = this.gatedConns.selfConned || {};
   if(partialNeuron) {
     this.update(partialNeuron);
-  } 
-}
+  }
+  this.selfConn = this.selfConn || {weight: 0, gain: 1};
+};
 
 Neuron.prototype.constructor = Neuron
 
-Neuron.prototype.update = function (partialNeuron) {
+Neuron.prototype.update = function (command, section, partialNeuron) {
   //properties of this node
   for(var nodeProp in paritalneuron.node) {
     this.node[nodeProp] = paritalneuron.node[nodeProp];
@@ -24,8 +25,10 @@ Neuron.prototype.update = function (partialNeuron) {
 
   //properties of the connections that this node gates
   for(var gatedProp in paritalneuron.gatedConns) {
-    if(gatedProp !== 'selfConned') {
+    if(gatedProp !== 'selfConned' || gatedProp !== 'extendedElegibility') {
       this.gatedConns[gatedProp] = partialNeuron.gatedConns[gatedProp]
+    } else if (gatedProp === 'extendedElegibility') {
+      this.gatedProp.extendedElegibilities[section] = partialNeuron.extendedElegibility
     }
   }
 
@@ -35,6 +38,7 @@ Neuron.prototype.update = function (partialNeuron) {
   }
 }
 
+
 if(module && module.exports) {
   module.exports = Neuron;
 }
@@ -42,20 +46,17 @@ if(module && module.exports) {
 //Full Neuron Template
 /* newNeuron is an object of the structure:
         {
-          id: int
-          job: int
-          level: int
-          children: array of objects
+          node: 
             {
               id: int
-              socket: connection
-              prevJob: int
+              job: int
+              level: int
+              state: float
+              prevState: float
+              bias: float
+              activation: float
+              derivative: float
             }
-          state: float
-          prevState: float
-          bias: float
-          activation: float
-          derivative: float
           selfConn: object
             {
               gain: float
@@ -71,6 +72,7 @@ if(module && module.exports) {
             }
           gatedConns: object
             {
+              //anything in this section may be singular for plebs
               ids: array of ints
               tos: array of ints
               activations: array of floats
