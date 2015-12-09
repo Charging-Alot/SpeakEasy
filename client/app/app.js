@@ -6,7 +6,7 @@ angular.module('speakEasy', [
   'speakEasy.services'
 ])
 
-.config( function ($stateProvider, $urlRouterProvider) {
+.config( function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
   $urlRouterProvider.otherwise('/landing');
 
   $stateProvider
@@ -28,6 +28,12 @@ angular.module('speakEasy', [
       templateUrl: '/about/about.html',
       controller: 'AboutCtrl'
     })
+    
+    $mdThemingProvider
+      .theme('default')
+      .primaryPalette('blue')
+      .accentPalette('orange')
+      .warnPalette('red', { 'default': '900'});
 
     //$httpProvider.interceptors.push('AttachTokens');
 })

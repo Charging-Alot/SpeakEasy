@@ -1,4 +1,15 @@
+body {
+  font-family: 'Lora', serif !important;
+  font-weight: bold;
+}
+
+.toolBar {
+  margin-left: 2% !important;
+  margin-top: 2% !important;
+}
+
 .viewContentBox {
+  margin-top: -8% !important;
   margin: -68px 0 0 0;
   background-size: cover;
   display: block;
@@ -12,8 +23,8 @@
 }
 
 .loginDivider {
-	border-color: #E1E1E1;
-	border-top: 0px;
+  border-color: #E1E1E1;
+  border-top: 0px;
 }
 
 .landingPageBackground {
@@ -43,7 +54,6 @@
 
 .mainLandingText {
   text-align: center;
-  font-family: 'Lora', serif;
   position: absolute;
   width: 50%;
   height: 50px;
@@ -59,37 +69,47 @@
 }
 
 .landingCardContent {
-  font-family: 'Lora', serif;
-  padding: 20px, 20px, 0px, 20px;
+  margin: 15px, 15px, 0px, 15px !important;
+}
+
+.majorBackground {
+  /*background-color: #FFB74D;*/
+  background-color: #FFEE58;
+}
+
+.majorCardHeader {
+  background-color: #00BCD4;
+  width: 100% !important;
+  height: 4%;
+}
+
+.majorCardHeaderText {
+  margin-left: 3%;
 }
 
 .downloadContent {
-  font-family: 'Lora', serif;
   padding: 20px, 20px, 0px, 20px;
   font-size: 19px;
   text-align: center;
 }
 
 .mainDLButton {
-  font-family: 'Lora', serif;
-  font-weight: bold;
-  border-radius: 0px;
-  color: black;
-  font-size: 18px;
-  background: none;
-  padding: 10px 20px 10px 20px;
-  border: solid black 4px;
-  text-decoration: none;
+  font-family: 'Lora', serif !important;
+  font-weight: bold !important;
+  border-radius: 0px !important;
+  color: black !important;
+  font-size: 18px !important;
+  background: none !important;
+  padding: 10px 20px 10px 20px !important;
+  border: solid black 4px !important;
+  text-decoration: none !important;
 }
 
 .mainDLButton:hover {
-  color: white;
-  border: solid white 4px;
+  color: white !important;
+  border: solid white 4px !important;
 }
 
-.landingHeader {
-  font-weight: italic;
-}
 
 .whiteframeHeader {
 	box-shadow: 0 0px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
