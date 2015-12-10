@@ -1,8 +1,38 @@
+
 body {
-  font-family: 'Lora', serif !important;
-  font-weight: bold;
+  font-family: 'Lato', sans-serif !important;
 }
 
+
+/* * * * * Major Material Class Overrides * * * * */
+
+/* due to a bug in Material, setting the overall background
+ * color bleeds into other content types, so we must override
+ * that issue here for each content type
+*/
+
+/* sets md-card background color */
+md-card.md-default-theme, md-card {
+  background-color: white;
+}
+
+/* sets md-whiteframe background color */
+md-content.md-default-theme, md-whiteframe {
+  background-color: white;
+}
+
+/* sets md-dialog background color */
+md-dialog.md-default-theme, md-dialog {
+  background-color: white;
+}
+
+md-card-image {
+  background-color: black;
+}
+
+/* * * * * Our Class Fixes * * * * */
+
+/* moves FAB toolbar slightly out from the exact corner */
 .toolBar {
   margin-left: 2% !important;
   margin-top: 2% !important;
@@ -53,10 +83,11 @@ body {
 }
 
 .mainLandingText {
+  /* font-family: 'Lora', serif !important; */  
   text-align: center;
   position: absolute;
   width: 50%;
-  height: 50px;
+  height: 10%;
   top: 30%;
   left: 30%;
   margin-left: -50px; /* margin is -0.5 * dimension */
@@ -64,13 +95,68 @@ body {
   z-index: 2;
 }
 
-.landingCardImage {
-  height: 300px;
+/* TESTING ***************/
+.mainCard:hover {
+  opacity: 0.65;
+  background: #2196F3;
+  color: white;
+  cursor: pointer;
 }
 
-.landingCardContent {
-  margin: 15px, 15px, 0px, 15px !important;
+.mainCard {
+  font-size: 18px;
+  line-height: 170%;
+  transition-duration: 0.7s;
 }
+
+.cardImage {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  position: relative;
+}
+
+.cardHeader {
+  color: white;
+  text-shadow: 0 1px 0 black;
+  margin-left: 15px;
+  bottom: 0px;
+  position: relative;
+  margin-top: 260px;
+}
+
+.landingLeftImage {
+  background: 
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url(https://s-media-cache-ak0.pinimg.com/236x/c8/4a/3e/c84a3ec1066dfeb938a32b503aafa0b7.jpg);
+    /* no fade
+    linear-gradient(
+      rgba(0, 0, 0, 0.25),
+      rgba(0, 0, 0, 0.25)
+    ), */
+}
+
+/***************/
+
+.landingCardImage {
+  height: 300px;
+  opacity: 0.75;
+  background: black;
+}
+
+/*.cardImageOverlay {
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0.65 !important;
+  z-index: 3;
+}*/
+
+/*.landingCardContent {
+  margin: 15px, 15px, 0px, 15px !important;
+}*/
 
 .majorBackground {
   /*background-color: #FFB74D;*/
@@ -87,32 +173,61 @@ body {
   margin-left: 3%;
 }
 
+.cardDivider {
+  content: '';
+  width: 0;
+  height: 100%;
+  position: relative;
+  border: 1px solid black;
+}
+
 .downloadContent {
   padding: 20px, 20px, 0px, 20px;
   font-size: 19px;
   text-align: center;
 }
 
-.mainDLButton {
-  font-family: 'Lora', serif !important;
-  font-weight: bold !important;
-  border-radius: 0px !important;
-  color: black !important;
-  font-size: 18px !important;
+.mainButton {
+  /* font-family: 'Lora', serif !important; */
+  /* font-weight: bold !important; */
+  color: white !important;
   background: none !important;
+  border-radius: 0px !important;
+  font-size: 18px !important;
   padding: 10px 20px 10px 20px !important;
-  border: solid black 4px !important;
+  border: none; /*solid white 2px !important;*/
   text-decoration: none !important;
+  transition-duration: 0.7s;
 }
 
-.mainDLButton:hover {
+.mainButton:hover {
+  color: #2196F3 !important;
+  background: white !important;
+}
+
+.secondaryButton {
+  color: #2196F3 !important;
+  background: white !important;
+  border-radius: 0px !important;
+  font-size: 18px !important;
+  padding: 10px 20px 10px 20px !important;
+  border: none; /*solid white 2px !important;*/
+  text-decoration: none !important;
+  transition-duration: 0.7s;
+}
+
+.secondaryButton:hover {
   color: white !important;
-  border: solid white 4px !important;
+  background: none !important;
 }
 
 
 .whiteframeHeader {
 	box-shadow: 0 0px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
+
+.aboutPageContent {
+  margin: 20px;
 }
 
 /* Fix for bug involving ng-message inside a material dialog, may not be necessary 12/7/2015 */

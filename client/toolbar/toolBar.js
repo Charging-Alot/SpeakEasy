@@ -1,7 +1,7 @@
 angular.module('speakEasy')
 
 .controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', function ($scope, $mdDialog, $mdMedia, $state, Auth) {
-	$scope.goToUser = function(ev) {
+	$scope.goToLogin = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
       templateUrl: 'user/login.html',

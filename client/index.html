@@ -8,14 +8,33 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Lora font for coolness -->
   <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <!-- Lato font for coolness -->
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,400italic,700' rel='stylesheet' type='text/css'>
   <!-- our CSS file -->
   <link rel="stylesheet" type="text/css" href="styles/styles.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
 </head>
 <body>
 
-<div ng-cloak ng-controller="toolBarCtrl" class="toolBar">
-  <md-fab-toolbar md-direction="right">
+<md-content ng-cloak ng-controller="toolBarCtrl">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button aria-label="label" class="md-icon-button" ng-click="goToLanding()">
+        <md-icon>home</md-icon>
+      </md-button>
+      <button class="mainButton" ng-click="goToInfo()">About</button>
+      <button class="mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
+      <button class="mainButton" ng-click="goToDownload()">Download</button>
+      <button class="mainButton" ng-click="goToMetrics()">Data</button>
+      <div flex></div>
+      <button class="secondaryButton" ng-click="goToLogin($event)">Login</button>
+    </div>
+  </md-toolbar>
+
+
+  <!-- BELOW IS THE ORIGINAL FAB TOOLBAR -->
+  <!--
+  <md-fab-toolbar class="toolBar" md-direction="right">
     <md-fab-trigger class="align-with-text">
       <md-button aria-label="menu" class="md-fab md-primary">
         <md-icon>list</md-icon>
@@ -47,7 +66,9 @@
       </md-fab-actions>
     </md-toolbar>
   </md-fab-toolbar>
-</div>
+  -->
+</md-content>
+
 <div ui-view>
   <!-- stuff goes here (our app) -->
 </div>
