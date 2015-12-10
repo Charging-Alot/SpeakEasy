@@ -1,5 +1,5 @@
 var Manager = function (partialNeuron) {
-  Neuron.call(this.paritalNeuron);
+  Neuron.call(paritalNeuron);
   this.toPleb = new IoHandler(1, 0, this.update.bind(this), send);
   this.toMother = new IoHandler(1, 2, this.update.bind(this), send);
 }
@@ -13,34 +13,42 @@ Manager.prototype.activate = function() {
   this.queueCommandPleb('activationStep', null, function () {
     this.activation = squash(this.state);
     this.derivative = squash(this.state, true);
-    this.queueCommandMother('activationStep', null);
-    this.toMother.runAllOutputs();
+    // this.queueCommandMother('activationStep');
+    // this.toMother.runAllOutputs();
   });
 
   this.queueCommandPleb('influenceStep', null, function () {
     // this.queueCommandMother('influenceStep', null);
     // this.toMother.runAllOutputs();
-    // gets rewritten at backPropagation.
+    // gets rewritten at backPropagation. and on next activation.
   });
 
   this.queueCommandPleb('elegibilityStep', null, function () {
-    this.queueCommandMother('elegibilityStep', null);
-    this.toMother.runAllOutputs();
+    // this.queueCommandMother('elegibilityStep');
+    // this.toMother.runAllOutputs();
   });
 
   this.toPleb.runAllOutputs(function () {
-    for(var i = 0; i < gatedConns.ids.length; ++i) {
+    var exElResponseCounter = 0;
+    for(var i = 0; i < this.gatedConns.ids.length; ++i) {
       this.queueCommandPleb('extendedElegibilityStep', i, function () {
+        // ++exElResponseCounter;
+        // if(exElResponseCounter === gatedConns.ids.length) {
+        //   this.queueCommandMother('extendedElegibilityStep');
+        //   this.toMother.runAllOutputs();
+        // }
         // this.queueCommandMother('extendedElegibilityStep', i);
-        //should these get passed back bit by bit?
+        // should these get passed back bit by bit?
       });
     }
     this.toPleb.runAllOutputs(function () {
-      this.queueCommandMother('activate', null);
-      this.toMother.runAllOutputs();
+      for(var i = 0; i < this.gatedConns.gains.length; ++i) {
+        this.gatedConns.gains[i] = this.node.activation;
+      }
+      this.queueCommandMother('activate');
       this.toMother.runAllInputs();
     }.bind(this));
-  });
+  }.bind(this));
 
 }
 
@@ -51,6 +59,7 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
     value.inputConns.gains = this.inputConns.gains;
     value.inputConns.activations = this.inputConns.activations;
     value.node.state = this.node.state;
+    value.node.prevState = this.node.prevState;
   } else if(command === 'influenceStep') {
     value.gatedConns.tos = this.gatedConns.tos;
     value.gatedConns.weights = this.gatedConns.weights;
@@ -64,28 +73,55 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
   } else if(command === 'extendedElegibilityStep') {
     value.gatedConns.to = this.gatedConns.tos[section];
     value.node.derivative = this.node.derivative;
-    value.gatedConns.selfConns.weight = this.gatedConns.selfConned.weights[this.gatedConns.tos[section]];
-    value.gatedConns.selfConns.gain = this.gatedConns.selfConned.gains[this.gatedConns.tos[section]];
+    value.gatedConns.selfConns.weight = this.gatedConns.selfConned.weights[this.gatedConns.tos[section]] || 0;
+    value.gatedConns.selfConns.gain = this.gatedConns.selfConned.gains[this.gatedConns.tos[section]] || 1;
     value.gatedConns.influence = this.gatedConns.influences[this.gatedConns.tos[section]];
     value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibilities[section]
+  } else if(command === 'gainStep') {
+    value.node.activation = this.node.activation; //not used currently
   }
-  this.toPleb.addToOut(command, section, value, callback.bind(this));
+  if(callback) {
+    callback.bind(this);
+  }
+  this.toPleb.addToOut(command, section, value, callback);
 }
 
-Manager.prototype.queueCommandMother = function (command, section, callback) {
+Manager.prototype.queueCommandMother = function (command, callback) {
   var value = new Neuron();
-  if(command === 'activationStep') {
+  // if(command === 'activationStep') {
+  //   value.node.id = this.node.id;
+  //   value.node.state = this.node.state;
+  //   value.node.derivative = this.node.derivative;
+  //   value.node.activation = this.node.activation;
+  //   command = 'action';
+  // } else if(command === 'elegibilityStep') {
+  //   value.inputConns.ids;
+  //   value.inputConns.elegibilities = this.inputConns.elegibilities;
+  //   command = 'action';
+  // } else if(command === 'extendedElegibilityStep') {
+  //   value.gatedConns.ids;
+  //   value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibility;
+  //   command = 'action';
+  // } else if(command === 'gainStep') {
+  //   value.gatedConns.gains;
+  //   command = 'action';
+  // }
+  //will figure out how to recieve these separately later
+  if (command === 'action') {
+    value.node.id = this.node.id;
     value.node.state = this.node.state;
     value.node.derivative = this.node.derivative;
     value.node.activation = this.node.activation;
-    command = 'update';
-  } else if(command === 'elegibilityStep') {
+    value.inputConns.ids;
     value.inputConns.elegibilities = this.inputConns.elegibilities;
-    command = 'update';
-  } else if(command === 'activate') {
-    value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibility
+    value.gatedConns.ids;
+    value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibility;
+    value.gatedConns.gains;
   }
-  this.toMother.addToOut(command, section, callback.bind('this'));
+  if(callback) {
+    callback = callback.bind(this);
+  }
+  this.toMother.addToOut(command, section, value);
 }
 
 

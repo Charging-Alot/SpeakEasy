@@ -18,7 +18,7 @@ Pleb.prototype.influenceStep = function () {
   for(var i = 0; i < this.gatedConns.tos.length; ++i) {
     if(this.gatedConns.influences[this.gatedConns.tos[i]] === undefined) {
       //if we haven't seen neuron before then initialize it to 0 or prevState if the to node is selfConnected
-      this.gatedConns.influences[this.gatedConns.tos[i]] =  this.gatedConns.selfConns.initialInfluences[this.gatedConns.tos[i]] || 0; 
+      this.gatedConns.influences[this.gatedConns.tos[i]] =  this.gatedConns.selfConned.initialInfluences[this.gatedConns.tos[i]] || 0; 
     }
     this.gatedConns.influences[this.gatedConns.tos[i]] += this.gatedConns.weights[i] * this.gatedConns.activations[i];
   }
@@ -45,10 +45,14 @@ Pleb.prototype.extendedElegibilityStep = function () {
       this.gatedConns.extendedEligibility[m] = 0;
     }
     this.gatedConns.extendedEligibility[m] += this.node.derivative * this.inputConns.elegibilities[m] 
-                                                  * this.gatedConns.influences[l];
+                                                  * this.gatedConns.influence;
   }
   this.queueCommandManager('extendedElegibilityStep', this.section);
   this.toManager.runAllOutouts();
+}
+
+Pleb.prototype.gainStep = function () {
+  //not currently used;
 }
 
 Pleb.prototype.queueCommandManager = function (command, section) {
