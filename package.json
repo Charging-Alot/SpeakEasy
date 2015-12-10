@@ -1,4 +1,3 @@
-
 {
   "name": "speakeasy",
   "version": "1.0.0",
@@ -6,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "test": "test",
-    "dox" : "node node_modules/doxx/bin/doxx" 
+    "dox": "node node_modules/doxx/bin/doxx"
   },
   "repository": {
     "type": "git",
@@ -33,6 +32,7 @@
     "doxx": "^2.1.1",
     "express": "^4.13.3",
     "request": "^2.67.0",
-    "srt": "0.0.3"
+    "srt": "0.0.3",
+    "sync-request": "^2.1.0"
   }
 }

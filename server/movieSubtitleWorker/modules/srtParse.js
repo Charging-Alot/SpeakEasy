@@ -19,7 +19,7 @@ module.exports = function (data) {
 }
 // console.log(__dirname)
 
-fs.readFile(__dirname+'/../srtFiles/testy.srt','utf-8', function (err, data) {
+fs.readFile(__dirname+'/../srtFiles/ABrokenLife.srt','utf-8', function (err, data) {
   if (err) {
     throw err; 
   }
@@ -27,7 +27,9 @@ fs.readFile(__dirname+'/../srtFiles/testy.srt','utf-8', function (err, data) {
   // console.log(module.exports(data))
 });
 
-var appendFile = __dirname+'/../srtFiles/testTextFile.txt';
+
+
+var appendFile = __dirname+'/../srtFiles/testTextFileABROKENLIFE.txt';
 
 function buildFile(dataArr){
   var nextLine = '';
