@@ -1,6 +1,7 @@
 var Neuron = function (partialNeuron) {
   this.node = this.node || {};
   this.inputConns = this.inputConns || {};
+  this.outputConns = this.outputConns || {};
   this.gatedConns = this.gatedConns || {};
   this.gatedConns.influences = this.gatedConns.influences || {};
   this.gatedConns.selfConned = this.gatedConns.selfConned || {};
@@ -38,7 +39,6 @@ Neuron.prototype.update = function (command, section, partialNeuron) {
   }
 }
 
-
 if(module && module.exports) {
   module.exports = Neuron;
 }
@@ -48,9 +48,8 @@ if(module && module.exports) {
         {
           node: 
             {
+              layer: int
               id: int
-              job: int
-              level: int
               state: float
               prevState: float
               bias: float
@@ -70,6 +69,9 @@ if(module && module.exports) {
               gains: array of floats
               elegibilities: array of floats *private
             }
+          outputConns: object 
+            {
+            }
           gatedConns: object
             {
               //anything in this section may be singular for plebs
@@ -79,7 +81,7 @@ if(module && module.exports) {
               weights: array of floats
               gains: array of floats
               extendedElegibilities: array of arrays of floats *private
-              selfConns: object of objects
+              selfConned: object of objects
                 {
                   initialInfluences: object
                     {
