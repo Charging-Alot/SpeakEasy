@@ -1,4 +1,6 @@
 
+/* * sets the font to 'Lato' for the entire site * */
+
 body {
   font-family: 'Lato', sans-serif !important;
 }
@@ -138,6 +140,23 @@ md-card-image {
       rgba(0, 0, 0, 0.25),
       rgba(0, 0, 0, 0.25)
     ), */
+}
+
+/***************/
+
+/* CHAT PAGE ***************/
+
+.chatFrame {
+  height: 500px;
+}
+
+.chatBox {
+
+}
+
+.messageInput {
+  height: 470px;
+  bottom: 0px;
 }
 
 /***************/

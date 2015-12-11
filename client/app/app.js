@@ -1,9 +1,10 @@
 angular.module('speakEasy', [
   'ngMaterial',
-  'ngMessages',
+  'ngMessages', // messages may not be necessary since they don't work in md-dialogs
   'ui.router',
   'speakEasy.home', //should need as a separate module
-  'speakEasy.services'
+  'speakEasy.services',
+  'speakEasy.chat'
 ])
 
 .config( function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
@@ -28,12 +29,17 @@ angular.module('speakEasy', [
       templateUrl: '/about/about.html',
       controller: 'AboutCtrl'
     })
+    .state('chat', {
+      url: '/chat',
+      templateUrl: '/chat/chat.html',
+      controller: 'ChatCtrl'
+    })
     
 
     // As described in styles.css, background color can be a little funky in Material
     // So these settings combined with .backgroundPalette('background') get us to where
     // we want to be in terms of control
-    
+
     var background = $mdThemingProvider
                     .extendPalette('grey', { 'A100': '#CFD8DC' }); // prev: 'f2f2f2'
 

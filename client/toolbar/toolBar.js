@@ -35,7 +35,7 @@ angular.module('speakEasy')
 
 	$scope.goToChat = function () {
 		console.log("GOING TO goToChat")
-		
+    $state.go('chat');
 	}
 
 	$scope.goToDownload = function (ev) {

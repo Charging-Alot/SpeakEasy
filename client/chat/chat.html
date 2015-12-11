@@ -1,0 +1,30 @@
+<div ng-cloak>
+  <md-content layout="row" layout-padding layout-wrap layout-fill>
+    <div flex="10"></div>
+    <md-whiteframe flex="80" class="md-whiteframe-5dp chatFrame">
+      <md-toolbar class="md-primary whiteframeHeader">
+        <div class="md-toolbar-tools">
+          <h2 class="md-flex">Chat With SpeakEasy</h2>
+        </div>
+      </md-toolbar>
+      <div class="chatBox">
+        <!-- chat messages get appended here -->
+      </div>
+      <div layout="row" class="messageInput">
+        <form ng-submit="sendMessage()" flex>
+        <md-input-container>
+          <label>Message</label>
+          <input type="message" ng-model="message.text" ng-enter="sendMessage()">
+        </md-input-container>
+        </form>
+        <md-button layout-align="center" class="md-fab md-primary" aria-label="Login" ng-click="sendMessage()"> 
+          <md-icon>input</md-icon>
+          <md-tooltip md-direction="bottom">
+            Submit
+          </md-tooltip>
+        </md-button>
+      </div>
+    </md-whiteframe>
+    <div flex="10"></div>
+  </md-content>
+</div>
