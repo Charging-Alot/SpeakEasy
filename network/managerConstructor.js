@@ -8,11 +8,9 @@ Manager.prototype.constructor = Manager;
 
 Manager.prototype.activate = function() {
   this.node.prevState = this.node.state;
-  this.node.state = this.node.bias + this.node.old * this.node.selfConn.gain * this.node.selfConn.weight;
+  this.node.state = this.node.bias + this.node.old * this.node.selfConnection.gain * this.node.selfConnection.weight;
 
   this.queueCommandPleb('activationStep', null, function () {
-    this.activation = squash(this.state);
-    this.derivative = squash(this.state, true);
     // this.queueCommandMother('activationStep');
     // this.toMother.runAllOutputs();
   });
@@ -30,7 +28,7 @@ Manager.prototype.activate = function() {
 
   this.toPleb.runAllOutputs(function () {
     var exElResponseCounter = 0;
-    for(var i = 0; i < this.gatedConns.ids.length; ++i) {
+    for(var i = 0; i < this.gatedNodes.length; ++i) {
       this.queueCommandPleb('extendedElegibilityStep', i, function () {
         // ++exElResponseCounter;
         // if(exElResponseCounter === gatedConns.ids.length) {
@@ -42,8 +40,8 @@ Manager.prototype.activate = function() {
       });
     }
     this.toPleb.runAllOutputs(function () {
-      for(var i = 0; i < this.gatedConns.gains.length; ++i) {
-        this.gatedConns.gains[i] = this.node.activation;
+      for(var i = 0; i < this.connections.gated.length; ++i) {
+        this.connections.gated.gains[i] = this.node.activation;
       }
       this.queueCommandMother('activate');
       this.toMother.runAllInputs();
@@ -55,28 +53,37 @@ Manager.prototype.activate = function() {
 Manager.prototype.queueCommandPleb = function (command, section, callback) {
   var value = new Neuron();
   if(command === 'activationStep') {
-    value.inputConns.weights = this.inputConns.weights;
-    value.inputConns.gains = this.inputConns.gains;
-    value.inputConns.activations = this.inputConns.activations;
-    value.node.state = this.node.state;
-    value.node.prevState = this.node.prevState;
+    value.connections.inputs = this.connections.inputs;
+    value.node = this.node
+    // value.inputConns.weights = this.inputConns.weights;
+    // value.inputConns.gains = this.inputConns.gains;
+    // value.inputConns.activations = this.inputConns.activations;
+    // value.node.state = this.node.state;
+    // value.node.prevState = this.node.prevState;
   } else if(command === 'influenceStep') {
-    value.gatedConns.tos = this.gatedConns.tos;
-    value.gatedConns.weights = this.gatedConns.weights;
-    value.gatedConns.activations = this.gatedConns.activations;
-    value.gatedConns.selfConns.initialInfluences = this.gatedConns.selfConns.initialInfluences
+    value.node = this.node;
+    value.gatedNodes = this.gatedNodes;
+    value.connections.inputs = this.connections.inputs;
+    // value.gatedConns.tos = this.gatedConns.tos;
+    // value.gatedConns.weights = this.gatedConns.weights;
+    // value.gatedConns.activations = this.gatedConns.activations;
+    // value.gatedConns.selfConns.initialInfluences = this.gatedConns.selfConns.initialInfluences
   } else if(command === 'elegibilityStep') {
-    value.inputConns.elegibilities = this.inputConns.elegibilities;
-    value.node.selfConnection = this.node.selfConnection;
-    value.inputConns.gains = this.inputConns.gains;
-    value.inputConns.activations = this.inputConns.activations;
+    value.node = this.node;
+    value.connections.inputs = value.connections.inputs;
+    // value.inputConns.elegibilities = this.inputConns.elegibilities;
+    // value.node.selfConnection = this.node.selfConnection;
+    // value.inputConns.gains = this.inputConns.gains;
+    // value.inputConns.activations = this.inputConns.activations;
   } else if(command === 'extendedElegibilityStep') {
-    value.gatedConns.to = this.gatedConns.tos[section];
-    value.node.derivative = this.node.derivative;
-    value.gatedConns.selfConns.weight = this.gatedConns.selfConned.weights[this.gatedConns.tos[section]] || 0;
-    value.gatedConns.selfConns.gain = this.gatedConns.selfConned.gains[this.gatedConns.tos[section]] || 1;
-    value.gatedConns.influence = this.gatedConns.influences[this.gatedConns.tos[section]];
-    value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibilities[section]
+    value.node = this.node;
+    value.gatedNodes = this.gatedNodes;
+    // value.gatedConns.to = this.gatedConns.tos[section];
+    // value.node.derivative = this.node.derivative;
+    // value.gatedConns.selfConns.weight = this.gatedConns.selfConned.weights[this.gatedConns.tos[section]] || 0;
+    // value.gatedConns.selfConns.gain = this.gatedConns.selfConned.gains[this.gatedConns.tos[section]] || 1;
+    // value.gatedConns.influence = this.gatedConns.influences[this.gatedConns.tos[section]];
+    // value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibilities[section]
   } else if(command === 'gainStep') {
     value.node.activation = this.node.activation; //not used currently
   }
@@ -107,16 +114,19 @@ Manager.prototype.queueCommandMother = function (command, callback) {
   //   command = 'action';
   // }
   //will figure out how to recieve these separately later
-  if (command === 'action') {
-    value.node.id = this.node.id;
-    value.node.state = this.node.state;
-    value.node.derivative = this.node.derivative;
-    value.node.activation = this.node.activation;
-    value.inputConns.ids;
-    value.inputConns.elegibilities = this.inputConns.elegibilities;
-    value.gatedConns.ids;
-    value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibility;
-    value.gatedConns.gains;
+  if (command === 'activate') {
+    value.node
+    //add an output to add activation to;
+    value.connections.gatedConns;
+    // value.node.id = this.node.id;
+    // value.node.state = this.node.state;
+    // value.node.derivative = this.node.derivative;
+    // value.node.activation = this.node.activation;
+    // value.inputConns.ids;
+    // value.inputConns.elegibilities = this.inputConns.elegibilities;
+    // value.gatedConns.ids;
+    // value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibility;
+    // value.gatedConns.gains;
   }
   if(callback) {
     callback = callback.bind(this);
