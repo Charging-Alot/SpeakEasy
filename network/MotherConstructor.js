@@ -9,6 +9,10 @@ var Mother = function (layerLengths) {
   this.createAllLayers(layerLengths);
   this.createAllConnections();
   this.toManager = new IoHandler(0, 1, this.update.bind(this), this.send);
+  //ALL LSTMS
+  //INPUT LAYER
+  //LSTM INARDS
+  //OUTPUT LAYER
 }
 
 Mother.prototype.createAllLayers = function (layerLengths) {
@@ -26,17 +30,7 @@ Mother.prototype.createLayer = function (layerId, numberOfNodes) {
   //this will change
   var layer = {id: layerId, nodes: []};
   for(var i = 0; i < numberOfNodes; ++i) {
-    layer.nodes.push(new Neuron({
-      node: {
-        id: i,
-        layerId: layerId,
-        state: 0,
-        prevState: 0,
-        activation: 0,
-        selfconnection = {weight: 0, gain: 1}
-        bias = Math.random() * 0.2 - 0.1;
-      }
-    }));
+    layer.nodes.push(new Node(layerId, i));
   }
   return layer;
 }
@@ -160,6 +154,35 @@ Mother.prototype.initAllConnectionData = function () {
 Mother.prototype.initConnection(connection, isSelfConnedLayer) {
   connection.selfConned = isSelfConnedLayer;
   
+}
+
+Mother.prototype.Node = function (layerId, id) {
+  return {
+    id: id,
+    layerId: layerId,
+    state: 0,
+    prevState: 0,
+    activation: 0,
+    selfconnection = {weight: 0, gain: 1, gateId: -1, gateLayer: -1}
+    elegibility = [];
+    extendedEligibility = [];
+    bias = Math.random() * 0.2 - 0.1;
+  }
+}
+
+Mother.prototype.Connection = function (toLayerId, fromLayerId, toNodeId, fromNodeId, connId) {
+  return {
+    id: connId,
+    toNodeId: toNodeId,
+    toLayerId: toLayerId,
+    fromNodeId: fromNodeId,
+    fromLayerId: fromLayerId,
+    gateNodeId: -1
+    gateLayerId: -1
+    activation: 0,
+    gain: 0,
+    weight: Math.random() * .2 - .1
+  }
 }
 
 Mother.prototype.updateConnectionAttribute = function (fromLayerId, toLayerId, connId, attribute, value) {
