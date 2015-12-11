@@ -5,10 +5,84 @@ var Mother = function (vocabularySize, hiddenSize, numberOfLSTMLayers) {
   this.createLSTMNetwork(vocabularySize, hiddenSize, numberOfLSTMLayers);
   Mother.initNeurons();
   this.toManager = new IoHandler(0, 1, this.update.bind(this), this.send);
-  //ALL LSTMS LOOK LIKE
-  //INPUT LAYER
-  //LSTM INARDS
-  //OUTPUT LAYER
+}
+
+Mother.prototype.update = function (command, section, partialNeuron) {
+  var inMemoryNeuron = this.layers[partialNeuron.node.layerId][section];
+  if(command === 'activate') {
+    this.activationUpdate(partialNeuron.layerId, partialNeuron.node.activation);
+    //update this node
+    for(var nodeKey in partialNeuron.node) {
+      inMemoryNeuron.node[nodeKey] = partialNeuron.node[nodeKey];
+    }
+    //update connections
+    for(var connType in partialNeuron.connections) {
+      for(var j = 0; j < partialNeuron.connections.inputs; ++j) {
+        for(property in partialNeuron.connection[connType][j]) {
+          inMemoryNeuron.connections[connType][j][property] = partialNeuron.connection[connType][j][property];
+        }
+      }
+    }
+    //update gated nodes
+    for(var nodeId in partialNeuron.gatedNodes) {
+      for(var gatedKey in partialNeuron.gatedNodes[nodeId]) {
+        inMemoryNeuron.gatedNodes[nodeId][gatedKey] = partialNeuron.gatedNodes[nodeId][gatedKey];
+      }
+    }
+  }
+}
+
+Mother.prototype.activate = function (inputArr, callback) {
+  this.activationUpdate(0, inputArr);
+  var layerCounter = 1;
+  var activationCallback = function () {
+    if(++layerCounter < this.layers.length) {
+      this.activateLayer(layerCounter, activationCallback);
+    } else {
+      callback();
+    }
+  }
+  this.activateLayer(layerCounter, activationCallback);
+}
+
+Mother.prototype.activationUpdatesForLayer = function (layerId, inputArr) {
+  for(var i = 0; i < this.layers[layerId].length; ++i) {
+    this.activation(this.layers[layerId][i], inputArr[i]);
+  }
+}
+
+Mother.prototype.activationUpdate = function (neuron, activation) {
+  neuron.node.activation = activation || neuron.node.activation;
+  var activation = neuron.node.activation;
+  var outputs = neuron.connections.outputs;
+  var gated = neuron.connections.gated;
+  for(var i = 0; i < outputs.length; ++i) {
+    outputs[i].activation = activation;
+  }
+  for(var j = 0; j < gated.length; ++j) {
+    gated[j].gain = activation;
+  }
+}
+
+Mother.prototype.activateLayer = function (layerId, callback) {
+  for(var i = 0; i < layer.length; ++i) {
+    this.queueCommandManager('activate', i, this.layers[layerId][i])
+  }
+  this.toManager.runAllOutputs(callback);
+}
+
+Mother.prototype.queueCommandManager = function (command, section, neuron, callback) {
+  if(command === 'activate') {
+    var partialNeuron = new Neuron({
+      node: neuron.node;
+      gatedNode: neuron.gatedNodes;
+      connections: {
+        inputs: neuron.connections.inputs;
+        gated: neuron.connections.gated;
+      }
+    });
+  }
+  this.toManager.addToOut(command, section, partialNeuron, callback)
 }
 
 Mother.prototype.initNeurons = function () {
@@ -18,7 +92,7 @@ Mother.prototype.initNeurons = function () {
       this.layers[layer].push(new Neuron({node: this.nodes[layer].nodes[node]}, true));
     }
   }
-  this.placeConnectionsInNeurons();
+  this.placeConnectionsInNeurons(callback);
 }
 
 Mother.prototype.placeConnectionsInNeurons = function () {
@@ -47,18 +121,20 @@ Mother.prototype.placeConnectionsInNeurons = function () {
 }
 
 Mother.prototype.createLSTMNetworkNodes = function (vocabularySize, hiddenSize, numberOfLSTMLayers) {
+  // needs gates
   var numberOfLayersInLSTM = 3;
   this.nodes.push(this.createAllNodesInLayer(0, vocabularySize));
   for(var i = 0; i < numberOfLSTMLayers; ++i) {
     for(var j = 0; j < numberOfLayersInLSTM; ++j) {
       this.nodes.push(this.createAllNodesInLayer(this.nodes.length, hiddenSize));
+      this.joinLayers(this.nodes[this.nodes.length - 2], this.nodes[this.nodes.length -1], j === 0);
     }
   }
   this.layers.push(createAllNodesInLayer(this.layers.length, vocabularySize));
+  this.joinLayers(this.nodes[this.nodes.length - 2], this.nodes[this.nodes.length -1], true);
 }
 
 Mother.prototype.createAllNodesInLayer = function (layerId, numberOfNodes) {
-  //this will change
   var nodeLayer = {id: layerId, nodes: []};
   for(var i = 0; i < numberOfNodes; ++i) {
     nodeLayer.nodes.push(Node(layerId, i));
@@ -77,13 +153,6 @@ var Node = function (layerId, id) {
     elegibility = [];
     extendedEligibility = [];
     bias = Math.random() * 0.2 - 0.1;
-  }
-}
-
-Mother.prototype.createAllConnections = function (layerLengths) {
-  //this will change
-  for(var i = 0; i < layerLength-1; ++i) {
-    this.joinLayers(this.nodes[i], this.nodes[i+1], true);
   }
 }
 

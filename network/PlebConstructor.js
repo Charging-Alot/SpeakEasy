@@ -10,7 +10,7 @@ Pleb.prototype.activationStep = function () {
     this.node.state += this.connections.inputs[i].weight * this.connections.inputs[i].gain * this.connections.inputs[i].activations;
   }
   this.queueCommandManager('activationStep', null);
-  this.toManager.runAllOutouts();
+  this.toManager.runAllOutputs();
   this.node.activation = squash(this.state);
   this.node.derivative = squash(this.state, true);
   /*
@@ -102,9 +102,11 @@ Pleb.prototype.gainStep = function () {
 Pleb.prototype.queueCommandManager = function (command, section) {
   var value = new Neuron();
   if(command === 'activationStep') {
-    value.node.state = this.node.state
+    value.node.state = this.node.state;
+    value.node.activation = this.node.activation;
+    value.node.derivative = this.node.derivative;
   } else if(command === 'influenceStep') {
-    value.connections.gated.influences = this.connections.gated.influences;
+    value.connections.gated = this.connections.gated;
   } else if(command === 'elegibilityStep')
     value.node.elegibilities = this.node.elegibilities;
   } else if(command === 'extendedElegibilityStep') {

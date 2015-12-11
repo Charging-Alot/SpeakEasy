@@ -28,10 +28,6 @@ IoHandler.prototype.runOutput = function(taskObj, callback) {
       section: taskObj.section,
       value: taskObj.value
   });
-  if(callback) {
-    this.waiting.names[taskObj.command];
-    this.waiting.callbacks(callback)
-  }
   //if there are response callbacks, set them to the waiting objects
   if(callback) {
     this.waiting.names[taskObj.command] = true;

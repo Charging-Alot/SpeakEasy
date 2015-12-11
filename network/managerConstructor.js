@@ -40,9 +40,10 @@ Manager.prototype.activate = function() {
       });
     }
     this.toPleb.runAllOutputs(function () {
-      for(var i = 0; i < this.connections.gated.length; ++i) {
-        this.connections.gated.gains[i] = this.node.activation;
-      }
+      //this part is done on mother
+      // for(var i = 0; i < this.connections.gated.length; ++i) {
+      //   this.connections.gated.gains[i] = this.node.activation;
+      // }
       this.queueCommandMother('activate');
       this.toMother.runAllInputs();
     }.bind(this));
@@ -63,7 +64,7 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
   } else if(command === 'influenceStep') {
     value.node = this.node;
     value.gatedNodes = this.gatedNodes;
-    value.connections.inputs = this.connections.inputs;
+    value.connections.gated = this.connections.gated;
     // value.gatedConns.tos = this.gatedConns.tos;
     // value.gatedConns.weights = this.gatedConns.weights;
     // value.gatedConns.activations = this.gatedConns.activations;
