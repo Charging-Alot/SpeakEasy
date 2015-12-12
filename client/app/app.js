@@ -38,7 +38,7 @@ angular.module('speakEasy', [
 
     // As described in styles.css, background color can be a little funky in Material
     // So these settings combined with .backgroundPalette('background') get us to where
-    // we want to be in terms of control
+    // we want to be in terms of control (also after being coupled with the CSS changes)
 
     var background = $mdThemingProvider
                     .extendPalette('grey', { 'A100': '#CFD8DC' }); // prev: 'f2f2f2'
@@ -48,7 +48,7 @@ angular.module('speakEasy', [
     $mdThemingProvider
       .theme('default')
       .primaryPalette('blue')
-      .accentPalette('orange')
+      .accentPalette('deep-orange')
       .warnPalette('red', { 'default': '900' })
       .backgroundPalette('background');
 

@@ -97,7 +97,8 @@ md-card-image {
   z-index: 2;
 }
 
-/* TESTING ***************/
+/* CARDS AND CARD IMAGES ***************/
+
 .mainCard:hover {
   opacity: 0.65;
   background: #2196F3;
@@ -106,9 +107,13 @@ md-card-image {
 }
 
 .mainCard {
-  font-size: 18px;
-  line-height: 170%;
+  font-size: 15px;
+  line-height: 190%;
   transition-duration: 0.7s;
+}
+
+.cardContent {
+  padding: 3px 20px 3px 20px;
 }
 
 .cardImage {
@@ -128,13 +133,14 @@ md-card-image {
 }
 
 .landingLeftImage {
+  /*background-size: cover;*/
   background: 
     linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0),
       rgba(0, 0, 0, 0.6)
     ),
-    url(https://s-media-cache-ak0.pinimg.com/236x/c8/4a/3e/c84a3ec1066dfeb938a32b503aafa0b7.jpg);
+    url(https://s-media-cache-ak0.pinimg.com/236x/c8/4a/3e/c84a3ec1066dfeb938a32b503aafa0b7.jpg) no-repeat;
     /* no fade
     linear-gradient(
       rgba(0, 0, 0, 0.25),
@@ -146,17 +152,82 @@ md-card-image {
 
 /* CHAT PAGE ***************/
 
+.chatMain {
+  /*height: 100%;
+  width: 100%;*/
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
 .chatFrame {
-  height: 500px;
+  /*height: 500px;*/
+  top: 14%; /*14%;*/
+  height: 62%;
+  width: 50%;
+  position: absolute;
+}
+
+.chatBoxHeader {
+ /* margin: 10% 0 0 0;*/
+ position: fixed;
+ width: 50%;
+}
+
+.chatBoxWrap {
+  top: 64px; /*16%;*/
+  height: 85%;
+  width: 100%;
+  position: absolute;
+  overflow: auto;
 }
 
 .chatBox {
+  height: 100%;
+  width: 100%;
+}
 
+.messageWrap {
+  width: 100%
+}
+
+.userMessage {
+  float: right;
+  border-radius: 2px;
+  padding: 3px 20px 3px 20px;
+  margin: 3%;
+  background-color: #90CAF9;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
+
+.robotMessage {
+  float: left;
+  border-radius: 2px;
+  padding: 3px 20px 3px 20px;
+  margin: 3%;
+  color: white;
+  background-color: #FF5722;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
 }
 
 .messageInput {
-  height: 470px;
+  width: 50%;
+  margin-bottom: 6%;
   bottom: 0px;
+  position: fixed;
+  background-color: white;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
+
+.chatLine {
+  margin-left: 3%;
+}
+
+.chatButton {
+  margin-right: 3% !important;
+  margin-top: 1% !important;
 }
 
 /***************/

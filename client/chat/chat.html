@@ -1,23 +1,25 @@
-<div ng-cloak>
-  <md-content layout="row" layout-padding layout-wrap layout-fill>
+<div ng-cloak class="chatMain">
+  <md-content layout="row" layout-padding layout-wrap layout-fill class="chatMain">
     <div flex="10"></div>
     <md-whiteframe flex="80" class="md-whiteframe-5dp chatFrame">
-      <md-toolbar class="md-primary whiteframeHeader">
+      <md-toolbar class="md-primary whiteframeHeader chatBoxHeader">
         <div class="md-toolbar-tools">
           <h2 class="md-flex">Chat With SpeakEasy</h2>
         </div>
       </md-toolbar>
-      <div class="chatBox">
-        <!-- chat messages get appended here -->
+      <div class="chatBoxWrap">
+        <div layout="column" class="chatBox">
+          <!-- chat messages get appended here -->
+        </div>
       </div>
       <div layout="row" class="messageInput">
         <form ng-submit="sendMessage()" flex>
-        <md-input-container>
+        <md-input-container class="chatLine">
           <label>Message</label>
           <input type="message" ng-model="message.text" ng-enter="sendMessage()">
         </md-input-container>
         </form>
-        <md-button layout-align="center" class="md-fab md-primary" aria-label="Login" ng-click="sendMessage()"> 
+        <md-button layout-align="center" class="md-fab md-primary chatButton" aria-label="Login" ng-click="sendMessage()"> 
           <md-icon>input</md-icon>
           <md-tooltip md-direction="bottom">
             Submit
