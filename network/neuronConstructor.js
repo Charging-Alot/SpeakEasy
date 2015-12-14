@@ -1,125 +1,69 @@
-var Neuron = function (partialNeuron, fromUpstream) {
-  if(fromUpstream) {
-    this.node = partialNeuron.node || {};
+var Neuron = function (partialNeuron) {
+  if(partialNeuron !== undefined) {
+    this.node = partialNeuron.node || {}
     this.connections = {};
-    this.connections.inputs = partialNeuron.connections.inputs || [];
-    this.connections.outputs = partialNeuron.connections.outputs || [];
-    this.connections.gated = partialNeuron.connections.gated || [];
-    this.gatedNodes = partialNeuron.gatedNodes || {};
-  }
+    if(partialNeuron.connections) {
+      this.connections.inputs = partialNeuron.connections.inputs || [];
+      this.connections.outputs = partialNeuron.connections.outputs || [];
+      this.connections.gated = partialNeuron.connections.gated || [];
+    } else {
+      this.connections = {}
+      this.connections.inputs = [];
+      this.connections.outputs = [];
+      this.connections.gated = [];
+    }
+    this.gatedNodes = partialNeuron.gatedNodes || {}
+  } else {
     this.node = {};
     this.connections = {};
     this.connections.inputs = [];
     this.connections.outputs = [];
     this.connections.gated = [];
-    this.gatedNodes = {}; //
-  if(partialNeuron && !fromUpstream) {
-    this.update(partialNeuron);
+    this.gatedNodes = {};
   }
 };
 
-Neuron.prototype.constructor = Neuron
+// Neuron.prototype.constructor = Neuron
 
-Neuron.prototype.update = function (partialNeuron, fromUpstream) {
-  if(fromUpstream)
-
+Neuron.prototype.update = function (command, section, partialNeuron) {
   //properties of this node
   if(partialNeuron.node) {
-    for(var nodeProp in paritalneuron.node) {
-      this.node[nodeProp] = paritalneuron.node[nodeProp];
+    for(var nodeProp in partialNeuron.node) {
+      if(nodeProp === 'extendedElegibilities') {
+        for(var gatedNode in partialNeuron.node.extendedElegibilities) {
+          this.node.extendedElegibilities[gatedNode] = partialNeuron.node.extendedElegibilities[gatedNode]
+        }
+      } else {
+        this.node[nodeProp] = partialNeuron.node[nodeProp];
+      }
     }
   }
+  //properties of gated nodes
+  if(partialNeuron.gatedNodes) {
+    for(var node in partialNeuron.gatedNodes) {
+      if(!this.gatedNodes[node]) {
+        this.gatedNodes[node] = {};
+      }
+      for(gatedProp in partialNeuron.gatedNodes[node]) {
+        this.gatedNodes[node][gatedProp] = partialNeuron.gatedNodes[node][gatedProp];
+      }
+    }
+  }
+  //properties of input, output and gated connections
   if(partialNeuron.connections) {
     for(var connType in partialNeuron.connections) {
       for(var connection in partialNeuron.connections[connType]) {
+        if(!this.connections[connType][connection]) {
+          this.connections[connType][connection] = {};
+        }
         for(var property in partialNeuron.connections[connType][connection]) {
-          if(property !== 'selfConned') {
-            this.connections[connType][connection][property] = partialNeuron.connections[connType][connection][property];
-          } else {
-            for(var nodeProperty in this.connections[connType][connection]['selfConned']) {
-              this.connections[connType][connection]['selfConned'][nodeProperty] = partialNeuron.connections[connType][connection]['selfConned'][nodeProperty];
-            }
-          }
+          this.connections[connType][connection][property] = partialNeuron.connections[connType][connection][property];
         }
       }
     }
   }
-
-  // //properties of this node's input connections
-  // for(var inputProp in paritalneuron.inputConns) {
-  //   this.inputConns[inputProp] = partialNeuron.inputConns[inputProp]
-  // }
-
-  // //properties of the connections that this node gates
-  // for(var gatedProp in paritalneuron.gatedConns) {
-  //   if(gatedProp !== 'selfConned' || gatedProp !== 'extendedElegibility') {
-  //     this.gatedConns[gatedProp] = partialNeuron.gatedConns[gatedProp]
-  //   } else if (gatedProp === 'extendedElegibility') {
-  //     this.gatedProp.extendedElegibilities[section] = partialNeuron.extendedElegibility
-  //   }
-  // }
-
-  // //properties of the to-nodes of the connections that this node gates and have a self connection.
-  // for(var selfProp in paritalneuron.gatedConns.selfConned) {
-  //   this.gatedConns.selfConned[selfProp] = partialNeuron.gatedConns.selfConned[selfProp]
-  // }
 }
 
-if(module && module.exports) {
-  module.exports = Neuron;
-}
-
-// Neuron.prototype.get = function () {
-//   var target = this;
-//   for(var i = 0; i < arguments.length; ++i) {
-//     target = target[arguments[i]];
-//   }
-//   if(typeof target === object) {
-//     return target
-//   } else {
-//     return target[0];
-//   }
-// }
-
-// Neuron.prototype.set = function () {
-//   var target = this;
-//   if(typeof arguments[arguments.length -1] !== 'string') {
-//     var value = arguments.pop();
-//   } else {
-//     var opString = arguments.pop();
-//     value = arguments.pop();
-//   }
-
-//   for(var i = 0; i < arguments.length - 1; ++i) {
-//       target = target[arguments[i]];
-//   }
-//   if(typeof value === 'object') {
-//     target = value;
-//     return;
-//   }
-
-//   if(!opString) {
-//     target[0] = value;
-//   } else if (opString  === '+') {
-//     target[0] += value;
-//   } else if (opString  === '-') {
-//     target[0] -= value;
-//   } else if (opString  === '*') {
-//     target[0] *= value;
-//   } else if (opString  === '/') {
-//     target[0] /= value;
-//   }
-// }
-
-// Neuron.prototype.getNodeAtt = Neuron.prototype.get.bind(this.node);
-// Neuron.prototype.getInputAtt = Neuron.prototype.get.bind(this.inputConns);
-// Neuron.prototype.getOutputAtt = Neuron.prototype.get.bind(this.outputConns);
-// Neuron.prototype.getGatedAtt = Neuron.prototype.get.bind(this.gatedConns);
-
-// Neuron.prototype.setNodeAtt = Neuron.prototype.set.bind(this.node);
-// Neuron.prototype.setInputAtt = Neuron.prototype.set.bind(this.inputConns);
-// Neuron.prototype.setOutputAtt = Neuron.prototype.set.bind(this.outputConns);
-// Neuron.prototype.setGatedAtt = Neuron.prototype.set.bind(this.gatedConns);
 //Full Neuron Template
 /* newNeuron is an object of the structure:
         {

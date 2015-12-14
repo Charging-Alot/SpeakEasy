@@ -5,6 +5,10 @@ var Queue = function () {
   this.length = 0;
 }
 
+Queue.prototype.first = function () {
+  return this.storage[0];
+}
+
 Queue.prototype.enqueue = function (element) {
   this.storage[this.end] = element;
   ++this.end;
@@ -18,9 +22,11 @@ Queue.prototype.dequeue = function () {
     if(!this.length) {
       //since we aren't deleting elements, we just clear the
       //whole thing when it's empty.
+      var tmp = this.storage[this.start++]
       Queue.call(this);
+      return tmp;
     }
-    return this.storage[this.start++];
+      return this.storage[this.start++];
   } else {
     return null;
   }

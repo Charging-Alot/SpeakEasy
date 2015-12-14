@@ -75,7 +75,7 @@ Mother.prototype.joinNodes = function (fromNode, toNode) {
   var connection = this.connections[toLayerId][fromLayerId][connId];
 
   if(fromNode.layerId === toNode.layerId && fromNode.id === toNode.id) {
-    toNode.selfconnection.weight = 1;
+    // toNode.selfconnection.weight = 1;
     toNode.selfconnection.id = connId;
     connection.selfConned = true;
   }

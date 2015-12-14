@@ -1,18 +1,23 @@
-var Pleb = function (partialNeuron) {
-  Neuron.call(this.paritalneuron);
-  this.toManager = new IoHandler(0,1)
+var Pleb = function (partialNeuron, sendFunction) {
+  Neuron.call(this, partialNeuron);
+  this.toManager = new IoHandler(0, 1, this, sendFunction)
 }
 Pleb.prototype = Object.create(Neuron.prototype);
 Pleb.prototype.constructor = Pleb;
 
+Pleb.prototype.update = function (command, section, partialNeuron) {
+  Neuron.call(this, partialNeuron);
+}
+
 Pleb.prototype.activationStep = function () {
   for(var i = 0; i < this.connections.inputs.length; ++i) {
-    this.node.state += this.connections.inputs[i].weight * this.connections.inputs[i].gain * this.connections.inputs[i].activations;
+    this.node.state += this.connections.inputs[i].weight * this.connections.inputs[i].gain * this.connections.inputs[i].activation;
   }
+  this.node.activation = this.squashAct(this.node.state);
+  this.node.derivative = this.squashDer(this.node.state);
   this.queueCommandManager('activationStep', null);
   this.toManager.runAllOutputs();
-  this.node.activation = squash(this.state);
-  this.node.derivative = squash(this.state, true);
+
   /*
   node
     state
@@ -27,7 +32,7 @@ Pleb.prototype.activationStep = function () {
 
 Pleb.prototype.influenceStep = function () {
   for(var i = 0; i < this.connections.gated.length; ++i) {
-    gatedNode = this.gatedNodes[this.connections.gated[i].toId]
+    gatedNode = this.gatedNodes[this.connections.gated[i].toId] //does not account for gated nodes in multiple layers
     if(gatedNode.influence === undefined) {
       //if we haven't seen neuron before then initialize it to 0 or prevState if the to node is selfConnected
       gatedNode.influence = gatedNode.selfConnection.gateId === this.node.id  && 
@@ -36,7 +41,7 @@ Pleb.prototype.influenceStep = function () {
     gatedNode.influence += this.connections.gated[i].weight * this.connections.gated[i].activation;
   }
   this.queueCommandManager('influenceStep', null);
-  this.toManager.runAllOutouts();
+  this.toManager.runAllOutputs();
   /*
   connections.gated
     to
@@ -54,12 +59,12 @@ Pleb.prototype.influenceStep = function () {
 }
 
 Pleb.prototype.elegibilityStep = function () {
-  for(var i = 0; i < this.connections.inputs[i].activations; ++i) {
+  for(var i = 0; i < this.connections.inputs.length; ++i) {
     this.node.elegibilities[i] *= this.node.selfConnection.weight * this.node.selfConnection.gain;
     this.node.elegibilities[i] += this.connections.inputs[i].gain * this.connections.inputs[i].activation;
   }
   this.queueCommandManager('elegibilityStep', null)
-  this.toManager.runAllOutouts();
+  this.toManager.runAllOutputs();
   /*
   node
     elegibilities
@@ -73,15 +78,17 @@ Pleb.prototype.elegibilityStep = function () {
   */
 }
 
-Pleb.prototype.extendedElegibilityStep = function () {
-  for(var i = 0; i < this.node.elegibilities.length; ++i) {
-    this.node.extendedEligibilities[0][i] *= this.gatedNodes[0].selfConnection.weight
-                                                  * this.gatedNodes[0].selfConnection.gain;
-    this.node.extendedEligibilities[0][i] += this.node.derivative * this.node.elegibilities[i] 
-                                                  * this.gatedNodes[0].influence;
-  }
-  this.queueCommandManager('extendedElegibilityStep', this.section);
-  this.toManager.runAllOutouts();
+Pleb.prototype.extendedElegibilityStep = function (section) { // should have key other than 0 for extendedEls
+  // for(gatedNodeId in this.node.extendedElegibilities) { //there's only one for each pleb, but this is an easy way to extract it
+    for(var i = 0; i < this.node.elegibilities.length; ++i) {
+      this.node.extendedElegibilities[section][i] *= this.gatedNodes[section].selfConnection.weight
+                                                    * this.gatedNodes[section].selfConnection.gain;
+      this.node.extendedElegibilities[section][i] += this.node.derivative * this.node.elegibilities[i] 
+                                                    * this.gatedNodes[section].influence;
+    }
+  // }
+  this.queueCommandManager('extendedElegibilityStep', section);
+  this.toManager.runAllOutputs();
   /*
   node
     extendedEligibilities (just one)
@@ -99,22 +106,28 @@ Pleb.prototype.gainStep = function () {
   //not currently used;
 }
 
-Pleb.prototype.queueCommandManager = function (command, section) {
+Pleb.prototype.queueCommandManager = function (command, section, callback) {
   var value = new Neuron();
   if(command === 'activationStep') {
     value.node.state = this.node.state;
     value.node.activation = this.node.activation;
     value.node.derivative = this.node.derivative;
   } else if(command === 'influenceStep') {
-    value.connections.gated = this.connections.gated;
-  } else if(command === 'elegibilityStep')
+    value.gatedNodes = this.gatedNodes;
+  } else if(command === 'elegibilityStep') {
     value.node.elegibilities = this.node.elegibilities;
   } else if(command === 'extendedElegibilityStep') {
-    value.node.extendedEligibility = this.node.extendedEligibility;
+    value.node.extendedElegibilities = this.node.extendedElegibilities;
   }
-  this.toPleb.addToOut(command, section, value, callback.bind('this'));
+  if(callback) {
+    callback = callback.bind('this')
+  }
+  this.toManager.addToOut(command, section, value, callback);
 }
 
-if(module && module.exports) {
-  module.exports = Pleb;
+Pleb.prototype.squashAct = function(x) {
+  return 1/(1-Math.exp(-x))
+}
+Pleb.prototype.squashDer = function (x) {
+  return Math.exp(x)/Math.pow(1-Math.exp(x), 2)
 }
