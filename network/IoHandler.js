@@ -1,8 +1,8 @@
-var IoHandler = function (level, toLevel, updateFunction, sendFunction) {
+var IoHandler = function (level, toLevel, model, sendFunction) {
   this.input = new Queue();
   this.output = new Queue();
-  this.update = updateFunction;
-  this.send = sendFunction;
+  this.model = model
+  this.send = sendFunction
   this.level = level;
   this.toLevel = toLevel;
   this.waiting = {};
@@ -23,11 +23,6 @@ IoHandler.prototype.runOutput = function(taskObj, callback) {
   //callback argument is used to wrap the callback in taskObj instead of storing just
   //the one in taskObj.  must take a callback as it's first argument.
   //Mostly used for counting responses in runAllOutputs.
-  this.output.send(this.toLevel, {
-      command: taskObj.command,
-      section: taskObj.section,
-      value: taskObj.value
-  });
   //if there are response callbacks, set them to the waiting objects
   if(callback) {
     this.waiting.names[taskObj.command] = true;
@@ -36,6 +31,12 @@ IoHandler.prototype.runOutput = function(taskObj, callback) {
     this.waiting.names[taskObj.command] = true;
     this.waiting.callbacks[taskObj.command] = taskObj.callback;
   }
+
+  this.send(this.toLevel, {
+      command: taskObj.command,
+      section: taskObj.section,
+      value: taskObj.value
+  });
 }
 
 IoHandler.prototype.runAllOutputs = function (callback) {
@@ -44,14 +45,14 @@ IoHandler.prototype.runAllOutputs = function (callback) {
 
   while(this.output.length) {
     var taskObj = this.output.dequeue();
-    if(waitForResponse) {
-      this.runOutput(taskObj, function (taskCallback, response) {
+    if(callback) {
+      this.runOutput(taskObj, function (taskCallback, command, section, value) {
         if(taskCallback) {
-          taskCallback(response);
+          taskCallback(command, section, value);
         }
         ++numFinished;
         if(numFinished === len && callback) {
-          if(task.obj.section === null) {
+          if(taskObj.section !== null) {
             this.waiting.names[taskObj.command] = false;
           }
           callback();
@@ -64,32 +65,42 @@ IoHandler.prototype.runAllOutputs = function (callback) {
 }
 
 IoHandler.prototype.addToIn = function (taskObj) {
-  if(this.input.length === 0 || this.waiting.names[taskObj.command]) {
-    this.runInput(taskObj);
+  if(this.level < this.toLevel) {
+    if(this.input.length <= 0) {
+      this.input.enqueue(taskObj)
+      this.runInput(taskObj);
+      this.input.dequeue();
+    } else {
+      this.input.enqueue(taskObj);
+    }
   } else {
-    this.input.enqueue(taskObj);
+    if(this.waiting.names[taskObj.command]) {
+      this.runInput(taskObj);
+    } else {
+      this.input.enqueue(taskObj);
+    }
   }
 }
 
-IOHandler.prototype.runInput = function (taskObj) {
-  this.section = taskObj.section;
-  this.command = taskObj.command;
-  this.update(taskObj.command, taskObj.section, taskObj.value);
+IoHandler.prototype.runInput = function (taskObj) {
+  this.model.update(taskObj.command, taskObj.section, taskObj.value);
   if(this.level < this.toLevel && taskObj.command !== 'update') {
-    this[taskObj.command]();
+    this.model[taskObj.command](taskObj.section);
   } else if(this.level > this.toLevel) {
     if(this.waiting.names[taskObj.command]) {
-      if(taskObj.section !== null) {
+      if(taskObj.section === null) {
         //if section is being used then this variable is reset in the callback
         this.waiting.names[taskObj.command] = false;
       }
-      this.waiting.callbacks[taskObj.command]();
+      this.waiting.callbacks[taskObj.command](taskObj.command, taskObj.section, taskObj.value);
     }
+  }
 }
 
 IoHandler.prototype.runAllInputs = function () {
   while(this.input.length) {
-    var taskObj = this.input.dequeue();
+    var taskObj = this.input.first();
     this.runInput(taskObj);
+    this.input.dequeue();
   }
 }
