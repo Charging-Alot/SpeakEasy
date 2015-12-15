@@ -324,6 +324,171 @@ describe('Pleb Constructor', function () {
     });
     n.extendedElegibilityStep(1)
   });
+  it('on projectedErrorStep, should send an object containing the correct projected Error', function () {
+    var sentSomething = false;
+    var n = new Pleb({
+      node: {
+        derivative: 37
+      },
+      connections: {
+        outputs: [
+          {
+            errorResponsibility: 4,
+            gain: 90,
+            weight: 1000
+          },
+          {
+            errorResponsibility: 20,
+            gain: 21,
+            weight: 23
+          }
+        ]
+      }
+    }, function (toLevel, taskObj) {
+      sentSomething = true;
+      if(taskObj.command === 'projectedErrorStep') {
+        expect(taskObj.value.node.errorProjected).to.eql((4*90*1000 + 20*21*23) * 37)
+      } else {
+        expect('YOUR KUNGFU IS WEAK').to.eql(true)
+      }
+    })
+    n.projectedErrorStep();
+    expect(sentSomething).to.eql(true)
+  })
+  it('on gatedErrorStep, should send an object containing the correct gated error', function () {
+    var sentSomething = false;
+    var n = new Pleb({
+      node: {
+        id: 1,
+        layerId: 1,
+        derivative: 42
+      },
+      connections: {
+        gated: [
+          {
+            toNodeId: 3,
+            weight: 76,
+            activation: 67
+          },
+          {
+            toNodeId: 4,
+            weight: 83,
+            activation: 32
+          }
+        ]
+      },
+      gatedNodes: {
+        3: {
+          id: 3,
+          prevState: 65,
+          selfConnection: {
+            gateId: 1,
+            gateLayerId: 1
+          },
+          errorResponsibility: 34
+        },
+        4: {
+          id: 4,
+          prevState: 2,
+          selfConnection: {
+            gateId: 3,
+            gateLayerId: 6
+          },
+          errorResponsibility: 23
+        }
+      }
+    }, function (toLevel, taskObj) {
+      sentSomething = true
+      expect(taskObj.command).to.eql('gatedErrorStep')
+      expect(taskObj.value.node.errorGated).to.eql(((65+76*67)*34 + 83*32*23)*42 )
+    })
+    n.gatedErrorStep();
+    expect(sentSomething).to.eql(true)
+  })
+  it('on learningStep, should send an object containing the correct weights for each input connection', function () {
+    var sentSomething = false;
+    var n = new Pleb({
+      rate: 62,
+      maxGradient: 1000000,
+      node: {
+        errorProjected: 76,
+        errorResponsibility: 82,
+        elegibilities: [
+          3,
+          94
+        ],
+        extendedElegibilities: {
+          1: [56, 43]
+        }
+      },
+      connections: {
+        inputs: [
+          {
+            weight: 5,
+          },
+          {
+            weight: 7,
+          }
+        ]
+      },
+      gatedNodes: {
+        1: {
+          errorResponsibility: 9
+        }
+      }
+    }, function (toLevel, taskObj) {
+      sentSomething = true;
+      expect(taskObj.command).to.eql('learningStep')
+      var gradient = 76  * 3 + 9 * 56;
+      expect(taskObj.value.connections.inputs[0].weight).to.eql(5 + gradient*62)
+      gradient = 76 * 94 + 9 * 43;
+      expect(taskObj.value.connections.inputs[1].weight).to.eql(7 + gradient*62)
+    })
+    n.learningStep()
+    expect(sentSomething).to.eql(true);
+  })
+  it('as above on learning step, but includes correct behavior with stricter gradient clipping', function () {
+    var sentSomething = false;
+    var n = new Pleb({
+      rate: 62,
+      maxGradient: 5,
+      node: {
+        errorProjected: 76,
+        errorResponsibility: 82,
+        elegibilities: [
+          3,
+          94
+        ],
+        extendedElegibilities: {
+          1: [56, 43]
+        }
+      },
+      connections: {
+        inputs: [
+          {
+            weight: 5,
+          },
+          {
+            weight: 7,
+          }
+        ]
+      },
+      gatedNodes: {
+        1: {
+          errorResponsibility: 9
+        }
+      }
+    }, function (toLevel, taskObj) {
+      sentSomething = true;
+      expect(taskObj.command).to.eql('learningStep')
+      var gradient = 76  * 3 + 9 * 56;
+      expect(taskObj.value.connections.inputs[0].weight).to.eql(5 + 5*62)
+      gradient = 76 * 94 + 9 * 43;
+      expect(taskObj.value.connections.inputs[1].weight).to.eql(7 + 5*62)
+    })
+    n.learningStep()
+    expect(sentSomething).to.eql(true);
+  })
   it('should run the right command when a well formed taskObj is recieved by the io handler', function () {
     n = new Pleb({
       node:{
@@ -601,8 +766,146 @@ describe('manager Constructor', function () {
     n.activate();
     expect(counter).to.eql(6);
   })
-  xit('the same but for backPropagation', function () {
-    
+  it('the same but for backPropagation', function () {
+    var n = new Manager({
+      rate: 500,
+      maxGradient: 20,
+      node: {
+        id: 0,
+        layerId: 1,
+        state: 2,
+        bias: 2.5,
+        prevState: 3,
+        activation: 4,
+        selfConnection: {weight: 5, gain: 6, gateId: 0, gateLayer: 0},
+        elegibilities: [7, 8],
+        extendedElegibilities: {
+          9: [10, 11],
+          12: [13, 14]
+        },
+        influences: {
+          9: 100,
+          12: 1000,
+        }
+      },
+      connections: {
+        inputs: [
+          {
+            id: 15,
+            toNodeId: 16,
+            toLayerId: 17,
+            fromNodeId: 18,
+            fromLayerId: 19,
+            gatNodeId: 20,
+            gateLayerId: 21,
+            activation: 22,
+            gain: 23,
+            weight: 24
+          }
+        ],
+        outputs: [
+          {
+            id: 25,
+            toNodeId: 26,
+            toLayerId: 27,
+            fromNodeId: 28,
+            fromLayerId: 29,
+            gatNodeId: 30,
+            gateLayerId: 31,
+            activation: 32,
+            gain: 33,
+            weight: 34
+          }
+        ],
+        gated: [
+          {
+            id: 45,
+            toNodeId: 9,
+            toLayerId: 47,
+            fromNodeId: 48,
+            fromLayerId: 49,
+            gatNodeId: 50,
+            gateLayerId: 51,
+            activation: 52,
+            gain: 53,
+            weight: 54
+          },
+          {
+            id: 55,
+            toNodeId: 12,
+            toLayerId: 57,
+            fromNodeId: 58,
+            fromLayerId: 59,
+            gatNodeId: 60,
+            gateLayerId: 61,
+            activation: 62,
+            gain: 63,
+            weight: 64
+          }
+        ]
+      },
+      gatedNodes: {
+        9: {
+          id: 9,
+          layerId: 47,
+          state: 65,
+          prevState: 66,
+          activation: 67,
+          selfConnection: {weight: 68, gain: 69, gateId: 0, gateLayer: 1},
+          elegibilities: [70, 71],
+          extendedElegibilities: {
+          }
+        },
+        12: {
+          id: 9,
+          layerId: 57,
+          state: 72,
+          prevState: 73,
+          activation: 74,
+          selfConnection: {weight: 75, gain: 76, gateId: 0, gateLayer: 1},
+          elegibilities: [75, 76],
+          extendedElegibilities: {
+          }
+        }
+      }
+    }, function (toLevel, taskObj) {
+      counter++;
+      if(taskObj.command === 'projectedErrorStep') {
+        expect(taskObj.value.node.derivative).to.eql(n.node.derivative);
+        expect(taskObj.value.connections.outputs).to.eql(n.connections.outputs);
+        n.toPleb.addToIn(taskObj) //just to trigger callback
+      } else if (taskObj.command === 'gatedErrorStep') {
+        expect(taskObj.value.node.id).to.eql(n.node.id);
+        expect(taskObj.value.node.layerId).to.eql(n.node.layerId);
+        expect(taskObj.value.node.derivative).to.eql(n.node.derivative);
+        expect(taskObj.value.gatedNodes).to.eql(n.gatedNodes);
+        expect(taskObj.value.connections.gated).to.eql(n.connections.gated);
+        n.toPleb.addToIn(taskObj) //just to trigger callback
+      } else if (taskObj.command === 'learningStep') {
+        expect(taskObj.value.node.elegibilities).to.eql(n.node.elegibilities);
+        expect(taskObj.value.node.extendedElegibilities).to.eql(n.node.extendedElegibilities);
+        expect(taskObj.value.node.errorProjected).to.eql(n.node.errorProjected);
+        expect(taskObj.value.rate).to.eql(n.rate);
+        expect(taskObj.value.maxGradient).to.eql(n.maxGradient);
+        expect(taskObj.value.gatedNodes).to.eql(n.gatedNodes);
+        expect(taskObj.value.connections.inputs).to.eql(n.connections.inputs);
+        n.toPleb.addToIn(taskObj) //just to trigger callback
+      }  else if (taskObj.command === 'backPropagate'){
+        debugger
+        expect(taskObj.value.node.id).to.eql(n.node.id)
+        expect(taskObj.value.node.layerId).to.eql(n.node.layerId);
+        expect(taskObj.value.node.errorProjected).to.eql(n.node.errorProjected);
+        expect(taskObj.value.node.errorResponsibility).to.eql(n.node.errorResponsibility);
+        expect(taskObj.value.node.errorGated).to.eql(n.node.errorGated);
+        expect(taskObj.value.connections.inputs).to.eql(n.connections.inputs);
+        expect(taskObj.value.connections.outputs).to.eql(n.connections.outputs)
+      } else {
+        expect('YOUR KUNGFU IS WEAK').to.eql(true);
+      }
+    })
+    var counter = 0;
+    n.backPropagate();
+    expect(counter).to.eql(4);
   })
 })
 
