@@ -59,7 +59,46 @@ Manager.prototype.activate = function(section) {
       this.toMother.runAllInputs();
     }.bind(this));
   }.bind(this));
+}
 
+Manager.prototype.backPropagate = function (section) {
+  this.node.errorProjected = 0;
+  var hasLearned = false;
+  var hasGatedError = false;
+  var hasProjectedError = false
+  //race condition?  depends if it handles learning and gatedError at the same time
+  queueCommandPleb('projectedErrorStep', null, function () {
+    hasProjectedError = true
+    if(hasGatedError) {
+
+    }
+    queueCommandPleb('learningStep', null, function () {
+      hasLearned = true
+      if(hasGatedError) {
+        queueCommandMother('backPropagate', section)
+        this.toMother.runAllOutputs();
+        this.toMother.runAllInputs();
+      }
+    })
+    runAllOutputs()
+  })
+  queueCommandPleb('gatedErrorStep', null, function () {
+    hasGatedError = true
+  })
+  this.toPleb.runAllOutputs(function () {
+    this.node.errorResponsibility = this.node.errorGated + this.node.errorProjected;
+    for(var n = 0; n < this.connections.outputs.length; ++n) {
+      this.connections.inputs[n].errorResponsibility = this.node.errorResponsibility
+    }
+    this.node.bias += this.rate * this.node.errorResponsibility
+    if(hasLearned) {
+      this.toPleb.runAllOutputs(function () {
+      this.queueCommandMother('backPropagate', section);
+      this.toMother.runAllOutputs();
+      this.toMother.runAllInputs();
+      })
+    }
+  }.bind(this))
 }
 
 Manager.prototype.queueCommandPleb = function (command, section, callback) {
@@ -103,6 +142,24 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
     // value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibilities[section]
   } else if(command === 'gainStep') {
     value.node.activation = this.node.activation; //not used currently
+  } else if(command === 'projectedErrorStep') {
+    value.connections.outputs = this.connections.outputs;
+    value.node.derivative = this.node.derivative;
+  } else if(command === 'gatedErrorStep') {
+    value.connections.gated = this.connections.gated;
+    value.gatedNodes = this.gatedNodes;
+    value.node.id = this.node.id;
+    value.node.layerId = this.node.layerId;
+    value.node.derivative = this.node.derivative;
+  } else if(command === 'learningStep') {
+    value.connections.inputs = this.connections.inputs
+    value.gatedNodes = this.gatedNodes;
+    value.node.errorProjected = this.node.errorProjected
+    value.node.elegibilities = this.node.elegibilities;
+    value.node.extendedElegibilities = this.node.extendedElegibilities;
+    value.rate = this.rate;
+    value.maxGradient = this.maxGradient;
+
   }
   if(callback && section) {
     callback.bind(this, section);
@@ -134,7 +191,8 @@ Manager.prototype.queueCommandMother = function (command, section, callback) {
   // }
   //will figure out how to recieve these separately later
   if (command === 'activate') {
-    value.node = this.node
+    value.node = this.node;
+    value.node.influences = {};
     //add an output to add activation to;
     value.connections.gatedConns = this.connections.gatedConns;
     value.connections.outputs = this.connections.outputs;
@@ -147,6 +205,15 @@ Manager.prototype.queueCommandMother = function (command, section, callback) {
     // value.gatedConns.ids;
     // value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibility;
     // value.gatedConns.gains;
+  } else if (command === 'backPropagate') {
+    value.node.errorProjected = this.node.errorProjected
+    value.node.errorResponsibility = this.node.errorResponsibility
+    value.node.errorGated = this.node.errorGated
+    value.node.bias = this.node.bias;
+
+    value.connections.outputs = this.connections.outputs
+    value.connections.inputs = this.connections.inputs
+
   }
   if(callback && section) {
     callback.bind(this, section);
