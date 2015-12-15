@@ -65,9 +65,7 @@ angular.module('speakEasy.chat', [])
 
     chatBox.append(messageElement);
 
-    chatWrap[0].scrollTop = chatWrap[0].scrollHeight;//currentMessage.scrollHeight; //= currentMessage.scrollHeight;
-    //chatBox.scrollTop(chatBox.scrollHeight);
-    //messageElement.height(messageElement.scrollHeight > messageElement.height() ? messageElement.scrollHeight : messageElement.height() );
+    chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
   }
 
 }]);

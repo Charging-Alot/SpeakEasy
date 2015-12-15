@@ -4,7 +4,8 @@ angular.module('speakEasy', [
   'ui.router',
   'speakEasy.home', //should need as a separate module
   'speakEasy.services',
-  'speakEasy.chat'
+  'speakEasy.chat',
+  'speakEasy.about'
 ])
 
 .config( function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {

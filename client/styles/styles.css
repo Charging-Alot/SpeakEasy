@@ -232,6 +232,56 @@ md-card-image {
 
 /***************/
 
+/* ABOUT PAGE TESTING **********************/
+
+.testCard {
+  height: 400px;
+  width: 0%;
+  z-index: 20;
+}
+
+.aboutCard {
+  width: 25%;
+}
+
+.cardA {
+  display: block;
+}
+
+.cardB {
+  display: block;
+}
+
+.cardC {
+  display: block;
+}
+
+.cardD {
+  display: block;
+}
+
+.cardAInfo {
+  width: 5%;
+  display: none;
+}
+
+.cardBInfo {
+  width: 5%;
+  display: none;
+}
+
+.cardCInfo {
+  width: 5%;
+  display: none;
+}
+
+.cardDInfo {
+  width: 5%;
+  display: none;
+}
+
+/***********************/
+
 .landingCardImage {
   height: 300px;
   opacity: 0.75;
