@@ -90,6 +90,8 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
     // value.inputConns.gains = this.inputConns.gains;
     // value.inputConns.activations = this.inputConns.activations;
   } else if(command === 'extendedElegibilityStep') {
+    value.node.influences = {};
+    value.node.influences[section] = this.node.influences[section];
     value.node.extendedElegibilities = {}
     value.node.extendedElegibilities[section] = this.node.extendedElegibilities[section];
     value.node.elegibilities = this.node.elegibilities

@@ -31,14 +31,16 @@ Pleb.prototype.activationStep = function () {
 }
 
 Pleb.prototype.influenceStep = function () {
+  this.node.influences = {};
+
   for(var i = 0; i < this.connections.gated.length; ++i) {
-    gatedNode = this.gatedNodes[this.connections.gated[i].toId] //does not account for gated nodes in multiple layers
-    if(gatedNode.influence === undefined) {
+    gatedNode = this.gatedNodes[this.connections.gated[i].toNodeId] //does not account for gated nodes in multiple layers
+    if(this.node.influences[gatedNode.id] === undefined) {
       //if we haven't seen neuron before then initialize it to 0 or prevState if the to node is selfConnected
-      gatedNode.influence = gatedNode.selfConnection.gateId === this.node.id  && 
+      this.node.influences[gatedNode.id] = gatedNode.selfConnection.gateId === this.node.id  && 
         gatedNode.selfConnection.gateLayer === this.node.layerId ? gatedNode.prevState : 0; 
     }
-    gatedNode.influence += this.connections.gated[i].weight * this.connections.gated[i].activation;
+    this.node.influences[gatedNode.id] += this.connections.gated[i].weight * this.connections.gated[i].activation;
   }
   this.queueCommandManager('influenceStep', null);
   this.toManager.runAllOutputs();
@@ -84,7 +86,7 @@ Pleb.prototype.extendedElegibilityStep = function (section) { // should have key
       this.node.extendedElegibilities[section][i] *= this.gatedNodes[section].selfConnection.weight
                                                     * this.gatedNodes[section].selfConnection.gain;
       this.node.extendedElegibilities[section][i] += this.node.derivative * this.node.elegibilities[i] 
-                                                    * this.gatedNodes[section].influence;
+                                                    * this.node.influences[section];
     }
   // }
   this.queueCommandManager('extendedElegibilityStep', section);
@@ -113,7 +115,7 @@ Pleb.prototype.queueCommandManager = function (command, section, callback) {
     value.node.activation = this.node.activation;
     value.node.derivative = this.node.derivative;
   } else if(command === 'influenceStep') {
-    value.gatedNodes = this.gatedNodes;
+    value.node.influences = this.node.influences;
   } else if(command === 'elegibilityStep') {
     value.node.elegibilities = this.node.elegibilities;
   } else if(command === 'extendedElegibilityStep') {

@@ -31,7 +31,6 @@ IoHandler.prototype.runOutput = function(taskObj, callback) {
     this.waiting.names[taskObj.command] = true;
     this.waiting.callbacks[taskObj.command] = taskObj.callback;
   }
-
   this.send(this.toLevel, {
       command: taskObj.command,
       section: taskObj.section,
