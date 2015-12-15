@@ -12,6 +12,11 @@ Neuron.prototype.backpropagate = function (expected) {
     }
     this.node.error.projected *= this.derivative;
 
+    //update outputs
+    for(var n = 0; n < this.connections.inputs.length; ++n) {
+      this.connections.inputs[n].error.responsibility = this.node.error.responsibility;
+    }
+
     //gated step
     this.node.error.gated = 0;
     this.node.influences = {}

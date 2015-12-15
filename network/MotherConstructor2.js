@@ -33,7 +33,7 @@ Mother.prototype.activate = function (inputArr, callback) {
 }
 
 Mother.prototype.activateLayer = function (layerId, callback) {
-  console.log('activating layer', layerId)
+  // console.log('activating layer', layerId)
   for(var i = 0; i < this.layers[layerId].length; ++i) {
     this.queueCommandManager('activate', i, this.layers[layerId][i])
   }
@@ -41,7 +41,7 @@ Mother.prototype.activateLayer = function (layerId, callback) {
 }
 
 Mother.prototype.queueCommandManager = function (command, section, neuron, callback) {
-  if(command === 'activate') {
+  if(command === 'activate' ) {
     var partialNeuron = neuron
     // new Neuron({
     //   node: neuron.node,
@@ -52,6 +52,8 @@ Mother.prototype.queueCommandManager = function (command, section, neuron, callb
     //     gated: neuron.connections.gated,
     //   }
     // });
+  } else if(command === 'backPropagate') {
+    var partialNeuron = neuron
   }
   this.toManager.addToOut(command, section, partialNeuron, callback)
 }
@@ -64,7 +66,7 @@ Mother.prototype.activationUpdatesForLayer = function (layerId, inputArr) {
 
 //node manager does this.
 Mother.prototype.activationUpdate = function (neuron, activation) {
-  neuron.node.activation = activation || neuron.node.activation;
+  neuron.node.activation = activation;
   var activation = neuron.node.activation;
   var outputs = neuron.connections.outputs;
   var gated = neuron.connections.gated;
@@ -73,6 +75,48 @@ Mother.prototype.activationUpdate = function (neuron, activation) {
   }
   for(var j = 0; j < gated.length; ++j) {
     gated[j].gain = activation;
+  }
+}
+
+Mother.prototype.backPropagate = function (targetArr, callback) {
+  if(this.initialized) {
+    this.errorUpdatesForLayer(this.layers.length-1, targetArr);
+    var layerCounter = this.layers.length - 2;
+    var backPropagationCallback = function () {
+      layerCounter--
+      if(layerCounter >= 0) {
+        console.log(layerCounter)
+        this.backPropagateLayer(layerCounter, backPropagationCallback);
+      } else {
+        callback();
+      }
+    }.bind(this)
+    this.backPropagateLayer(layerCounter, backPropagationCallback); //activates first non input layer
+  } else {
+    console.log("You must call initNeurons before backPropagate! (don't forget to activate first as well)");
+  } 
+}
+
+Mother.prototype.backPropagateLayer = function (layerId, callback) {
+  for(var i = 0; i < this.layers[layerId].length; ++i) {
+    this.queueCommandManager('backPropagate', i, this.layers[layerId][i])
+  }
+  this.toManager.runAllOutputs(callback);
+}
+
+Mother.prototype.errorUpdatesForLayer = function(layerId, targetArr) {
+  for(var i = 0; i < this.layers[layerId].length; ++i) {
+    this.errorUpdate(this.layers[layerId][i], targetArr[i]);
+  }
+}
+
+Mother.prototype.errorUpdate = function (neuron, target) {
+  var error = target - neuron.node.activation
+  neuron.node.errorProjected = error;
+  neuron.node.errorResponsibility = error;
+  var inputs = neuron.connections.inputs
+  for(var i = 0; i < inputs.length; ++i) {
+    inputs[i].errorResponsibility = error
   }
 }
 

@@ -106,13 +106,13 @@ describe('Pleb Constructor', function () {
         connections: {
           gated: [
             {
-              toId: 1,
+              toNodeId: 1,
               toLayerId: 3,
               weight: 0.78,
               activation: 0.7
             },
             {
-              toId: 1,
+              toNodeId: 1,
               toLayerId: 3,
               weight: 0.2,
               activation:0.5
@@ -230,13 +230,13 @@ describe('Pleb Constructor', function () {
         connections: {
           gated: [
             {
-              toId: 1,
+              toNodeId: 1,
               toLayerId: 3,
               weight: 0.78,
               activation: 0.7
             },
             {
-              toId: 1,
+              toNodeId: 1,
               toLayerId: 3,
               weight: 0.2,
               activation:0.5
@@ -257,7 +257,7 @@ describe('Pleb Constructor', function () {
           }
         }
     }, function (toLevel, taskObj) {
-      expect(taskObj.value.gatedNodes[1].influence).to.eql(0.8 + 0.78*0.7 + 0.2*0.5)
+      expect(taskObj.value.node.influences[1]).to.eql(0.8 + 0.78*0.7 + 0.2*0.5)
     })
     n.influenceStep();
   });
@@ -302,6 +302,9 @@ describe('Pleb Constructor', function () {
           0.3,
           0.6
         ],
+        influences: {
+          1: 3
+        },
         extendedElegibilities: {
           1: [0.3, 0.4]
         }
@@ -312,7 +315,6 @@ describe('Pleb Constructor', function () {
             weight: 0.2,
             gain: 0.5
           },
-          influence: 3
         }
       }
     }, function (toLayerId, taskObj) {
@@ -478,6 +480,10 @@ describe('manager Constructor', function () {
         extendedElegibilities: {
           9: [10, 11],
           12: [13, 14]
+        },
+        influences: {
+          9: 100,
+          12: 1000,
         }
       },
       connections: {
