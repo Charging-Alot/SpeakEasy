@@ -1,5 +1,7 @@
 var Neuron = function (partialNeuron) {
   if(partialNeuron !== undefined) {
+    this.rate = partialNeuron.rate;
+    this.maxGradient = partialNeuron.maxGradient;
     this.node = partialNeuron.node || {}
     this.connections = {};
     if(partialNeuron.connections) {

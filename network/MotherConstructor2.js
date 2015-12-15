@@ -33,18 +33,6 @@ Mother.prototype.activateLayer = function (layerId, callback) {
 }
 
 Mother.prototype.queueCommandManager = function (command, section, neuron, callback) {
-<<<<<<< HEAD
-  if(command === 'activate') {
-    var partialNeuron = new Neuron({
-      node: neuron.node,
-      gatedNode: neuron.gatedNodes,
-      connections: {
-        outputs: neuron.connections.outputs,
-        inputs: neuron.connections.inputs,
-        gated: neuron.connections.gated,
-      }
-    });
-=======
   if(command === 'activate' ) {
     var partialNeuron = neuron
     // new Neuron({
@@ -58,7 +46,6 @@ Mother.prototype.queueCommandManager = function (command, section, neuron, callb
     // });
   } else if(command === 'backPropagate') {
     var partialNeuron = neuron
->>>>>>> backprop is better, i think.  There might be a race condition in manager constructor.
   }
   this.toManager.addToOut(command, section, partialNeuron, callback)
 }

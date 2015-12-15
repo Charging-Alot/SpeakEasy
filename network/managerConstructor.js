@@ -67,22 +67,19 @@ Manager.prototype.backPropagate = function (section) {
   var hasGatedError = false;
   var hasProjectedError = false
   //race condition?  depends if it handles learning and gatedError at the same time
-  queueCommandPleb('projectedErrorStep', null, function () {
+  this.queueCommandPleb('projectedErrorStep', null, function () {
     hasProjectedError = true
-    if(hasGatedError) {
-
-    }
-    queueCommandPleb('learningStep', null, function () {
+    this.queueCommandPleb('learningStep', null, function () {
       hasLearned = true
       if(hasGatedError) {
-        queueCommandMother('backPropagate', section)
+        this.queueCommandMother('backPropagate', section)
         this.toMother.runAllOutputs();
         this.toMother.runAllInputs();
       }
-    })
-    runAllOutputs()
-  })
-  queueCommandPleb('gatedErrorStep', null, function () {
+    }.bind(this))
+    this.toPleb.runAllOutputs()
+  }.bind(this))
+  this.queueCommandPleb('gatedErrorStep', null, function () {
     hasGatedError = true
   })
   this.toPleb.runAllOutputs(function () {
@@ -96,7 +93,7 @@ Manager.prototype.backPropagate = function (section) {
       this.queueCommandMother('backPropagate', section);
       this.toMother.runAllOutputs();
       this.toMother.runAllInputs();
-      })
+      }.bind(this))
     }
   }.bind(this))
 }
@@ -206,6 +203,8 @@ Manager.prototype.queueCommandMother = function (command, section, callback) {
     // value.gatedConns.extendedElegibility = this.gatedConns.extendedElegibility;
     // value.gatedConns.gains;
   } else if (command === 'backPropagate') {
+    value.node.id = this.node.id;
+    value.node.layerId = this.node.layerId
     value.node.errorProjected = this.node.errorProjected
     value.node.errorResponsibility = this.node.errorResponsibility
     value.node.errorGated = this.node.errorGated

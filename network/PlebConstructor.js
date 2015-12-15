@@ -113,7 +113,7 @@ Pleb.prototype.projectedErrorStep = function () {
     this.node.errorProjected += this.connections.outputs[i].errorResponsibility * //this is from the to neuron
       this.connections.outputs[i].gain * this.connections.outputs[i].weight
   }
-  this.node.errorProjected *= this.derivative;
+  this.node.errorProjected *= this.node.derivative;
 
   this.queueCommandManager('projectedErrorStep', null)
   this.toManager.runAllOutputs();
@@ -131,28 +131,28 @@ Pleb.prototype.gatedErrorStep = function () {
   this.node.errorGated = 0;
   this.node.influences = {}
   for (var j = 0; j < this.connections.gated.length; ++j) {
-    var gatedNode = this.gatedNodes[this.connection.toNodeId]
-    if(this.node.influences[gatedNode.node.id] === undefined) {
-      this.node.influences[gatedNode.node.id] = gatedNode.node.selfConnection.gateId === this.node.id &&
-        gatedNode.node.selfConnection.gateLayerId === this.node.layerId ? gatedNode.node.prevState : 0;
+    var gatedNode = this.gatedNodes[this.connections.gated[j].toNodeId]
+    if(this.node.influences[gatedNode.id] === undefined) {
+      this.node.influences[gatedNode.id] = gatedNode.selfConnection.gateId === this.node.id &&
+        gatedNode.selfConnection.gateLayerId === this.node.layerId ? gatedNode.prevState : 0;
     }
-    influence[gatedNode.node.id] += this.connections.gated[j].weight * this.connections.gated[j].activation;
+
+    this.node.influences[gatedNode.id] += this.connections.gated[j].weight * this.connections.gated[j].activation;
   }
-  for(var k = 0; k < this.gatedNodes.length; ++k) {
-    this.node.errorGated += this.node.influences[this.gatedNodes[k].node.id] * this.gatedNodes[k].node.errorResponsibility;
+  for(var k in this.gatedNodes) {
+    this.node.errorGated += this.node.influences[this.gatedNodes[k].id] * this.gatedNodes[k].errorResponsibility;
   }
-  this.node.errorGated *= this.derivative;
+  this.node.errorGated *= this.node.derivative;
   this.queueCommandManager('gatedErrorStep', null);
   this.toManager.runAllOutputs();
-
 }
 
 Pleb.prototype.learningStep = function () {
     var gradient;
     for(var l = 0; l < this.connections.inputs.length; ++l) {
       gradient = this.node.errorProjected * this.node.elegibilities[l]
-      for(var m in this.gatedNodes.length) {
-        gradient += this.gatedNodes[m].node.errorResponsibility * this.node.extendedElegibilities[this.gatedNodes[m].id][l]
+      for(var m in this.gatedNodes) {
+        gradient += this.gatedNodes[m].errorResponsibility * this.node.extendedElegibilities[m][l]
       }
       this.connections.inputs[l].weight += this.rate * Math.min(gradient, this.maxGradient);
     }
