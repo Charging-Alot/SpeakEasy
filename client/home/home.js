@@ -1,4 +1,4 @@
-angular.module('starter.home', [])
+angular.module('speakEasy.home', [])
 
 .controller('HomeCtrl', ['$scope', function ($scope) {
 	$scope.foo="I AM TEH FOO"
