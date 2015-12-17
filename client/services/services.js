@@ -1,5 +1,94 @@
 angular.module('speakEasy.services', [])
 
+.factory('Dialog', function ($http, $location, $window, $mdDialog, $mdMedia) {
+
+  var loginWindow = function(ev, $scope) {
+    $mdDialog.show({
+      controller: userCtrl,
+      templateUrl: 'user/login.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: $mdMedia('sm') && $scope.customFullscreen
+    })
+    .then(function() {
+      //$scope.status = 'You said the information was "' + answer + '".';
+      //console.log('status in loginwindow', $scope.status)
+      console.log('sucess then response loginwindow')
+      $scope.login();
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+      console.log('cancel in loginwin', $scope.status)
+    });
+    $scope.$watch(function() {
+      return $mdMedia('sm');
+    }, function(sm) {
+      $scope.customFullscreen = (sm === true);
+    });
+  }
+
+  var signupWindow = function(ev, $scope) {
+    $mdDialog.show({
+      controller: userCtrl,
+      templateUrl: 'user/signup.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: $mdMedia('sm') && $scope.customFullscreen
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });
+    $scope.$watch(function() {
+      return $mdMedia('sm');
+    }, function(sm) {
+      $scope.customFullscreen = (sm === true);
+    });
+  }
+
+  var downloadWindow = function (ev, $scope) {
+    console.log("GOING TO goToDownload")
+    $mdDialog.show({
+      controller: userCtrl,
+      templateUrl: 'download/download.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: $mdMedia('sm') && $scope.customFullscreen
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });
+    $scope.$watch(function() {
+      return $mdMedia('sm');
+    }, function(sm) {
+      $scope.customFullscreen = (sm === true);
+    });
+  }
+
+  var closeWindow = function () {
+    $mdDialog.cancel();
+  }
+
+  var hideWindow = function () {
+    console.log('dialog submit called')
+    $mdDialog.hide();
+  }
+
+  return {
+    loginWindow: loginWindow,
+    signupWindow: signupWindow,
+    downloadWindow: downloadWindow,
+    closeWindow: closeWindow,
+    hideWindow: hideWindow
+  };
+
+})
+
 .factory('Auth', function ($http, $location, $window) {
   // Don't touch this Auth service!!!
   // it is responsible for authenticating our user

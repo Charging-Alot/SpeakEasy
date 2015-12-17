@@ -59,7 +59,7 @@ angular.module('speakEasy', [
   //$httpProvider.interceptors.push('AttachTokens');
 })
 
-.run(function ($rootScope, $location, $state, Auth) {
+.run(function ($rootScope, $location, $state, Auth, Dialog) {
   // here inside the run phase of angular, our services and controllers
   // have just been registered and our app is ready
   // however, we want to make sure the user is authorized
@@ -71,8 +71,10 @@ angular.module('speakEasy', [
     console.log('run.evt', evt, 'run.next', next, 'run.current', current)
     if (next.name === "chat" && !Auth.isAuth()) {
       console.log('statechange if statement')
-      $state.go('landing');
-      $rootScope.$broadcast('badJwt');
+      evt.preventDefault();
+      //$state.go('landing');
+      Dialog.loginWindow();
+      //$rootScope.$broadcast('badJwt');
     }
     // if (next.$$route && next.$$route.authenticate && !Auth.isAuth()) {
     //   $location.path('/signin');
