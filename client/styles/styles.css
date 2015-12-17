@@ -1,25 +1,70 @@
+
+/* * sets the font to 'Lato' for the entire site * */
+
+body {
+  font-family: 'Lato', sans-serif !important;
+}
+
+
+/* * * * * Major Material Class Overrides * * * * */
+
+/* due to a bug in Material, setting the overall background
+ * color bleeds into other content types, so we must override
+ * that issue here for each content type
+*/
+
+/* sets md-card background color */
+md-card.md-default-theme, md-card {
+  background-color: white;
+}
+
+/* sets md-whiteframe background color */
+md-content.md-default-theme, md-whiteframe {
+  background-color: white;
+}
+
+/* sets md-dialog background color */
+md-dialog.md-default-theme, md-dialog {
+  background-color: white;
+}
+
+md-card-image {
+  background-color: black;
+}
+
+/* * * * * Our Class Fixes * * * * */
+
+/* moves FAB toolbar slightly out from the exact corner */
+.toolBar {
+  margin-left: 2% !important;
+  margin-top: 2% !important;
+}
+
 .viewContentBox {
-	margin:-68px 0 0 0;
+  margin-top: -8% !important;
+  margin: -68px 0 0 0;
   background-size: cover;
   display: block;
   filter: blur(2px);
   -webkit-filter: blur(2px);
-  height: 800px;
+  height: 550px;
   left: 0;
-  position: fixed;
+  position: relative;
   right: 0;
   z-index: 1;
 }
-.loginDivider{
-	border-color: #E1E1E1;
-	border-top: 0px;
+
+.loginDivider {
+  border-color: #E1E1E1;
+  border-top: 0px;
 }
 
-.landingPageBackground{
+.landingPageBackground {
   background-image: url('../assets/img/output.gif');
   background-position: bottom 0px right 0px;
 }
-.speakEzLogo{
+
+.speakEzLogo {
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
@@ -39,6 +84,295 @@
 	padding: 0 10px 0 0;
 }
 
+.mainLandingText {
+  /* font-family: 'Lora', serif !important; */  
+  text-align: center;
+  position: absolute;
+  width: 50%;
+  height: 10%;
+  top: 30%;
+  left: 30%;
+  margin-left: -50px; /* margin is -0.5 * dimension */
+  margin-top: -25px;
+  z-index: 2;
+}
+
+/* CARDS AND CARD IMAGES ***************/
+
+.mainCard:hover {
+  opacity: 0.65;
+  background: #2196F3;
+  color: white;
+  cursor: pointer;
+}
+
+.mainCard {
+  font-size: 15px;
+  line-height: 190%;
+  transition-duration: 0.7s;
+}
+
+.cardContent {
+  padding: 3px 20px 3px 20px;
+}
+
+.cardImage {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  position: relative;
+}
+
+.cardHeader {
+  color: white;
+  text-shadow: 0 1px 0 black;
+  margin-left: 15px;
+  bottom: 0px;
+  position: relative;
+  margin-top: 260px;
+}
+
+.landingLeftImage {
+  /*background-size: cover;*/
+  background: 
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url(https://s-media-cache-ak0.pinimg.com/236x/c8/4a/3e/c84a3ec1066dfeb938a32b503aafa0b7.jpg) no-repeat;
+    /* no fade
+    linear-gradient(
+      rgba(0, 0, 0, 0.25),
+      rgba(0, 0, 0, 0.25)
+    ), */
+}
+
+/***************/
+
+/* CHAT PAGE ***************/
+
+.chatMain {
+  /*height: 100%;
+  width: 100%;*/
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+.chatFrame {
+  /*height: 500px;*/
+  top: 14%; /*14%;*/
+  height: 62%;
+  width: 50%;
+  position: absolute;
+}
+
+.chatBoxHeader {
+ /* margin: 10% 0 0 0;*/
+ position: fixed;
+ width: 50%;
+}
+
+.chatBoxWrap {
+  top: 64px; /*16%;*/
+  height: 85%;
+  width: 100%;
+  position: absolute;
+  overflow: auto;
+}
+
+.chatBox {
+  height: 100%;
+  width: 100%;
+}
+
+.messageWrap {
+  width: 100%
+}
+
+.userMessage {
+  float: right;
+  border-radius: 2px;
+  padding: 3px 20px 3px 20px;
+  margin: 3%;
+  background-color: #90CAF9;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
+
+.robotMessage {
+  float: left;
+  border-radius: 2px;
+  padding: 3px 20px 3px 20px;
+  margin: 3%;
+  color: white;
+  background-color: #FF5722;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
+
+.messageInput {
+  width: 50%;
+  margin-bottom: 6%;
+  bottom: 0px;
+  position: fixed;
+  background-color: white;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
+
+.chatLine {
+  margin-left: 3%;
+}
+
+.chatButton {
+  margin-right: 3% !important;
+  margin-top: 1% !important;
+}
+
+/***************/
+
+/* ABOUT PAGE TESTING **********************/
+
+.testCard {
+  height: 400px;
+  width: 0%;
+  z-index: 20;
+}
+
+.aboutCard {
+  width: 25%;
+}
+
+.cardA {
+  display: block;
+}
+
+.cardB {
+  display: block;
+}
+
+.cardC {
+  display: block;
+}
+
+.cardD {
+  display: block;
+}
+
+.cardAInfo {
+  width: 5%;
+  display: none;
+}
+
+.cardBInfo {
+  width: 5%;
+  display: none;
+}
+
+.cardCInfo {
+  width: 5%;
+  display: none;
+}
+
+.cardDInfo {
+  width: 5%;
+  display: none;
+}
+
+/***********************/
+
+.landingCardImage {
+  height: 300px;
+  opacity: 0.75;
+  background: black;
+}
+
+/*.cardImageOverlay {
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0.65 !important;
+  z-index: 3;
+}*/
+
+/*.landingCardContent {
+  margin: 15px, 15px, 0px, 15px !important;
+}*/
+
+.majorBackground {
+  /*background-color: #FFB74D;*/
+  background-color: #FFEE58;
+}
+
+.majorCardHeader {
+  background-color: #00BCD4;
+  width: 100% !important;
+  height: 4%;
+}
+
+.majorCardHeaderText {
+  margin-left: 3%;
+}
+
+.cardDivider {
+  content: '';
+  width: 0;
+  height: 100%;
+  position: relative;
+  border: 1px solid black;
+}
+
+.downloadContent {
+  padding: 20px, 20px, 0px, 20px;
+  font-size: 19px;
+  text-align: center;
+}
+
+.mainButton {
+  /* font-family: 'Lora', serif !important; */
+  /* font-weight: bold !important; */
+  color: white !important;
+  background: none !important;
+  border-radius: 0px !important;
+  font-size: 18px !important;
+  padding: 10px 20px 10px 20px !important;
+  border: none; /*solid white 2px !important;*/
+  text-decoration: none !important;
+  transition-duration: 0.7s;
+}
+
+.mainButton:hover {
+  color: #2196F3 !important;
+  background: white !important;
+}
+
+.secondaryButton {
+  color: #2196F3 !important;
+  background: white !important;
+  border-radius: 0px !important;
+  font-size: 18px !important;
+  padding: 10px 20px 10px 20px !important;
+  border: none; /*solid white 2px !important;*/
+  text-decoration: none !important;
+  transition-duration: 0.7s;
+}
+
+.secondaryButton:hover {
+  color: white !important;
+  background: none !important;
+}
+
+
 .whiteframeHeader {
 	box-shadow: 0 0px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);
+}
+
+.aboutPageContent {
+  margin: 20px;
+}
+
+/* Fix for bug involving ng-message inside a material dialog, may not be necessary 12/7/2015 */
+md-input-container ng-message, md-input-container data-ng-message, md-input-container x-ng-message, md-input-container [ng-message], md-input-container [data-ng-message], md-input-container [x-ng-message], md-input-container .md-char-counter {
+  position: relative;
+  font-size: 12px;
+  line-height: 24px;
 }
