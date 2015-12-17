@@ -20,27 +20,34 @@ angular.module('speakEasy.chat', [])
   };
 })
 
-.controller('ChatCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', 'ChatFactory', function ($scope, $mdDialog, $mdMedia, $state, ChatFactory) {
+.controller('ChatCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', 'ChatFactory', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, ChatFactory) {
   // find chatBox in our HTML to append onto it later
   var chatBox = angular.element(document.querySelector('.chatBox'));
   // find chatWrap to ensure proper scrolling later
   var chatWrap = angular.element(document.querySelector('.chatBoxWrap'));
   $scope.message = {};
   $scope.sendMessage = function () {
-    console.log('sending message!', $scope.message);
+    var jwt = $window.localStorage.getItem('com.speakEasy');
+    if (jwt) {
+      console.log('theres jwt!!')
+      console.log('sending message!', $scope.message);
 
-    $scope.renderMessage('user', $scope.message.text);
+      $scope.renderMessage('user', $scope.message.text);
 
-    ChatFactory.serveMessage($scope.message)
-      .then(function (data) {
-        // this resets message to blank and also clears the message field
-        $scope.message = {};
-        console.log('then function from ChatCtrl serveMsg call', data);
-        $scope.renderMessage('robot', data);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+      ChatFactory.serveMessage($scope.message)
+        .then(function (data) {
+          // this resets message to blank and also clears the message field
+          $scope.message = {};
+          console.log('then function from ChatCtrl serveMsg call', data);
+          $scope.renderMessage('robot', data);
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    } else {
+      //$scope.goToLogin();
+      $rootScope.$broadcast('noJwtChat');
+    }
   }
 
   $scope.renderMessage = function (context, message) {

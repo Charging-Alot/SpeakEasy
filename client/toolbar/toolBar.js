@@ -1,6 +1,6 @@
 angular.module('speakEasy')
 
-.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', function ($scope, $mdDialog, $mdMedia, $state, Auth) {
+.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, Auth) {
 	$scope.goToLogin = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
@@ -35,7 +35,21 @@ angular.module('speakEasy')
 
 	$scope.goToChat = function () {
 		console.log("GOING TO goToChat")
+    console.log("token cheeckkk!",$window.localStorage.getItem('com.speakEasy'));
     $state.go('chat');
+
+    // var jwt = $window.localStorage.getItem('com.speakEasy');
+    // if (jwt) {
+    //   console.log('theres jwt!!')
+    //   $state.go('chat');
+    //   $window.localStorage.removeItem('com.speakEasy');
+    // } else {
+    //  $scope.goToLogin();
+    //}
+
+
+    // original
+    //$state.go('chat');
 	}
 
 	$scope.goToDownload = function (ev) {
@@ -64,6 +78,12 @@ angular.module('speakEasy')
 		console.log("GOING TO goToMetrics")
 
 	}
+
+  $rootScope.$on('badJwt', 
+    function() { 
+      console.log('EMMMMIITTTTT')
+      $scope.goToLogin(); 
+    } );
 
 }]);
 
@@ -97,6 +117,7 @@ function userCtrl ($scope, $mdDialog, $mdMedia, $state, $window, Auth) {
       .then(function (token) {
         $scope.user = {};
         $window.localStorage.setItem('com.speakEasy', token);
+        $scope.closeDialog();
         //$location.path('/landing'); // this path is wrong... where should it go?
       })
       .catch(function (error) {
@@ -109,8 +130,10 @@ function userCtrl ($scope, $mdDialog, $mdMedia, $state, $window, Auth) {
     Auth.signup($scope.user)
       .then(function (token) {
         $scope.user = {};
+        $scope.secondPass = '';
         console.log('signup set token')
         $window.localStorage.setItem('com.speakEasy', token);
+        $scope.closeDialog();
         //$location.path('/landing'); // this path is wrong... where should it go?
       })
       .catch(function (error) {

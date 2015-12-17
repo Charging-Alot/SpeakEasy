@@ -56,12 +56,37 @@ angular.module('speakEasy', [
     //$httpProvider.interceptors.push('AttachTokens');
 })
 
+.run(function ($rootScope, $location, $state, Auth) {
+  // here inside the run phase of angular, our services and controllers
+  // have just been registered and our app is ready
+  // however, we want to make sure the user is authorized
+  // we listen for when angular is trying to change routes
+  // when it does change routes, we then look for the token in localstorage
+  // and send that token to the server to see if it is a real user or hasn't expired
+  // if it's not valid, we then redirect back to signin/signup
+  $rootScope.$on('$stateChangeStart', function (evt, next, current) {
+    console.log('run.evt', evt, 'run.next', next, 'run.current', current)
+    if ( next.name === "chat" && !Auth.isAuth() ) {
+      console.log('statechange if statement')
+      $state.go('landing');
+      $rootScope.$broadcast('badJwt');
+    }
+    // if (next.$$route && next.$$route.authenticate && !Auth.isAuth()) {
+    //   $location.path('/signin');
+    // }
+  });
+});
+
+  // this is an $httpInterceptor
+  // its job is to stop all out going requests
+  // then look in local storage and find the user's token
+  // then add it to the header so the server can validate the request
 // .factory('AttachTokens', function ($window, user, $rootScope) {
 //   var attach = {
 //     request: function (object) {
-//       var jwt = $rootScope.authToken;
+//       var jwt = $window.localStorage.getItem('com.shortly');
 //       if (jwt) {
-//         object.data['x-access-token'] = jwt;
+//         object.headers['x-access-token'] = jwt;
 //       }
 //       object.headers['Allow-Control-Allow-Origin'] = '*';
 //       return object;
@@ -69,3 +94,4 @@ angular.module('speakEasy', [
 //   };
 //   return attach;
 // })
+

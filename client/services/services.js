@@ -34,6 +34,7 @@ angular.module('speakEasy.services', [])
   };
 
   var isAuth = function () {
+    console.log('Auth.isAuth', !!$window.localStorage.getItem('com.speakEasy'))
     return !!$window.localStorage.getItem('com.speakEasy');
   };
 
