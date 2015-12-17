@@ -1,26 +1,29 @@
 angular.module('speakEasy')
 
-.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, Auth) {
-	$scope.goToLogin = function(ev) {
-    $mdDialog.show({
-      controller: userCtrl,
-      templateUrl: 'user/login.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: $mdMedia('sm') && $scope.customFullscreen
-    })
-    .then(function(answer) {
-      $scope.status = 'You said the information was "' + answer + '".';
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
-    });
-    $scope.$watch(function() {
-      return $mdMedia('sm');
-    }, function(sm) {
-      $scope.customFullscreen = (sm === true);
-    });
+.controller('toolBarCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', 'Auth', 'Dialog', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, Auth, Dialog) {
+  $scope.goToLogin = function (ev) {
+    Dialog.loginWindow(ev, $scope);
   }
+	// $scope.goToLogin = function(ev) {
+ //    $mdDialog.show({
+ //      controller: userCtrl,
+ //      templateUrl: 'user/login.html',
+ //      parent: angular.element(document.body),
+ //      targetEvent: ev,
+ //      clickOutsideToClose:true,
+ //      fullscreen: $mdMedia('sm') && $scope.customFullscreen
+ //    })
+ //    .then(function(answer) {
+ //      $scope.status = 'You said the information was "' + answer + '".';
+ //    }, function() {
+ //      $scope.status = 'You cancelled the dialog.';
+ //    });
+ //    $scope.$watch(function() {
+ //      return $mdMedia('sm');
+ //    }, function(sm) {
+ //      $scope.customFullscreen = (sm === true);
+ //    });
+ //  }
 
   $scope.goToLanding = function () {
     console.log("GOING TO goToLanding")
@@ -37,7 +40,6 @@ angular.module('speakEasy')
 		console.log("GOING TO goToChat")
     console.log("token cheeckkk!",$window.localStorage.getItem('com.speakEasy'));
     $state.go('chat');
-
     // var jwt = $window.localStorage.getItem('com.speakEasy');
     // if (jwt) {
     //   console.log('theres jwt!!')
@@ -76,6 +78,7 @@ angular.module('speakEasy')
 	
 	$scope.goToMetrics = function () {
 		console.log("GOING TO goToMetrics")
+    $window.localStorage.removeItem('com.speakEasy');
 
 	}
 
@@ -87,7 +90,7 @@ angular.module('speakEasy')
 
 }]);
 
-function userCtrl ($scope, $mdDialog, $mdMedia, $state, $window, Auth) {
+function userCtrl ($scope, $mdDialog, $mdMedia, $state, $window, Auth, Dialog) {
   $scope.goToSignup = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
@@ -109,6 +112,11 @@ function userCtrl ($scope, $mdDialog, $mdMedia, $state, $window, Auth) {
     });
   }
   
+  $scope.submit = function () {
+    console.log('calling dialog submit')
+    Dialog.hideWindow();
+  }
+
   $scope.user = {};
   $scope.secondPass;
   $scope.login = function () {
@@ -143,7 +151,7 @@ function userCtrl ($scope, $mdDialog, $mdMedia, $state, $window, Auth) {
   }
 
   $scope.closeDialog = function () {
-    $mdDialog.hide();
+    Dialog.closeWindow();
   }
 
   $scope.downloadExtension = function () {
