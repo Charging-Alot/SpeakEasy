@@ -12,7 +12,7 @@ module.exports = {
     // send error message to client
     // message for gracefull error handling on app
     console.log('serverside error')
-    res.send(500, {error: error.message});
+    res.status(500).send({error: error.message})
   },
 
   decode: function (req, res, next) {

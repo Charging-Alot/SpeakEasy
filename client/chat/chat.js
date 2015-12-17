@@ -23,6 +23,7 @@ angular.module('speakEasy.chat', [])
 .controller('ChatCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', 'ChatFactory', function ($scope, $mdDialog, $mdMedia, $state, ChatFactory) {
   // find chatBox in our HTML to append onto it later
   var chatBox = angular.element(document.querySelector('.chatBox'));
+  // find chatWrap to ensure proper scrolling later
   var chatWrap = angular.element(document.querySelector('.chatBoxWrap'));
   $scope.message = {};
   $scope.sendMessage = function () {
@@ -64,7 +65,8 @@ angular.module('speakEasy.chat', [])
     messageElement += ('<p>' + message + '</p></div></div>');
 
     chatBox.append(messageElement);
-
+    
+    // This makes sure the chatbox follows new messages as they cause overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
   }
 

@@ -56,16 +56,16 @@ angular.module('speakEasy', [
     //$httpProvider.interceptors.push('AttachTokens');
 })
 
-.factory('AttachTokens', function ($window,user,$rootScope) {
-  var attach = {
-    request: function (object) {
-      var jwt = $rootScope.authToken;
-      if (jwt) {
-        object.data['x-access-token'] = jwt;
-      }
-      object.headers['Allow-Control-Allow-Origin'] = '*';
-      return object;
-    }
-  };
-  return attach;
-})
+// .factory('AttachTokens', function ($window, user, $rootScope) {
+//   var attach = {
+//     request: function (object) {
+//       var jwt = $rootScope.authToken;
+//       if (jwt) {
+//         object.data['x-access-token'] = jwt;
+//       }
+//       object.headers['Allow-Control-Allow-Origin'] = '*';
+//       return object;
+//     }
+//   };
+//   return attach;
+// })

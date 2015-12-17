@@ -44,28 +44,35 @@ module.exports = {
         if (user) {
           next(new Error('User already exists!'));
         } else {
-          // make a new user if not one
-          // create = Q.nbind(User.create, User);
+          // this is the Q method that should allow proper oauth
+          create = Q.nbind(User.create, User);
           newUser = {
             email: email,
             password: password
           };
-          // IT GETS THIS FAR, BUT THEN CAN'T CREATE THE USER
-          // console.log('creating user', create(newUser))
-          newDBUser = new User(newUser);
-          console.log("ABOUT TO SAVE THE USER",newDBUser)
+          return create(newUser);
 
-          newDBUser.save(function(err,DBresp) {
-            if(err) return console.log("THERE WAS AN ERROR IN CREATE USER", err);
-            console.log("SUCESS IN SAVE YER",DBresp)
-            return DBresp;
-          })
-          // return create(newUser); 
+          // below here is the other method that is hacked together
+          // functional, but has no oauth
+          // newUser = {
+          //   email: email,
+          //   password: password
+          // };
+          // // IT GETS THIS FAR, BUT THEN CAN'T CREATE THE USER
+          // // console.log('creating user', create(newUser))
+          // newDBUser = new User(newUser);
+          // console.log("ABOUT TO SAVE THE USER", newDBUser)
+
+          // newDBUser.save(function(err, DBresp) {
+          //   if (err) return console.log("THERE WAS AN ERROR IN CREATE USER", err);
+          //   console.log("SUCESS IN SAVE YER", DBresp)
+          //   return DBresp;
+          // })
         }
       })
       .then(function (user) {
         // create token to send back for auth
-        var token = jwt.encode('THIS IS THE PAYLOAD', 'secret');
+        var token = jwt.encode(user, 'secret');
         res.json({token: token});
       })
       .fail(function (error) {

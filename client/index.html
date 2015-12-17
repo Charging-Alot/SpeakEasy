@@ -15,24 +15,9 @@
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
 </head>
 <body>
-
-<md-content ng-cloak ng-controller="toolBarCtrl">
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <md-button aria-label="label" class="md-icon-button md-accent" ng-click="goToLanding()">
-        <md-icon>home</md-icon>
-      </md-button>
-      <button class="mainButton" ng-click="goToInfo()">About</button>
-      <button class="mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
-      <button class="mainButton" ng-click="goToDownload()">Download</button>
-      <button class="mainButton" ng-click="goToMetrics()">Data</button>
-      <div flex></div>
-      <button class="secondaryButton" ng-click="goToLogin($event)">Login</button>
-    </div>
-  </md-toolbar>
-
-  <!-- *** The below script is for Facebook SDK *** -->
-  <script>
+  
+<!-- *** The below script is for Facebook SDK *** -->
+<script>
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '932650913454857',
@@ -49,7 +34,23 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
-<!-- ***   ***   ***   ***   ***   ***   ***   ***   ***   *** -->
+<!-- ***   ***   ***   ***   ***   ***   ***   *** -->
+
+<md-content ng-cloak ng-controller="toolBarCtrl">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button aria-label="label" class="md-icon-button md-accent" ng-click="goToLanding()">
+        <md-icon>home</md-icon>
+      </md-button>
+      <button class="mainButton" ng-click="goToInfo()">About</button>
+      <button class="mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
+      <button class="mainButton" ng-click="goToDownload()">Download</button>
+      <button class="mainButton" ng-click="goToMetrics()">Data</button>
+      <div flex></div>
+      <button class="secondaryButton" ng-click="goToLogin($event)">Login</button>
+    </div>
+  </md-toolbar>
+
 
   <!-- BELOW IS THE ORIGINAL FAB TOOLBAR -->
   <!--

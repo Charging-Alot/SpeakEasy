@@ -16,6 +16,7 @@ angular.module('speakEasy.services', [])
       data: user
     })
     .then(function (resp) {
+      console.log('auths data token', resp.data.token)
       return resp.data.token;
     });
   };

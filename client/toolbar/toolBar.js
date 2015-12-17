@@ -67,7 +67,7 @@ angular.module('speakEasy')
 
 }]);
 
-function userCtrl ($scope, $mdDialog, $mdMedia, $state, Auth) {
+function userCtrl ($scope, $mdDialog, $mdMedia, $state, $window, Auth) {
   $scope.goToSignup = function(ev) {
     $mdDialog.show({
       controller: userCtrl,
@@ -90,12 +90,14 @@ function userCtrl ($scope, $mdDialog, $mdMedia, $state, Auth) {
   }
   
   $scope.user = {};
+  $scope.secondPass;
   $scope.login = function () {
     console.log('logging into SkyNet!', $scope.user);
     Auth.login($scope.user)
       .then(function (token) {
+        $scope.user = {};
         $window.localStorage.setItem('com.speakEasy', token);
-        $location.path('/links'); // this path is wrong... where should it go?
+        //$location.path('/landing'); // this path is wrong... where should it go?
       })
       .catch(function (error) {
         console.error(error);
@@ -106,10 +108,13 @@ function userCtrl ($scope, $mdDialog, $mdMedia, $state, Auth) {
     console.log('signing up to build SkyNet!', $scope.user);
     Auth.signup($scope.user)
       .then(function (token) {
+        $scope.user = {};
+        console.log('signup set token')
         $window.localStorage.setItem('com.speakEasy', token);
-        $location.path('/links'); // this path is wrong... where should it go?
+        //$location.path('/landing'); // this path is wrong... where should it go?
       })
       .catch(function (error) {
+        console.log('SIGNUP ERROR IN TOOLBAR')
         console.error(error);
       });
   }
