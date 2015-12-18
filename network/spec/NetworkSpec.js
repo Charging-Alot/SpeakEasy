@@ -955,7 +955,7 @@ describe('Mother Constructor', function () {
     expect(c.fromLayerId).to.eql(2);
     expect(c.toNodeId).to.eql(0);
     expect(c.fromNodeId).to.eql(4);
-    expect(c.gateId).to.eql(-1);
+    expect(c.gateNodeId).to.eql(-1);
     expect(c.gateLayerId).to.eql(-1);
     expect(c.activation).to.eql(0);
     expect(c.gain).to.eql(1)
@@ -1272,7 +1272,7 @@ describe('MONSTER END TO END TEST!!!', function () {
     mother.appendNodeLayer(1);
     mother.appendNodeLayer(1);
     mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
-    mother.initNeurons()
+    mother.initNeurons();
     mother.layers[0][0].node.bias = biases[0]
     mother.layers[1][0].node.bias = biases[1]
     mother.layers[0][0].connections.outputs[0].weight = weights[0]
