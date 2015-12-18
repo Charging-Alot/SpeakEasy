@@ -3,7 +3,6 @@ angular.module('speakEasy')
 .controller('DialogCtrl', ['$scope', 'Auth', "Dialog", function ($scope, Auth, Dialog) {
 	$scope.dialogMessage = "Fizzle my bizzle";
 	$scope.user = {};
-	$scope.secondPass;
 
 	$scope.login = function () {
 		Auth.login($scope.user).then(function (token) {
@@ -24,7 +23,6 @@ angular.module('speakEasy')
 		Auth.signup($scope.user)
 			.then(function (token) {
 				$scope.user = {};
-				$scope.secondPass = '';
 				$window.localStorage.setItem('com.speakEasy', token);
 				$scope.closeDialog();
 			})
