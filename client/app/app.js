@@ -68,17 +68,11 @@ angular.module('speakEasy', [
   // and send that token to the server to see if it is a real user or hasn't expired
   // if it's not valid, we then redirect back to signin/signup
   $rootScope.$on('$stateChangeStart', function (evt, next, current) {
-    console.log('run.evt', evt, 'run.next', next, 'run.current', current)
     if (next.name === "chat" && !Auth.isAuth()) {
       console.log('statechange if statement')
       evt.preventDefault();
-      //$state.go('landing');
       Dialog.loginWindow();
-      //$rootScope.$broadcast('badJwt');
     }
-    // if (next.$$route && next.$$route.authenticate && !Auth.isAuth()) {
-    //   $location.path('/signin');
-    // }
   });
 });
 

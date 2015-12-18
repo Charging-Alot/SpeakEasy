@@ -60,7 +60,7 @@ md-card-image {
 }
 
 .landingPageBackground {
-  background-image: url('../assets/img/output.gif');
+  /*background-image: url('../assets/img/output.gif');*/
   background-position: bottom 0px right 0px;
 }
 

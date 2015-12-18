@@ -5,9 +5,6 @@ function RespObj(status, data) {
   this.status = status;
   this.data = data;
 }
-
-
-
 module.exports = {
   signin: function (req, res) {
     var email = req.body.email;

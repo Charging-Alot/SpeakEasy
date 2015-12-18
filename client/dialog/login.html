@@ -1,8 +1,8 @@
-<md-dialog aria-label="SpeakEasy signup"  ng-cloak>
+<md-dialog ng-controller="DialogCtrl" aria-label="SpeakEasy Login" ng-cloak>
   <form>
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2>Signup</h2>
+        <h2>Login</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="closeDialog()">
           <md-icon>highlight_off</md-icon>
@@ -12,32 +12,37 @@
         </md-button>
       </div>
     </md-toolbar>
+    <h2>{{ dialogMessage }}</h2>
+    <form name="userLogin" ng-submit="login()">
       <md-dialog-content>
         <div class="md-dialog-content">
-          <form name="userSignup" ng-submit="signup()">
-            <md-input-container flex>
-              <label>email</label>
-              <input type="email" ng-model="user.email">
-            </md-input-container>
-            <md-input-container flex>
-              <label>password</label>
-              <input type="text" ng-model="user.password">
-            </md-input-container>
-            <md-input-container flex>
-              <label>confirm password</label>
-              <input type="text" ng-model="secondPass"/>
-            </md-input-container>
-          </form>
+          <md-input-container flex>
+            <label>email</label>
+            <input type="email" ng-model="user.email">
+          </md-input-container>
+          <md-input-container flex>
+            <label>password</label>
+            <input type="text" ng-model="user.password">
+          </md-input-container>
           <div layout="row" layout-align="center center">
-            <md-button class="md-fab md-primary" aria-label="Login" ng-click="signup()">
+            <md-button layout-align="center" class="md-fab md-primary" aria-label="Login" ng-click="submit()">
               <md-icon>input</md-icon>
               <md-tooltip md-direction="bottom">
                 Submit
               </md-tooltip>
             </md-button>
           </div>
+          <hr class="loginDivider">
+          <div layout="row" layout-align="center center">
+            <md-button class="md-warn" ng-click="goToSignup()">Not a user?</md-button>
+            <md-tooltip md-direction="bottom">
+              Go to Signup
+            </md-tooltip>
+          </div>
+          <!-- <p ng-click="goToSignup()">Not a user?</p> -->
         </div>
       </md-dialog-content>
+    </form>
 
     <!-- <md-dialog-actions layout="row">
       <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>

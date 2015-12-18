@@ -1,49 +1,46 @@
 angular.module('speakEasy.services', [])
 
-.factory('Dialog', function ($http, $location, $window, $mdDialog, $mdMedia) {
+.factory('Dialog', ['Auth', '$http', '$location', '$window', '$mdDialog', '$mdMedia', function (Auth, $http, $location, $window, $mdDialog, $mdMedia) {
 
-  var loginWindow = function(ev, $scope) {
+  var loginWindow = function (ev, $scope) {
+    console.log($mdDialog);
     $mdDialog.show({
-      controller: userCtrl,
-      templateUrl: 'user/login.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: $mdMedia('sm') && $scope.customFullscreen
-    })
-    .then(function() {
-      //$scope.status = 'You said the information was "' + answer + '".';
-      //console.log('status in loginwindow', $scope.status)
-      console.log('sucess then response loginwindow')
-      $scope.login();
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
-      console.log('cancel in loginwin', $scope.status)
-    });
-    $scope.$watch(function() {
+        templateUrl: 'dialog/login.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function () {
+        console.log('DIALOGUE SUCCESS STATUS')
+        Auth.login();
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+        console.log('DIALOGUE FAIL STATUS', $scope.status)
+      });
+    $scope.$watch(function () {
       return $mdMedia('sm');
-    }, function(sm) {
+    }, function (sm) {
       $scope.customFullscreen = (sm === true);
     });
   }
 
-  var signupWindow = function(ev, $scope) {
+  var signupWindow = function (ev, $scope) {
     $mdDialog.show({
-      controller: userCtrl,
-      templateUrl: 'user/signup.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: $mdMedia('sm') && $scope.customFullscreen
-    })
-    .then(function(answer) {
-      $scope.status = 'You said the information was "' + answer + '".';
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
-    });
-    $scope.$watch(function() {
+        templateUrl: 'dialog/signup.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function (answer) {
+        $scope.status = 'You said the information was "' + answer + '".';
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+      });
+    $scope.$watch(function () {
       return $mdMedia('sm');
-    }, function(sm) {
+    }, function (sm) {
       $scope.customFullscreen = (sm === true);
     });
   }
@@ -51,21 +48,21 @@ angular.module('speakEasy.services', [])
   var downloadWindow = function (ev, $scope) {
     console.log("GOING TO goToDownload")
     $mdDialog.show({
-      controller: userCtrl,
-      templateUrl: 'download/download.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: $mdMedia('sm') && $scope.customFullscreen
-    })
-    .then(function(answer) {
-      $scope.status = 'You said the information was "' + answer + '".';
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
-    });
-    $scope.$watch(function() {
+        controller: userCtrl,
+        templateUrl: 'download/download.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function (answer) {
+        $scope.status = 'You said the information was "' + answer + '".';
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+      });
+    $scope.$watch(function () {
       return $mdMedia('sm');
-    }, function(sm) {
+    }, function (sm) {
       $scope.customFullscreen = (sm === true);
     });
   }
@@ -87,7 +84,7 @@ angular.module('speakEasy.services', [])
     hideWindow: hideWindow
   };
 
-})
+}])
 
 .factory('Auth', function ($http, $location, $window) {
   // Don't touch this Auth service!!!
@@ -100,26 +97,25 @@ angular.module('speakEasy.services', [])
   var login = function (user) {
     console.log('Auths login')
     return $http({
-      method: 'POST',
-      url: '/api/users/signin',
-      data: user
-    })
-    .then(function (resp) {
-      console.log('auths data token', resp.data.token)
-      return resp.data.token;
-    });
+        method: 'POST',
+        url: '/api/users/signin',
+        data: user
+      })
+      .then(function (resp) {
+        return resp.data.token;
+      });
   };
 
   var signup = function (user) {
     console.log('Auths signup')
     return $http({
-      method: 'POST',
-      url: '/api/users/signup',
-      data: user
-    })
-    .then(function (resp) {
-      return resp.data.token;
-    });
+        method: 'POST',
+        url: '/api/users/signup',
+        data: user
+      })
+      .then(function (resp) {
+        return resp.data.token;
+      });
   };
 
   var isAuth = function () {
@@ -131,7 +127,6 @@ angular.module('speakEasy.services', [])
     $window.localStorage.removeItem('com.speakEasy');
     $location.path('/landing');
   };
-
 
   return {
     login: login,
