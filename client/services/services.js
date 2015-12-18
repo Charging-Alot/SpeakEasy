@@ -3,7 +3,6 @@ angular.module('speakEasy.services', [])
 .factory('Dialog', ['Auth', '$http', '$location', '$window', '$mdDialog', '$mdMedia', function (Auth, $http, $location, $window, $mdDialog, $mdMedia) {
 
   var loginWindow = function (ev, $scope) {
-    console.log($mdDialog);
     $mdDialog.show({
         templateUrl: 'dialog/login.html',
         parent: angular.element(document.body),
@@ -34,8 +33,10 @@ angular.module('speakEasy.services', [])
         fullscreen: $mdMedia('sm') && $scope.customFullscreen
       })
       .then(function (answer) {
+        console.log("Bizzle")
         $scope.status = 'You said the information was "' + answer + '".';
       }, function () {
+        console.log("Fizzle")
         $scope.status = 'You cancelled the dialog.';
       });
     $scope.$watch(function () {
