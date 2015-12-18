@@ -157,21 +157,6 @@ Mother.prototype.placeConnectionsInNeurons = function () {
   var fromNeuron;
   var toNeuron;
   var gateNode;
-<<<<<<< HEAD
-  for(toLayerId in this.connections) {
-    for(fromLayer in this.connections[toLayer]) {
-      for(var i = 0; i < this.connections[toLayer][fromLayer]; ++i) {
-        connection = this.connections[toLayer][fromLayer][i];
-        fromNeuron = this.layers[fromLayer][connection.fromNodeId]
-        toNeuron = this.layers[toLayer][connection.toNodeId]
-        fromNeuron.connections.outputs.push(connection);
-        toNeuron.connections.inputs.push(connection);
-        if(connection.gateNodeId) {
-          gateNeuron = this.layers[connection.gateLayer][connection.gateNodeId]
-          gateNeuron.connections.gated.push(connection)
-          if(!gateNeuron.gatedNodes[toNode.id]) {
-            gateNeuron.gatedNodes[toNode.id] = toNode;
-=======
   for(var toLayerId in this.connections) {
     for(var fromLayerId in this.connections[toLayerId]) {
       for(var i = 0; i < this.connections[toLayerId][fromLayerId].length; ++i) {
@@ -190,7 +175,6 @@ Mother.prototype.placeConnectionsInNeurons = function () {
           gateNode.connections.gated.push(connection)
           if(!gateNode.gatedNodes[toNode.id]) {
             gateNode.gatedNodes[toNode.id] = toNode;
->>>>>>> neurons contain input and output nodes.
           }
         }
       }
