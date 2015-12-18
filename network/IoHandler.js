@@ -43,6 +43,11 @@ IoHandler.prototype.runAllOutputs = function (callback) {
   var numFinished = 0;
   var len = this.output.length;
 
+  if(!this.output.length) {
+    callback();
+    return;
+  }
+
   while(this.output.length) {
     var taskObj = this.output.dequeue();
     if(callback) {
@@ -51,7 +56,7 @@ IoHandler.prototype.runAllOutputs = function (callback) {
           taskCallback(command, section, value);
         }
         ++numFinished;
-        if(numFinished === len && callback) {
+        if(numFinished === len) {
           if(taskObj.section !== null) {
             this.waiting.names[taskObj.command] = false;
           }
@@ -67,9 +72,9 @@ IoHandler.prototype.runAllOutputs = function (callback) {
 IoHandler.prototype.addToIn = function (taskObj) {
   if(this.level < this.toLevel) {
     if(this.input.length <= 0) {
-      this.input.enqueue(taskObj)
+      // this.input.enqueue(taskObj)
       this.runInput(taskObj);
-      this.input.dequeue();
+      // this.input.dequeue();
     } else {
       this.input.enqueue(taskObj);
     }
@@ -99,8 +104,9 @@ IoHandler.prototype.runInput = function (taskObj) {
 
 IoHandler.prototype.runAllInputs = function () {
   while(this.input.length) {
-    var taskObj = this.input.first();
-    this.runInput(taskObj);
-    this.input.dequeue();
+    // var taskObj = this.input.first();
+    // this.runInput(taskObj);
+    // this.input.dequeue();
+    this.runInput(this.input.dequeue());
   }
 }

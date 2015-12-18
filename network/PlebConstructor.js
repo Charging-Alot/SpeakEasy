@@ -8,13 +8,15 @@ Pleb.prototype.constructor = Pleb;
 Pleb.prototype.update = function (command, section, partialNeuron) {
   Neuron.call(this, partialNeuron);
 }
-
+var states = []
 Pleb.prototype.activationStep = function () {
+
   for(var i = 0; i < this.connections.inputs.length; ++i) {
-    this.node.state += this.connections.inputs[i].weight * this.connections.inputs[i].gain * this.connections.inputs[i].activation;
+    this.node.state += (this.connections.inputs[i].weight * this.connections.inputs[i].gain * this.inputNodes[i].activation);
   }
   this.node.activation = this.squashAct(this.node.state);
   this.node.derivative = this.squashDer(this.node.state);
+  // states.push(new Neuron(this))
   this.queueCommandManager('activationStep', null);
   this.toManager.runAllOutputs();
 
@@ -32,7 +34,6 @@ Pleb.prototype.activationStep = function () {
 
 Pleb.prototype.influenceStep = function () {
   for(var i = 0; i < this.connections.gated.length; ++i) {
-    console.log(this.connections.gated[i].toNodeId)
     gatedNode = this.gatedNodes[this.connections.gated[i].toNodeId] //does not account for gated nodes in multiple layers
     if(this.node.influences[gatedNode.id] === undefined) {
       //if we haven't seen neuron before then initialize it to 0 or prevState if the to node is selfConnected
@@ -62,7 +63,7 @@ Pleb.prototype.influenceStep = function () {
 Pleb.prototype.elegibilityStep = function () {
   for(var i = 0; i < this.connections.inputs.length; ++i) {
     this.node.elegibilities[i] *= this.node.selfConnection.weight * this.node.selfConnection.gain;
-    this.node.elegibilities[i] += this.connections.inputs[i].gain * this.connections.inputs[i].activation;
+    this.node.elegibilities[i] += this.connections.inputs[i].gain * this.inputNodes[i].activation;
   }
   this.queueCommandManager('elegibilityStep', null)
   this.toManager.runAllOutputs();
@@ -110,7 +111,7 @@ Pleb.prototype.gainStep = function () {
 Pleb.prototype.projectedErrorStep = function () {
   this.node.errorProjected = 0;
   for (var i = 0; i < this.connections.outputs.length; ++i) {
-    this.node.errorProjected += this.connections.outputs[i].errorResponsibility * //this is from the to neuron
+    this.node.errorProjected += this.outputNodes[i].errorResponsibility * //this is from the to neuron
       this.connections.outputs[i].gain * this.connections.outputs[i].weight
   }
   this.node.errorProjected *= this.node.derivative;
@@ -186,8 +187,10 @@ Pleb.prototype.queueCommandManager = function (command, section, callback) {
 }
 
 Pleb.prototype.squashAct = function(x) {
-  return 1/(1-Math.exp(-x))
+  return 1/(1 + Math.exp(-x))
 }
 Pleb.prototype.squashDer = function (x) {
-  return Math.exp(x)/Math.pow(1-Math.exp(x), 2)
+  // var logistic = 1/(1 + Math.exp(-x));
+  // return logistic * (1 - logistic)
+  return Math.exp(x)/Math.pow(1 + Math.exp(x), 2)
 }

@@ -52,11 +52,11 @@ Manager.prototype.activate = function(section) {
         this.connections.gated[i].gain = this.node.activation;
       }
       for(var j = 0; j < this.connections.outputs; ++j) {
-        this.connections.outputs[j].activation = this.node.activation;
+        this.connections.outputNodes.activation = this.node.activation;
       }
       this.queueCommandMother('activate', section);
       this.toMother.runAllOutputs();
-      this.toMother.runAllInputs();
+      // this.toMother.runAllInputs();
     }.bind(this));
   }.bind(this));
 }
@@ -103,6 +103,7 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
   if(command === 'activationStep') {
     value.connections.inputs = this.connections.inputs;
     value.node.state = this.node.state
+    value.inputNodes = this.inputNodes;
     // value.inputConns.weights = this.inputConns.weights;
     // value.inputConns.gains = this.inputConns.gains;
     // value.inputConns.activations = this.inputConns.activations;
@@ -121,6 +122,7 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
     value.node.elegibilities = this.node.elegibilities;
     value.node.selfConnection = this.node.selfConnection;
     value.connections.inputs = this.connections.inputs;
+    value.inputNodes = this.inputNodes;
     // value.inputConns.elegibilities = this.inputConns.elegibilities;
     // value.node.selfConnection = this.node.selfConnection;
     // value.inputConns.gains = this.inputConns.gains;
@@ -142,6 +144,7 @@ Manager.prototype.queueCommandPleb = function (command, section, callback) {
   } else if(command === 'projectedErrorStep') {
     value.connections.outputs = this.connections.outputs;
     value.node.derivative = this.node.derivative;
+    value.outputNodes = this.outputNodes
   } else if(command === 'gatedErrorStep') {
     value.connections.gated = this.connections.gated;
     value.gatedNodes = this.gatedNodes;
@@ -190,7 +193,10 @@ Manager.prototype.queueCommandMother = function (command, section, callback) {
   if (command === 'activate') {
     value.node = this.node;
     value.node.influences = {};
-    //add an output to add activation to;
+
+
+
+
     value.connections.gatedConns = this.connections.gatedConns;
     value.connections.outputs = this.connections.outputs;
     // value.node.id = this.node.id;
