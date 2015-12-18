@@ -5,14 +5,14 @@ angular.module('speakEasy.chat', [])
   var serveMessage = function (message) {
     console.log('ChatFactory serveMessage', message);
     return $http({
-      method: 'POST',
-      url: '/api/chat/chat',
-      data: message
-    })
-    .then(function (resp) {
-      console.log('response in ChatFact.serveMsg', resp.data)
-      return resp.data;
-    });
+        method: 'POST',
+        url: '/api/chat/chat',
+        data: message
+      })
+      .then(function (resp) {
+        console.log('response in ChatFact.serveMsg', resp.data)
+        return resp.data;
+      });
   }
 
   return {
@@ -20,7 +20,7 @@ angular.module('speakEasy.chat', [])
   };
 })
 
-.controller('ChatCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', 'ChatFactory', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, ChatFactory) {
+.controller('ChatCtrl', ['$scope', '$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', 'ChatFactory', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, ChatFactory) {
   // find chatBox in our HTML to append onto it later
   var chatBox = angular.element(document.querySelector('.chatBox'));
   // find chatWrap to ensure proper scrolling later
@@ -53,17 +53,17 @@ angular.module('speakEasy.chat', [])
   $scope.renderMessage = function (context, message) {
     // context is either 'user' or 'robot', defining the origin of the message
     message.replace(/^\s*$/g, ''); // FUTZ WITH REGEX
-    if ( message.length === 0 ) {
+    if (message.length === 0) {
       $scope.message = {};
       return;
     }
 
     var messageElement = '<div flex class="messageWrap"><div ';
-    
-    if ( context === 'user' ) {
+
+    if (context === 'user') {
       // With context of 'user' we give the element class userMessage.
       messageElement += 'class="userMessage">';
-    } else if ( context === 'robot' ) {
+    } else if (context === 'robot') {
       // With context of 'robot' we give the element class robotMessage.
       // These two class types define separate styling
       messageElement += 'class="robotMessage">';
@@ -72,7 +72,7 @@ angular.module('speakEasy.chat', [])
     messageElement += ('<p>' + message + '</p></div></div>');
 
     chatBox.append(messageElement);
-    
+
     // This makes sure the chatbox follows new messages as they cause overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
   }

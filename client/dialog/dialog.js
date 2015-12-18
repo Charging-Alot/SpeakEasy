@@ -37,7 +37,4 @@ angular.module('speakEasy')
 		Dialog.closeWindow();
 		Dialog.signupWindow(ev, $scope);
 	}
-
-
-
 }]);
