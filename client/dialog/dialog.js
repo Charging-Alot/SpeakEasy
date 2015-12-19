@@ -1,6 +1,6 @@
 angular.module('speakEasy')
 
-.controller('DialogCtrl', ['$window', '$scope', 'Auth', "Dialog", function ($window, $scope, Auth, Dialog) {
+.controller('DialogCtrl', ['$window', '$scope', 'Auth', 'Dialog', function ($window, $scope, Auth, Dialog) {
 	$scope.dialogMessage = "Fizzle my bizzle";
 	$scope.user = {};
 
@@ -8,6 +8,7 @@ angular.module('speakEasy')
 		Auth.login($scope.user).then(function (token) {
 				$scope.user = {};
 				$window.localStorage.setItem('com.speakEasy', token);
+				Auth.loginSwap();
 				$scope.closeDialog();
 			})
 			.catch(function (error) {
@@ -25,6 +26,7 @@ angular.module('speakEasy')
 			.then(function (token) {
 				$scope.user = {};
 				$window.localStorage.setItem('com.speakEasy', token);
+				Auth.loginSwap();
 				$scope.closeDialog();
 			})
 			.catch(function (error) {
@@ -33,7 +35,6 @@ angular.module('speakEasy')
 	};
 
 	$scope.goToSignup = function (ev) {
-		Dialog.closeWindow();
 		Dialog.signupWindow(ev, $scope);
 	};
 }]);

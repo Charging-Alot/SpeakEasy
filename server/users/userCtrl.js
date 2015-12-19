@@ -5,14 +5,17 @@ function RespObj(status, data) {
   this.status = status;
   this.data = data;
 }
+
 module.exports = {
   signin: function (req, res) {
+    if ( !req.body.email || !req.body.password ) {
+      return res.status(404).send(new RespObj(false, "No email and/or password."))
+    }
     var email = req.body.email;
     var password = req.body.password;
     var query = User.where({
       email: email
     });
-
     query.findOne(function (err, user) {
       if (err) throw (err);
       if (user.comparePasswords(password)) {

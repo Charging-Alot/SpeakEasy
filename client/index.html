@@ -42,12 +42,13 @@
       <md-button aria-label="label" class="md-icon-button md-accent" ng-click="goToLanding()">
         <md-icon>home</md-icon>
       </md-button>
-      <button class="mainButton" ng-click="goToInfo()">About</button>
-      <button class="mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
-      <button class="mainButton" ng-click="goToDownload()">Download</button>
-      <button class="mainButton" ng-click="goToMetrics()">Data</button>
+      <button class="toolButton mainButton" ng-click="goToInfo()">About</button>
+      <button class="toolButton mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
+      <button class="toolButton mainButton" ng-click="goToDownload()">Download</button>
+      <button class="toolButton mainButton" ng-click="goToMetrics()">Data</button>
       <div flex></div>
-      <button class="secondaryButton" ng-click="goToLogin($event)">Login</button>
+      <button class="toolButton loginButton" ng-click="goToLogin($event)">Login</button>
+      <button class="toolButton logoutButton" ng-click="signout()">Logout</button>
     </div>
   </md-toolbar>
 </md-content>

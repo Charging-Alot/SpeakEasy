@@ -27,27 +27,20 @@ angular.module('speakEasy.chat', [])
   var chatWrap = angular.element(document.querySelector('.chatBoxWrap'));
   $scope.message = {};
   $scope.sendMessage = function () {
-    var jwt = $window.localStorage.getItem('com.speakEasy');
-    if (jwt) {
-      console.log('theres jwt!!')
-      console.log('sending message!', $scope.message);
 
-      $scope.renderMessage('user', $scope.message.text);
+    $scope.renderMessage('user', $scope.message.text);
 
-      ChatFactory.serveMessage($scope.message)
-        .then(function (data) {
-          // this resets message to blank and also clears the message field
-          $scope.message = {};
-          console.log('then function from ChatCtrl serveMsg call', data);
-          $scope.renderMessage('robot', data);
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
-    } else {
-      //$scope.goToLogin();
-      $rootScope.$broadcast('noJwtChat');
-    }
+    ChatFactory.serveMessage($scope.message)
+      .then(function (data) {
+        // this resets message to blank and also clears the message field
+        $scope.message = {};
+        console.log('then function from ChatCtrl serveMsg call', data);
+        $scope.renderMessage('robot', data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+
   }
 
   $scope.renderMessage = function (context, message) {

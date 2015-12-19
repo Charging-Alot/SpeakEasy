@@ -126,13 +126,30 @@ angular.module('speakEasy.services', [])
 
   var signout = function () {
     $window.localStorage.removeItem('com.speakEasy');
+    logoutSwap();
     $location.path('/landing');
   };
+
+  var loginSwap = function () {
+    var loginButton = angular.element(document.querySelector('.loginButton'));
+    loginButton[0].style.display = 'none';
+    var logoutButton = angular.element(document.querySelector('.logoutButton'));
+    logoutButton[0].style.display = 'block';
+  }
+
+  var logoutSwap = function () {
+    var logoutButton = angular.element(document.querySelector('.logoutButton'));
+    logoutButton[0].style.display = 'none';
+    var loginButton = angular.element(document.querySelector('.loginButton'));
+    loginButton[0].style.display = 'block';
+  }
 
   return {
     login: login,
     signup: signup,
     isAuth: isAuth,
-    signout: signout
+    signout: signout,
+    loginSwap: loginSwap,
+    logoutSwap: logoutSwap
   };
 });

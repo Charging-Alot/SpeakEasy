@@ -9,8 +9,8 @@ body {
 /* * * * * Major Material Class Overrides * * * * */
 
 /* due to a bug in Material, setting the overall background
- * color bleeds into other content types, so we must override
- * that issue here for each content type
+ * color bleeds into many Material content types, so we must override
+ * that issue here for each content type individually
 */
 
 /* sets md-card background color */
@@ -327,17 +327,20 @@ md-card-image {
   text-align: center;
 }
 
-.mainButton {
-  /* font-family: 'Lora', serif !important; */
-  /* font-weight: bold !important; */
-  color: white !important;
-  background: none !important;
+/****** TOOLBAR BUTTONS ********/
+
+.toolButton {
   border-radius: 0px !important;
   font-size: 18px !important;
   padding: 10px 20px 10px 20px !important;
-  border: none; /*solid white 2px !important;*/
+  border: none;
   text-decoration: none !important;
   transition-duration: 0.7s;
+}
+
+.mainButton {
+  color: white !important;
+  background: none !important;
 }
 
 .mainButton:hover {
@@ -345,22 +348,28 @@ md-card-image {
   background: white !important;
 }
 
-.secondaryButton {
+.loginButton {
   color: #2196F3 !important;
   background: white !important;
-  border-radius: 0px !important;
-  font-size: 18px !important;
-  padding: 10px 20px 10px 20px !important;
-  border: none; /*solid white 2px !important;*/
-  text-decoration: none !important;
-  transition-duration: 0.7s;
 }
 
-.secondaryButton:hover {
+.loginButton:hover {
   color: white !important;
   background: none !important;
 }
 
+.logoutButton {
+  color: #FF5722 !important;
+  background: white !important;
+  display: none;
+}
+
+.logoutButton:hover {
+  color: white !important;
+  background: #FF5722 !important;
+}
+
+/*****************************/
 
 .whiteframeHeader {
 	box-shadow: 0 0px 5px -1px rgba(0,0,0,.2), 0 0px 8px 0 rgba(0,0,0,.14), 0 0px 14px 0 rgba(0,0,0,.12);

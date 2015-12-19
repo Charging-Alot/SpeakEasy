@@ -1,6 +1,7 @@
 angular.module('speakEasy')
 
-.controller('toolBarCtrl', ['$scope', '$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', 'Dialog', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, Dialog) {
+.controller('toolBarCtrl', ['$scope', '$mdDialog', '$mdMedia', '$state', '$window', '$rootScope', 'Dialog', 'Auth', function ($scope, $mdDialog, $mdMedia, $state, $window, $rootScope, Dialog, Auth) {
+
   $scope.goToLogin = function (ev) {
     Dialog.loginWindow(ev, $scope);
   }
@@ -27,6 +28,10 @@ angular.module('speakEasy')
 
   $scope.goToMetrics = function () {
     $state.go('metrics');
+  }
+
+  $scope.signout = function () {
+    Auth.signout();
   }
 
 }]);
