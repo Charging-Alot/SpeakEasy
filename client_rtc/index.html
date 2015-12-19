@@ -1,0 +1,21 @@
+<hr>
+<hr>
+<div id="chat-container">
+  <input type="text" id="input-text-chat" placeholder="Enter Text Chat"><br>
+  <div class="chat-output"></div>
+</div>
+
+<!-- <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script> -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/speakEasy_DataChannel.js"></script>
+<script src="/speakEasy_Inject.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script src="/speakEasy_Signaler.js"></script>
+<script>
+SpeakEasy.init();
+document.getElementById('input-text-chat').onkeyup = function(e) {
+  if(e.keyCode != 13 || !this.value.length) return;
+  SpeakEasy.LocalDataChannel.send(this.value);
+  this.value =  '';
+};
+</script>
