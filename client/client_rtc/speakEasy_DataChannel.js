@@ -24,11 +24,9 @@
   // GLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBAL
 
 
-  window.SpeakEasyChannel = function (channel, extras) {
+  window.SpeakEasyChannel = function (channel) {
     if (channel) this.automatic = true;
     this.channel = channel || location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
-    asd
-    extras = extras || {};
 
     var self = this,
       dataConnector, textReceiver;
@@ -55,9 +53,6 @@
     };
 
     function prepareInit(callback) {
-      for (var extra in extras) {
-        self[extra] = extras[extra];
-      }
       self.direction = self.direction || 'many-to-many';
       if (self.userid) window.userid = self.userid;
 
@@ -220,7 +215,7 @@
     if (self.automatic) {
       if (window.Firebase) {
         console.debug('checking presence of the room..');
-        new window.Firebase('https://' + (extras.firebase || self.firebase || 'chat') + '.firebaseIO.com/' + self.channel).once('value', function (data) {
+        new window.Firebase('https://' + (self.firebase || 'chat') + '.firebaseIO.com/' + self.channel).once('value', function (data) {
           console.debug('room is present?', data.val() != null);
           self.openNewSession(data.val() == null);
         });

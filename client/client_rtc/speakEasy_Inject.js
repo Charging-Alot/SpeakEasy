@@ -30,7 +30,6 @@ SpeakEasy.prototype.onMessageInject = function (first_argument) {
   if (this.ManagerInfo.managerStatus) { //if pleb response to instruction
     //toggle pleb is occupied
   }
-
   console.log("PLEB RECIEVED MEASSAGE: ", data, rtcId)
 };
 
