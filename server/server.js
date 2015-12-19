@@ -1,25 +1,17 @@
-//THIS IS ALSO THE BEGINNING
 var express = require('express');
+var expressInvoked = express();
 var mongoose = require('mongoose');
-var http = require('http');
-
-// access our middleware functions
-var middleware = require('./config/middleware.js');
-
 mongoose.connect('mongodb://localhost/speakEzUsers');
-
-var app = express();
-// require('./users/userRoutes.js')(app);
-
-app.use(express.static(__dirname + '/../client'));
-middleware(app, express);
-
-var port = 8000;
+var http = require('http');
+var middleware = require('./config/middleware.js');
+var config = {
+	port: 1337
+}
+var app = require('http').Server(expressInvoked);
+middleware(app, express); //sams middleware
 
 var server = http.createServer(app);
 
-server.listen(port, function () {
-	console.log('listening on port:', port);
+app.listen(config.port, function () {
+	console.log('Application listening on port:', config.port);
 });
-
-module.exports = app;
