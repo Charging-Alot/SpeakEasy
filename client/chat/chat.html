@@ -2,9 +2,28 @@
   <md-content layout="row" layout-padding layout-wrap layout-fill class="chatMain">
     <div flex="10"></div>
     <md-whiteframe flex="80" class="md-whiteframe-5dp chatFrame">
-      <md-toolbar class="md-primary whiteframeHeader chatBoxHeader">
+      <md-toolbar class="whiteframeHeader chatBoxHeader">
         <div class="md-toolbar-tools">
           <h2 class="md-flex">Chat With SpeakEasy</h2>
+          <div flex></div>
+          <md-fab-speed-dial md-direction="down" ng-class="md-fling"> <!--fling can also be scale-->
+            <md-fab-trigger>
+              <md-button aria-label="menu" class="md-fab md-primary">
+                <md-icon md-svg-src="img/icons/menu.svg"></md-icon>
+              </md-button>
+            </md-fab-trigger>
+            <md-fab-actions>
+              <md-button aria-label="Twitter" class="md-fab md-raised md-mini">
+                <md-icon md-svg-src="img/icons/twitter.svg" aria-label="Twitter"></md-icon>
+              </md-button>
+              <md-button aria-label="Facebook" class="md-fab md-raised md-mini">
+                <md-icon md-svg-src="img/icons/facebook.svg" aria-label="Facebook"></md-icon>
+              </md-button>
+              <md-button aria-label="Google Hangout" class="md-fab md-raised md-mini">
+                <md-icon md-svg-src="img/icons/hangout.svg" aria-label="Google Hangout"></md-icon>
+              </md-button>
+            </md-fab-actions>
+          </md-fab-speed-dial>
         </div>
       </md-toolbar>
       <div class="chatBoxWrap">
@@ -19,8 +38,8 @@
           <input type="message" ng-model="message.text">
         </md-input-container>
         </form>
-        <md-button layout-align="center" class="md-fab md-primary chatButton" aria-label="Login" ng-click="sendMessage()"> 
-          <md-icon>input</md-icon>
+        <md-button layout-align="center" class="md-fab md-accent chatButton" aria-label="Login" ng-click="sendMessage()"> 
+          <md-icon style="color: white;">input</md-icon>
           <md-tooltip md-direction="bottom">
             Submit
           </md-tooltip>

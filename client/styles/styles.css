@@ -164,21 +164,24 @@ md-card-image {
 
 .chatFrame {
   /*height: 500px;*/
-  top: 14%; /*14%;*/
-  height: 62%;
+  top: 18%; /*14%;*/
+  height: 65%;
   width: 50%;
   position: absolute;
 }
 
 .chatBoxHeader {
  /* margin: 10% 0 0 0;*/
+ background: white !important;
+ color: #2196F3 !important;
  position: fixed;
  width: 50%;
 }
 
 .chatBoxWrap {
   top: 64px; /*16%;*/
-  height: 85%;
+  bottom: 77px q;
+  height: 83%;
   width: 100%;
   position: absolute;
   overflow: auto;
@@ -214,7 +217,7 @@ md-card-image {
 
 .messageInput {
   width: 50%;
-  margin-bottom: 6%;
+  margin-bottom: 4%;
   bottom: 0px;
   position: fixed;
   background-color: white;
@@ -226,6 +229,7 @@ md-card-image {
 }
 
 .chatButton {
+  background-color: #FF5722 !important;
   margin-right: 3% !important;
   margin-top: 1% !important;
 }

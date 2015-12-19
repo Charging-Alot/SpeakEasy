@@ -41,9 +41,9 @@ angular.module('speakEasy', [
   // we want to be in terms of control (also after being coupled with the CSS changes)
 
   var background = $mdThemingProvider
-    .extendPalette('grey', {
-      'A100': '#CFD8DC'
-    }); // prev: 'f2f2f2'
+    .extendPalette('blue', {
+      'A100': '#E3F2FD'
+    }); // prev: '#CFD8DC'
 
   $mdThemingProvider.definePalette('background', background);
 
