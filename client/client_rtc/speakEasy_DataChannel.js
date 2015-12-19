@@ -27,7 +27,7 @@
   window.SpeakEasyChannel = function (channel, extras) {
     if (channel) this.automatic = true;
     this.channel = channel || location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
-
+    asd
     extras = extras || {};
 
     var self = this,
