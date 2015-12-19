@@ -1,15 +1,12 @@
 var morgan = require('morgan'); // used for logging incoming request
 var bodyParser = require('body-parser');
 var helpers = require('./helpers.js'); // our custom middleware
-var rtcSignaler = require("signalerService"); //attach socket handlers to app
-
 
 module.exports = function (app, express) {
 
   // Express 4 allows us to use multiple routers with their own configurations
   var userRouter = express.Router();
   var chatRouter = express.Router();
-  rtcSignaler(app); //attaches the socket handlers for rtc signaling
   app.use(morgan('dev')); //request logger?
   app.use(bodyParser.urlencoded({
     extended: true

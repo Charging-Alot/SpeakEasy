@@ -4,14 +4,16 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/speakEzUsers');
 var http = require('http');
 var middleware = require('./config/middleware.js');
+var rtcSignaler = require("signalerService");
+var server = require('http').Server(expressInvoked)
+rtcSignaler(server);
 var config = {
 	port: 1337
 }
-var app = require('http').Server(expressInvoked);
-middleware(app, express); //sams middleware
 
-var server = http.createServer(app);
 
-app.listen(config.port, function () {
+middleware(expressInvoked, express); //sams middleware
+
+server.listen(config.port, function () {
 	console.log('Application listening on port:', config.port);
 });
