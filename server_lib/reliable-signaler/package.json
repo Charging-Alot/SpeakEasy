@@ -1,0 +1,85 @@
+{
+  "_args": [
+  [
+    "reliable-signaler@1.0.2",
+    "/home/milkman4/rtcTest/node_modules/datachannel-client"
+  ]
+  ],
+  "_from": "reliable-signaler@1.0.2",
+  "_id": "reliable-signaler@1.0.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/reliable-signaler",
+  "_npmUser": {
+  "email": "muazkh@gmail.com",
+  "name": "muaz-khan"
+  },
+  "_npmVersion": "1.4.21",
+  "_phantomChildren": {},
+  "_requested": {
+  "name": "reliable-signaler",
+  "raw": "reliable-signaler@1.0.2",
+  "rawSpec": "1.0.2",
+  "scope": null,
+  "spec": "1.0.2",
+  "type": "version"
+  },
+  "_requiredBy": [
+  "/datachannel-client"
+  ],
+  "_resolved": "https://registry.npmjs.org/reliable-signaler/-/reliable-signaler-1.0.2.tgz",
+  "_shasum": "db0fe548adc11d6f6668e77136a521334c021b07",
+  "_shrinkwrap": null,
+  "_spec": "reliable-signaler@1.0.2",
+  "_where": "/home/milkman4/rtcTest/node_modules/datachannel-client",
+  "analyze": false,
+  "author": {
+  "email": "muazkh@gmail.com",
+  "name": "Muaz Khan",
+  "url": "http://www.muazkhan.com/"
+  },
+  "bugs": {
+  "email": "muazkh@gmail.com",
+  "url": "https://github.com/muaz-khan/Reliable-Signaler/issues"
+  },
+  "dependencies": {},
+  "description": "Reliable signaling implementation for RTCMultiConnection.js, DataChannel.js and WebRTC Experiments.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+  "shasum": "db0fe548adc11d6f6668e77136a521334c021b07",
+  "tarball": "http://registry.npmjs.org/reliable-signaler/-/reliable-signaler-1.0.2.tgz"
+  },
+  "homepage": "https://github.com/muaz-khan/WebRTC-Experiment",
+  "keywords": [
+  "javascript",
+  "muaz",
+  "muaz-khan",
+  "reliable",
+  "rtcmulticonnection",
+  "signaler",
+  "signaling",
+  "webrtc",
+  "webrtc-experiment"
+  ],
+  "license": "MIT",
+  "main": "./index.js",
+  "maintainers": [
+  {
+    "name": "muaz-khan",
+    "email": "muazkh@gmail.com"
+  }
+  ],
+  "name": "reliable-signaler",
+  "optionalDependencies": {},
+  "preferGlobal": true,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+  "type": "git",
+  "url": "git+https://github.com/muaz-khan/Reliable-Signaler.git"
+  },
+  "scripts": {
+  "start": "node index.js"
+  },
+  "version": "1.0.2"
+}
