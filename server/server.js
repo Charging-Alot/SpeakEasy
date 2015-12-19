@@ -17,8 +17,3 @@ middleware(expressInvoked, express); //sams middleware
 server.listen(config.port, function () {
 	console.log('Application listening on port:', config.port);
 });
-<<<<<<< HEAD
-
-module.exports = app;
-=======
->>>>>>> b791fef13564a2c5e2c4401d84235892537d505e
