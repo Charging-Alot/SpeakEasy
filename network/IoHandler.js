@@ -8,6 +8,7 @@ var IoHandler = function (level, toLevel, model, sendFunction) {
   this.waiting = {};
   this.waiting.names = {};
   this.waiting.callbacks = {};
+  this.blockInput = false;
 }
 
 IoHandler.prototype.addToOut = function (command, section, value, callback) {
@@ -71,13 +72,17 @@ IoHandler.prototype.runAllOutputs = function (callback) {
 
 IoHandler.prototype.addToIn = function (taskObj) {
   if(this.level < this.toLevel) {
-    if(this.input.length <= 0) {
-      // this.input.enqueue(taskObj)
-      this.runInput(taskObj);
-      // this.input.dequeue();
-    } else {
-      this.input.enqueue(taskObj);
-    }
+    this.runInput(taskObj)
+    // if(!blockInput) {
+    //   if(true) {
+    //   this.blockInput = true
+    //   // this.input.enqueue(taskObj)
+    //   this.runInput(taskObj);
+    //   this.blockInput = false;
+    //   // this.input.dequeue();
+    // } else {
+    //   this.input.enqueue(taskObj);
+    // }
   } else {
     if(this.waiting.names[taskObj.command]) {
       this.runInput(taskObj);

@@ -203,25 +203,25 @@ describe('Pleb Constructor', function () {
           {
             id:0,
             weight: 0.3,
-            gain: 0.5,
-            activation: 0.7
+            gateNode : {
+              activation: 0.7,
+            },
+            fromNode : {
+              activation: 0.5,
+            }
           },
           {
             id:1,
             weight: 0.4,
-            gain:0.6,
-            activation: 0.8
+            gateNode : {
+              activation: 0.8,
+            },
+            fromNode : {
+              activation: 0.6,
+            }
           }
         ]
       },
-      inputNodes: [ 
-        {
-          activation: 0.7,
-        },
-        {
-          activation: 0.8
-        }
-      ]
     }, function (toLevel, taskObj) {
       expect(taskObj.value.node.state).to.eql(1.297);
       expect(taskObj.value.node.activation).to.eql(0.785329655012861);
@@ -241,13 +241,39 @@ describe('Pleb Constructor', function () {
               toNodeId: 1,
               toLayerId: 3,
               weight: 0.78,
-              activation: 0.7
+              fromNode: {
+                activation: 0.7
+              },
+              toNode: {
+                id: 1,
+                layerId: 3,
+                prevState: 0.8,
+                selfConnection: {
+                  gateId: 1,
+                  gateLayer: 2,
+                  wieght: 0.67,
+                  gain: 0.4,
+                }
+              }
             },
             {
               toNodeId: 1,
               toLayerId: 3,
               weight: 0.2,
-              activation:0.5
+              fromNode: {
+                activation:0.5
+              },
+              toNode: {
+                id: 1,
+                layerId: 3,
+                prevState: 0.8,
+                selfConnection: {
+                  gateId: 1,
+                  gateLayer: 2,
+                  wieght: 0.67,
+                  gain: 0.4,
+                }
+              }
             }
           ]
         },
@@ -278,31 +304,33 @@ describe('Pleb Constructor', function () {
         ],
         selfConnection: {
           weight: 0.5,
-          gain: 0.1
+          gateNode: {
+            activation: 0.1
+          }
         }
       },
       connections : {
         inputs: [
           {
             id:5,
-            activation: 0.8,
-            gain: 0.3 
+            fromNode: {
+              activation: 0.8,
+            },
+            gateNode: {
+              activation: 0.3 
+            }
           },
           {
             id:9,
-            activation: 0.43,
-            gain: 0.44
+            fromNode: {
+              activation: 0.43,
+            },
+            gateNode: {
+              activation: 0.44
+            }
           }
         ]
       },
-      inputNodes: [
-        {
-          activation: 0.8
-        },
-        {
-          activation:0.43
-        }
-      ]
     }, function (toLevel, taskObj) {
       var el0 = 0.3*0.5*0.1 + 0.8*0.3;
       var el1 = 0.4*0.5*0.1 + 0.43*0.44;
@@ -329,7 +357,9 @@ describe('Pleb Constructor', function () {
         1: {
           selfConnection: {
             weight: 0.2,
-            gain: 0.5
+            gateNode: {
+              activation: 0.5
+            }
           },
         }
       }
@@ -349,25 +379,25 @@ describe('Pleb Constructor', function () {
       connections: {
         outputs: [
           {
-            errorResponsibility: 4,
-            gain: 90,
+            toNode: {
+              errorResponsibility: 4,
+            },
+            gateNode: {
+              activation: 90,
+            },
             weight: 1000
           },
           {
-            errorResponsibility: 20,
-            gain: 21,
+            toNode: {
+              errorResponsibility: 20,
+            },
+            gateNode: {
+              activation: 21,
+            },
             weight: 23
           }
         ]
-      },
-      outputNodes: [
-        {
-          errorResponsibility: 4
-        },
-        {
-          errorResponsibility: 20
-        }
-      ]
+      }
     }, function (toLevel, taskObj) {
       sentSomething = true;
       if(taskObj.command === 'projectedErrorStep') {
@@ -392,12 +422,16 @@ describe('Pleb Constructor', function () {
           {
             toNodeId: 3,
             weight: 76,
-            activation: 67
+            fromNode: {
+              activation: 67
+            }
           },
           {
             toNodeId: 4,
             weight: 83,
-            activation: 32
+            fromNode: {
+              activation: 32
+            }
           }
         ]
       },
@@ -949,16 +983,20 @@ describe('Mother Constructor', function () {
     expect(typeof n.bias).to.eql('number')
   })
   it('Connection Factory creates a valid connection', function () {
-    var c = Connection(1,2,0,4,3);
+    var m = new Mother(function () {})
+    m.nodes = [{}, {id: 1, nodes: [{id: 0, layerId: 1}]}, {id: 2, nodes: [{}, {}, {}, {}, {id: 4, layerId: 2}]}]
+    m.connections = [[], [[], [], [{}, {}, {}]]]
+    var c = m.Connection(1,2,0,4,3);
     expect(c.id).to.eql(3);
     expect(c.toLayerId).to.eql(1);
-    expect(c.fromLayerId).to.eql(2);
     expect(c.toNodeId).to.eql(0);
+    expect(c.fromLayerId).to.eql(2);
     expect(c.fromNodeId).to.eql(4);
-    expect(c.gateId).to.eql(-1);
+    expect(c.gateNodeId).to.eql(-1);
     expect(c.gateLayerId).to.eql(-1);
-    expect(c.activation).to.eql(0);
-    expect(c.gain).to.eql(1)
+    expect(c.toNode).to.eql(m.nodes[1].nodes[0])
+    expect(c.fromNode).to.eql(m.nodes[2].nodes[4])
+    expect(c.gateNode).to.eql(null)
     expect(typeof c.weight).to.eql('number')
   })
   it('createAllNodesInLayer should create a layer object with an id and an array of nodes', function () {
@@ -987,7 +1025,6 @@ describe('Mother Constructor', function () {
     var n = m.nodes[0].nodes[0];
     m.joinNodes(n, n);
     expect(n.selfConnection.id !== undefined).to.eql(true);
-    expect(n.selfConnection.gain).to.eql(1);
     expect(n.selfConnection.weight).to.eql(1);
   })
   it('joinLayers, when allToAll is set to true, should create valid connections from all nodes in the first layer to all nodes in the second layer', function () {
@@ -1039,9 +1076,10 @@ describe('Mother Constructor', function () {
 
     var connection = m.connections[2][0][0];
     var node = m.nodes[1].nodes[0];
-    m.gateConnection(connection, node);
+    m.gateConnection(connection, 0, 1);
     expect(connection.gateLayerId).to.eql(node.layerId);
-    expect(connection.gateId).to.eql(node.id);
+    expect(connection.gateNodeId).to.eql(node.id);
+    expect(connection.gateNode).to.eql(node)
   });
   it('gateLayerOneToOne should gate connections going from fromLayer to toLayer with the node at the same index as the connection', function () {
     var m = new Mother(function () {})
@@ -1052,7 +1090,7 @@ describe('Mother Constructor', function () {
     m.gateLayerOneToOne(m.nodes[1], m.nodes[0].id, m.nodes[2].id);
     var connections = m.connections[2][0];
     for(var i = 0; i < connections.length; ++i) {
-      expect(connections[i].gateId).to.eql(m.nodes[1].nodes[i].id)
+      expect(connections[i].gateNodeId).to.eql(m.nodes[1].nodes[i].id)
       expect(connections[i].gateLayerId).to.eql(m.nodes[1].nodes[i].layerId)
     }
   })
@@ -1064,10 +1102,12 @@ describe('Mother Constructor', function () {
     m.joinLayers(m.nodes[0], m.nodes[1], true);
     m.joinLayers(m.nodes[0], m.nodes[2], false);
     m.gateLayerOneToOne(m.nodes[1], m.nodes[0].id, m.nodes[2].id);
-    m.initNeurons()
+    m.initNeurons();
     neurons2 = m.layers[2];
     neurons1 = m.layers[1];
     neurons0 = m.layers[0];
+
+    // debugger;
 
     expect(neurons0[0].connections.outputs.length).to.eql(3)
     expect(neurons0[0].connections.outputs[0]).to.equal(neurons1[0].connections.inputs[0])
@@ -1128,7 +1168,7 @@ describe('Mother Constructor', function () {
     expect(m.layers[2][0].connections.inputs[0]).to.eql(m.layers[1][0].connections.gated[0])
     expect(m.layers[2][1].connections.inputs[0]).to.eql(m.layers[1][1].connections.gated[0])
   })
-  it('on activation, queues and sends each neuron not in the input layer', function () {
+  it('on activation, queues and sends each neuron not in the input layer', function (done) {
     // console.log('mother commands start')
     var sentSomething = false
     var counter = 0;
@@ -1142,7 +1182,9 @@ describe('Mother Constructor', function () {
         expect(taskObj.value.node).to.eql(m.layers[layer][taskObj.section].node)
         expect(taskObj.value.gatedNodes).to.eql(m.layers[layer][taskObj.section].gatedNodes)
         expect(taskObj.value.connections).to.eql(m.layers[layer][taskObj.section].connections)
-        m.toManager.addToIn(taskObj);
+        setTimeout(function () {
+          m.toManager.addToIn(taskObj);
+        }, 0);
       } else {
         expect('YOUR KUNGFU IS WEAK!').to.eql(true);
       }
@@ -1156,14 +1198,14 @@ describe('Mother Constructor', function () {
     m.activate([1,1], function () {
       sentSomething = true;
       expect(counter).to.eql(4);
+      done()
     });
-    expect(sentSomething).to.eql(true)
   });
-  it('on backPropagation, queues and sends each neuron not in the output layer', function () {
+  it('on backPropagation, queues and sends each neuron not in the output layer', function (done) {
     var counter = 0;
     var sentSomething = false;
     var m = new Mother(function (toLevel, taskObj) {
-      console.log(taskObj.command)
+      // console.log(taskObj.command)
       if(taskObj.command === 'backPropagate') {
         counter++;
         var layer = 1;
@@ -1173,7 +1215,9 @@ describe('Mother Constructor', function () {
         expect(taskObj.value.node).to.eql(m.layers[layer][taskObj.section].node)
         expect(taskObj.value.gatedNodes).to.eql(m.layers[layer][taskObj.section].gatedNodes)
         expect(taskObj.value.connections).to.eql(m.layers[layer][taskObj.section].connections)
-        this.addToIn(taskObj);
+        setTimeout(function () {
+          m.toManager.addToIn(taskObj);
+        }, 0);
       } else {
         expect('YOUR KUNGFU IS WEAK!').to.eql(true);
       }
@@ -1187,14 +1231,15 @@ describe('Mother Constructor', function () {
     m.backPropagate([1,1], function () {
       sentSomething = true;
       expect(counter).to.eql(4);
+      done();
     });
-    expect(sentSomething).to.eql(true);
+    // expect(sentSomething).to.eql(true);
+    // setTimeout(function () {expect(sentSomething).to.eql(false)}, 0);
   });
 })
 
 describe('MONSTER END TO END TEST!!!', function () {
   var mother;
-  var managers = []
   var biases = [
     0,
     0,
@@ -1211,81 +1256,71 @@ describe('MONSTER END TO END TEST!!!', function () {
     -0.08829510072246194,
     -0.003387802373617882,
   ]
-  var manager
-
-  var pleb
 
   beforeEach(function() {
     mother = new Mother(function (toLevel, taskObj) {
-      // debugger;
+      var manager
       if(toLevel === 1) {
-        manager.toMother.addToIn(taskObj)
+        setTimeout(function () {
+          manager = new Manager(null, function (toLevel, taskObj) {
+            var pleb;
+            if(toLevel === 2) {
+              setTimeout(function () {
+                mother.toManager.addToIn(taskObj);
+              }, 0)
+            } else if (toLevel === 0) {
+              setTimeout(function () {
+                pleb = new Pleb(null, function (toLevel, taskObj) {
+                  if(toLevel === 1) {
+                    setTimeout(function () {
+                      manager.toPleb.addToIn(taskObj);
+                    }, 0)
+                  } else {
+                    expect('YOUR KUNGFU IS WEAK').to.eql(true);
+                    done()
+                  }
+                })
+                pleb.toManager.addToIn(taskObj);
+              }, 0)
+            } else {
+              expect('YOUR KUNGFU IS WEAK').to.eql(true);
+              done()
+            }     
+          })
+          manager.toMother.addToIn(taskObj)
+        }, 0)
       } else {
         expect('YOUR KUNGFU IS WEAK').to.eql(true);
-      }
-    });
-
-    manager = new Manager(undefined, function (toLevel, taskObj) {
-      // debugger
-      if(toLevel === 2) {
-        mother.toManager.addToIn(taskObj);
-      } else if (toLevel === 0) {
-        pleb.toManager.addToIn(taskObj);
-      } else {
-        expect('YOUR KUNGFU IS WEAK').to.eql(true);
-      }
-    });
-
-    pleb = new Pleb(undefined, function (toLevel, taskObj) {
-      // debugger
-      if(toLevel === 1) {
-        manager.toPleb.addToIn(taskObj);
-      } else {
-        expect('YOUR KUNGFU IS WEAK').to.eql(true);
+        done()
       }
     })
-
-    // mother.appendNodeLayer(2);
-    // mother.appendNodeLayer(2);
-    // mother.appendNodeLayer(2);
-    // mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
-    // mother.joinLayers(mother.nodes[1], mother.nodes[2], false);
-    // mother.gateLayerOneToOne(mother.nodes[0], 1, 2);
-    // mother.nodes[0].nodes[0].bias = biases[0];
-    // mother.nodes[0].nodes[1].bias = biases[1];
-    // mother.nodes[1].nodes[0].bias = biases[2];
-    // mother.nodes[1].nodes[1].bias = biases[3];
-    // mother.nodes[2].nodes[0].bias = biases[4];
-    // mother.nodes[2].nodes[1].bias = biases[5];
-    // mother.connections[1][0][0].weight = weights[0];
-    // mother.connections[1][0][1].weight = weights[1];
-    // mother.connections[1][0][2].weight = weights[2];
-    // mother.connections[1][0][3].weight = weights[3];
-    // mother.connections[2][1][0].weight = weights[4];
-    // mother.connections[2][1][1].weight = weights[5];
-    // mother.initNeurons();
   });
-  it('should have correct activation for output nodes after activation (smallest test case)', function () {
+
+  it('should have correct activation for output nodes after activation (smallest test case)', function (done) {
     //numbers compared to an identical network in synaptic but with gradient clipping added
     //the code for this can be found in synapticTest.js.
     var gotToCallback = false;
     mother.appendNodeLayer(1);
     mother.appendNodeLayer(1);
     mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
-    mother.initNeurons()
+    mother.initNeurons();
     mother.layers[0][0].node.bias = biases[0]
     mother.layers[1][0].node.bias = biases[1]
     mother.layers[0][0].connections.outputs[0].weight = weights[0]
     // debugger;
     mother.activate([1], function () {
       gotToCallback = true;
-      // debugger;
-      // expect(mother.layers[0][0].node.activation).to.eql(0.5016502674455081);
-      expect(mother.layers[1][0].node.activation).to.eql(0.5289042292406864);
+      expect(mother.layers[0][0].node.activation).to.eql(1);
+      expect(mother.layers[1][0].node.activation).to.eql(0.4914076236469172);
+      done();
     })
-    expect(gotToCallback).to.eql(true)
+    // setTimeout(function () {
+    //   expect(gotToCallback).to.eql(true)
+    //   done()
+    // }, 0);
   });
-  it('should have correct activation for output nodes after activation (slightly larger case with gates)', function () {
+
+  it('should have correct activation for output nodes after activation (slightly larger case with gates)', function (done) {
     var gotToCallback = false
     mother.appendNodeLayer(2);
     mother.appendNodeLayer(2);
@@ -1309,14 +1344,15 @@ describe('MONSTER END TO END TEST!!!', function () {
     mother.activate([1,1], function () {
       gotToCallback = true
       var activations = [ 
-      1,
-      1,
-      0.48740595117718055,
-      0.5254898256884515,
-      0.4874192204543708,
-      0.47810860414632056 
+        1,
+        1,
+        0.48740595117718055,
+        0.5254898256884515,
+        0.4874192204543708,
+        0.47810860414632056 
       ]
       var i = 0
+      debugger
       expect(mother.layers[0][0].node.activation).to.eql(activations[i]);
       console.log(i++)
       expect(mother.layers[0][1].node.activation).to.eql(activations[i]);
@@ -1329,9 +1365,37 @@ describe('MONSTER END TO END TEST!!!', function () {
       console.log(i++)
       expect(mother.layers[2][1].node.activation).to.eql(activations[i]);
       console.log(i++)
+      done();
     })
-    expect(gotToCallback).to.eql(true)
+    // setTimeout(function () {
+    //   expect(gotToCallback).to.eql(true)
+    //   done()
+    // }, 1000)
   })
+
+  it('should have correct errors, weights and biases for input nodes after backPropagation (smallest test case)', function (done) {
+    var gotToCallback = false;
+    mother.appendNodeLayer(1);
+    mother.appendNodeLayer(1);
+    mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
+    mother.initNeurons();
+    mother.layers[0][0].node.bias = biases[0]
+    mother.layers[1][0].node.bias = biases[1]
+    mother.layers[0][0].connections.outputs[0].weight = weights[0]
+    mother.layers[0][0].node.activation = 1;
+    mother.layers[1][0].node.activation = 0.4914076236469172;
+
+    // debugger;
+    mother.backPropagate([1], function () {
+      gotToCallback = true;
+      expect(mother.layers[0][0].node.bias).to.eql(0);
+      expect(mother.layers[1][0].node.bias).to.eql(0.0412111976764754);
+      expect(mother.layers[0][0].connections.outputs[0].weight).to.eql(0.01673363541473006);
+      expect(mother.layers[0][0].node.errorResponsibility).to.eql(0);
+      expect(mother.layers[1][0].node.errorResponsibility).to.eql(0.5110652471181308);
+      done();
+    })
+  });
 
 })
 
