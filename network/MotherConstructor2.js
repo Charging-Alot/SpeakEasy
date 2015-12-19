@@ -7,7 +7,7 @@ var Mother = function (sendFunction) {
   this.connections = {}; // will become an object of objects of arrays.  cause simple would be boring.
   this.nodes = [];
   this.layers = [];
-  this.toManager = new IoHandler(0, 1, this, sendFunction);
+  this.toManager = new IoHandler(2, 1, this, sendFunction);
 }
 
 Mother.prototype.update = function (command, section, partialNeuron) {
@@ -27,12 +27,12 @@ Mother.prototype.activate = function (inputArr, callback) {
       } else {
         callback();
       }
-    }.bind(this)
+    }.bind(this);
     this.activateLayer(layerCounter, activationCallback); //activates first non input layer
   } else {
-    console.log('You must call initNeurons before activation!');
+    console.error('You must call initNeurons before activation!');
   }
-  this.activateLayer(layerCounter, activationCallback); //activates output layer
+  // this.activateLayer(layerCounter, activationCallback); //activates output layer
 }
 
 Mother.prototype.activateLayer = function (layerId, callback) {
@@ -64,23 +64,26 @@ Mother.prototype.queueCommandManager = function (command, section, neuron, callb
 
 Mother.prototype.activationUpdatesForLayer = function (layerId, inputArr) {
   for(var i = 0; i < this.layers[layerId].length; ++i) {
-    this.activationUpdate(this.layers[layerId][i], inputArr[i]);
+    // this.activationUpdate(this.layers[layerId][i], inputArr[i]);
+    this.layers[layerId][i].node.activation = inputArr[i];
+    this.layers[layerId][i].node.bias = 0;
+    this.layers[layerId][i].node.derivative = 0;
   }
 }
 
-//node manager does this.
-Mother.prototype.activationUpdate = function (neuron, activation) {
-  neuron.node.activation = activation;
-  var activation = neuron.node.activation;
-  var outputs = neuron.connections.outputs;
-  var gated = neuron.connections.gated;
-  for(var i = 0; i < outputs.length; ++i) {
-    outputs[i].activation = activation;
-  }
-  for(var j = 0; j < gated.length; ++j) {
-    gated[j].gain = activation;
-  }
-}
+// //node manager does this.
+// Mother.prototype.activationUpdate = function (neuron, activation) {
+//   neuron.node.activation = activation;
+//   var activation = neuron.node.activation;
+//   var outputs = neuron.connections.outputs;
+//   var gated = neuron.connections.gated;
+//   for(var i = 0; i < outputs.length; ++i) {
+//     outputs[i].activation = activation;
+//   }
+//   for(var j = 0; j < gated.length; ++j) {
+//     gated[j].gain = activation;
+//   }
+// }
 
 Mother.prototype.backPropagate = function (targetArr, callback) {
   if(this.initialized) {
@@ -89,7 +92,7 @@ Mother.prototype.backPropagate = function (targetArr, callback) {
     var backPropagationCallback = function () {
       layerCounter--
       if(layerCounter >= 0) {
-        console.log(layerCounter)
+        // console.log(layerCounter)
         this.backPropagateLayer(layerCounter, backPropagationCallback);
       } else {
         callback();
@@ -127,7 +130,7 @@ Mother.prototype.errorUpdate = function (neuron, target) {
 Mother.prototype.initNeurons = function () {
   for(var layer = 0; layer < this.nodes.length; ++layer) {
     this.layers.push([]);
-    for(var node = 0; node < this.nodes[layer].length; ++node) {
+    for(var node = 0; node < this.nodes[layer].nodes.length; ++node) {
       this.layers[layer].push(new Neuron({node: this.nodes[layer].nodes[node]}));
     }
   }
@@ -148,6 +151,8 @@ Mother.prototype.initNeurons = function () {
       }
     }
   }
+
+  this.initialized = true;
 }
 
 Mother.prototype.placeConnectionsInNeurons = function () {
@@ -167,11 +172,11 @@ Mother.prototype.placeConnectionsInNeurons = function () {
         toNode = this.nodes[toLayerId].nodes[connection.toNodeId]
         fromNeuron.connections.outputs.push(connection);
         toNeuron.connections.inputs.push(connection);
-        fromNeuron.outputNodes.push(toNode);
-        toNeuron.inputNodes.push(fromNode);
+        // fromNeuron.outputNodes.push(toNode);
+        // toNeuron.inputNodes.push(fromNode);
         // console.log(connection)
-        if(connection.gateId !== -1) {
-          gateNode = this.layers[connection.gateLayerId][connection.gateId]
+        if(connection.gateNodeId !== -1) {
+          gateNode = this.layers[connection.gateLayerId][connection.gateNodeId]
           gateNode.connections.gated.push(connection)
           if(!gateNode.gatedNodes[toNode.id]) {
             gateNode.gatedNodes[toNode.id] = toNode;
@@ -229,12 +234,12 @@ Mother.prototype.joinLayers = function (fromLayer, toLayer, allToAll) {
         this.joinNodes(fromLayer.nodes[i], toLayer.nodes[j]);
       }
     }
-  } else if(toLayer.nodes.length === this.nodes.length) {
+  } else if(toLayer.nodes.length === fromLayer.nodes.length) {
     for(var k = 0; k < fromLayer.nodes.length; ++k) {
       this.joinNodes(fromLayer.nodes[k], toLayer.nodes[k]);
     }
   } else {
-    console.alert('layers cannot be joined that way!')
+    console.error('layers cannot be joined that way!')
   }
 }
 
@@ -248,7 +253,7 @@ Mother.prototype.joinNodes = function (fromNode, toNode) {
     this.connections[toLayerId][fromLayerId] = [];
   }  
   var connId = this.connections[toLayerId][fromLayerId].length
-  var connection = Connection(toLayerId, fromLayerId, toNode.id, fromNode.id, connId)
+  var connection = this.Connection(toLayerId, fromLayerId, toNode.id, fromNode.id, connId)
   if(fromNode.layerId === toNode.layerId && fromNode.id === toNode.id) {
     connection.weight = 1;
     toNode.selfConnection = connection;
@@ -260,33 +265,36 @@ Mother.prototype.gateLayerOneToOne = function (gatingLayer, fromLayerId, toLayer
   //gates all inputs to toLayer from fromLayer, provided there are the same number of outputs in the gatingLayer 
   //as there are connections.
   //otherwise, fuck you.
-  var connectionArr = connections[toLayerId][fromLayerId];
+  var connectionArr = this.connections[toLayerId][fromLayerId];
   if(connectionArr.length === gatingLayer.nodes.length) {
     for(var k = 0; k < gatingLayer.nodes.length; ++k) {
-      this.gateConnection(connectionArr[k], gatingLayer[k]);
+      this.gateConnection(connectionArr[k], gatingLayer.nodes[k].id, gatingLayer.nodes[k].layerId);
     }
   } else {
     console.alert('layers cannot be gated that way!')
   }
 }
 
-Mother.prototype.gateConnection = function (connection, gateNode) {
-  connection.gateId = gateNode.id;
-  connection.gateLayerId = gateNode.layerId;
-
+Mother.prototype.gateConnection = function (connection, gateNodeId, gateLayerId) {
+  connection.gateNodeId = gateNodeId;
+  connection.gateLayerId = gateLayerId;
+  connection.gateNode = this.nodes[gateLayerId].nodes[gateNodeId];
 }
 
-var Connection = function (toLayerId, fromLayerId, toNodeId, fromNodeId, connId) {
+Mother.prototype.Connection = function (toLayerId, fromLayerId, toNodeId, fromNodeId, connId) {
   return {
     id: connId,
+    toNode: this.nodes[toLayerId].nodes[toNodeId],
     toNodeId: toNodeId,
     toLayerId: toLayerId,
+    fromNode: this.nodes[fromLayerId].nodes[fromNodeId],
     fromNodeId: fromNodeId,
     fromLayerId: fromLayerId,
+    gateNode: null,
     gateNodeId: -1,
     gateLayerId: -1,
-    activation: 0,
-    gain: 1,
+    // activation: 0,
+    // gain: 1,
     weight: Math.random() * .2 - .1 // -1 /sqrt(n) and 1/sqrt(n)
   }
 }

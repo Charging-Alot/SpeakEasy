@@ -12,7 +12,11 @@ var states = []
 Pleb.prototype.activationStep = function () {
 
   for(var i = 0; i < this.connections.inputs.length; ++i) {
-    this.node.state += (this.connections.inputs[i].weight * this.connections.inputs[i].gain * this.inputNodes[i].activation);
+    if(this.connections.inputs[i].gateNode) {
+      this.node.state += (this.connections.inputs[i].weight * this.connections.inputs[i].gateNode.activation * this.connections.inputs[i].fromNode.activation);
+    } else {
+      this.node.state += (this.connections.inputs[i].weight * this.connections.inputs[i].fromNode.activation);
+    }
   }
   this.node.activation = this.squashAct(this.node.state);
   this.node.derivative = this.squashDer(this.node.state);
@@ -35,13 +39,13 @@ Pleb.prototype.activationStep = function () {
 Pleb.prototype.influenceStep = function () {
   this.node.influences = {};
   for(var i = 0; i < this.connections.gated.length; ++i) {
-    gatedNode = this.gatedNodes[this.connections.gated[i].toNodeId] //does not account for gated nodes in multiple layers
+    gatedNode = this.connections.gated[i].toNode //does not account for gated nodes in multiple layers
     if(this.node.influences[gatedNode.id] === undefined) {
       //if we haven't seen neuron before then initialize it to 0 or prevState if the to node is selfConnected
       this.node.influences[gatedNode.id] = gatedNode.selfConnection.gateId === this.node.id  && 
         gatedNode.selfConnection.gateLayer === this.node.layerId ? gatedNode.prevState : 0; 
     }
-    this.node.influences[gatedNode.id] += this.connections.gated[i].weight * this.connections.gated[i].activation;
+    this.node.influences[gatedNode.id] += this.connections.gated[i].weight * this.connections.gated[i].fromNode.activation;
   }
   this.queueCommandManager('influenceStep', null);
   this.toManager.runAllOutputs();
@@ -63,8 +67,8 @@ Pleb.prototype.influenceStep = function () {
 
 Pleb.prototype.elegibilityStep = function () {
   for(var i = 0; i < this.connections.inputs.length; ++i) {
-    this.node.elegibilities[i] *= this.node.selfConnection.weight * this.node.selfConnection.gain;
-    this.node.elegibilities[i] += this.connections.inputs[i].gain * this.inputNodes[i].activation;
+    this.node.elegibilities[i] *= this.node.selfConnection.weight * (this.node.selfConnection.gateNode ? this.node.selfConnection.gateNode.activation : 1);
+    this.node.elegibilities[i] += (this.connections.inputs[i].gateNode ? this.connections.inputs[i].gateNode.activation : 1) * this.connections.inputs[i].fromNode.activation;
   }
   this.queueCommandManager('elegibilityStep', null)
   this.toManager.runAllOutputs();
@@ -85,7 +89,7 @@ Pleb.prototype.extendedElegibilityStep = function (section) { // should have key
   // for(gatedNodeId in this.node.extendedElegibilities) { //there's only one for each pleb, but this is an easy way to extract it
     for(var i = 0; i < this.node.elegibilities.length; ++i) {
       this.node.extendedElegibilities[section][i] *= this.gatedNodes[section].selfConnection.weight
-        * this.gatedNodes[section].selfConnection.gain;
+        * (this.gatedNodes[section].selfConnection.gateNode ? this.gatedNodes[section].selfConnection.gateNode.activation : 1);
       this.node.extendedElegibilities[section][i] += this.node.derivative * this.node.elegibilities[i] 
         * this.node.influences[section];
     }
@@ -105,20 +109,17 @@ Pleb.prototype.extendedElegibilityStep = function (section) { // should have key
   */
 }
 
-Pleb.prototype.gainStep = function () {
-  //not currently used;
-}
-
 Pleb.prototype.projectedErrorStep = function () {
   this.node.errorProjected = 0;
   for (var i = 0; i < this.connections.outputs.length; ++i) {
-    this.node.errorProjected += this.outputNodes[i].errorResponsibility * //this is from the to neuron
-      this.connections.outputs[i].gain * this.connections.outputs[i].weight
+    this.node.errorProjected += this.connections.outputs[i].toNode.errorResponsibility * //this is from the to neuron
+      (this.connections.outputs[i].gateNode ? this.connections.outputs[i].gateNode.activation : 1) * this.connections.outputs[i].weight
   }
   this.node.errorProjected *= this.node.derivative;
 
   this.queueCommandManager('projectedErrorStep', null)
   this.toManager.runAllOutputs();
+  this.toManager.runAllInputs();
   /*
     connections.outputs
       errorResponsibility
@@ -139,7 +140,7 @@ Pleb.prototype.gatedErrorStep = function () {
         gatedNode.selfConnection.gateLayerId === this.node.layerId ? gatedNode.prevState : 0;
     }
 
-    this.node.influences[gatedNode.id] += this.connections.gated[j].weight * this.connections.gated[j].activation;
+    this.node.influences[gatedNode.id] += this.connections.gated[j].weight * this.connections.gated[j].fromNode.activation;
   }
   for(var k in this.gatedNodes) {
     this.node.errorGated += this.node.influences[this.gatedNodes[k].id] * this.gatedNodes[k].errorResponsibility;
@@ -147,6 +148,7 @@ Pleb.prototype.gatedErrorStep = function () {
   this.node.errorGated *= this.node.derivative;
   this.queueCommandManager('gatedErrorStep', null);
   this.toManager.runAllOutputs();
+  this.toManager.runAllInputs();
 }
 
 Pleb.prototype.learningStep = function () {
@@ -160,6 +162,7 @@ Pleb.prototype.learningStep = function () {
     }
     this.queueCommandManager('learningStep', null);
     this.toManager.runAllOutputs();
+    this.toManager.runAllInputs();
 }
 
 Pleb.prototype.queueCommandManager = function (command, section, callback) {
