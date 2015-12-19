@@ -1,5 +1,3 @@
-// <script src="/reliable-signaler/signaler.js"></script>
-
 function initSpeakEasySignaler(SpeakEasy) {
   var onMessageCallbacks = {};
   if (!SpeakEasy.LocalDataChannel) throw '"SpeakEasy.LocalDataChannel" argument is required.';
@@ -39,10 +37,7 @@ function initSpeakEasySignaler(SpeakEasy) {
       SpeakEasy.LocalDataChannel.userid = data.managerId;
       SpeakEasy.LocalDataChannel.transmitRoomOnce = true;
       SpeakEasy.LocalDataChannel.open(data.managerId);
-
-
-      SpeakEasy.ManagerInfo.Model = new Manager(null, SpeakEasy.ManagerInfo.message.bind(SpeakEasy.ManagerInfo))
-        // SpeakEasy.ManagerInfo.Model = new Manager(null, SpeakEasy.ManagerInfo.message)
+      // SpeakEasy.ManagerInfo.Model = new Manager(null, SpeakEasy.ManagerInfo.message.bind(SpeakEasy.ManagerInfo))
       SpeakEasy.ManagerInfo.managerStatus = true;
       SpeakEasy.ManagerInfo.managerId = data.managerId;
     });
@@ -54,8 +49,7 @@ function initSpeakEasySignaler(SpeakEasy) {
         id: data.managerId,
         owner: data.managerId
       });
-      SpeakEasy.PlebInfo.Model = new Manager(null, SpeakEasy.PlebInfo.respond.bind(SpeakEasy.PlebInfo));
-      // SpeakEasy.PlebInfo.Model = new Manager(null, SpeakEasy.PlebInfo.respond);
+      // SpeakEasy.PlebInfo.Model = new Manager(null, SpeakEasy.PlebInfo.respond.bind(SpeakEasy.PlebInfo));
       SpeakEasy.PlebInfo.plebStatus = true;
       SpeakEasy.PlebInfo.oldPlebSocketId = data.plebId;
     });
@@ -63,14 +57,13 @@ function initSpeakEasySignaler(SpeakEasy) {
     SpeakEasy.socket.on('plebeject', function (data) {
 
       if (SpeakEasy.ManagerInfo.managerStatus) {
-        console.log("EJECT IS FIRING")
+        console.log("Pleb Eject called for:", data)
         var plebrtcid = SpeakEasy.ManagerInfo.plebRtcIds[data];
         //so ghettoo
         SpeakEasy.LocalDataChannel.channels[plebrtcid].channel.peer.close(plebrtcid);
         delete SpeakEasy.ManagerInfo.plebs[data];
       };
     });
-
     SpeakEasy.socket.on('message', function (data) {
       if (onMessageCallbacks[data.channel]) {
         onMessageCallbacks[data.channel](data.message);
@@ -94,7 +87,14 @@ function initSpeakEasySignaler(SpeakEasy) {
       channel: channel
     };
   };
-  //============================================================================== Connection error handling!!!!!
+
+  //======================================== Connection error handling!!!!!
+  //======================================== Connection error handling!!!!!
+  //======================================== Connection error handling!!!!!
+  //======================================== Connection error handling!!!!!
+  //======================================== Connection error handling!!!!!
+  //======================================== Connection error handling!!!!!
+  //======================================== Connection error handling!!!!!
   function listenEventHandler(eventName, eventHandler) {
     window.removeEventListener(eventName, eventHandler);
     window.addEventListener(eventName, eventHandler, false);
@@ -114,5 +114,5 @@ function initSpeakEasySignaler(SpeakEasy) {
   listenEventHandler('online', onLineOffLineHandler);
   listenEventHandler('offline', onLineOffLineHandler);
 
-  //============================================================================== Connection error handling!!!!!
+  //===================================== Connection error handling!!!!!
 }

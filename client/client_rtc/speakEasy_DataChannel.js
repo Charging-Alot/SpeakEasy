@@ -2,19 +2,18 @@
 //Thank you Muaz for everything you've done for the RTC community, you're a saint.
 
 (function () {
-  //GLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALS
+  //GLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBAL
   function swap(arr) {
     var swapped = [],
       length = arr.length;
     for (var i = 0; i < length; i++)
       if (arr[i]) swapped.push(arr[i]);
     return swapped;
-  }
+  };
 
   function getRandomString() {
     return (Math.random() * new Date().getTime()).toString(36).replace(/\./g, '-');
-  }
-
+  };
   window.userid = getRandomString();
   var isMobileDevice = navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
   var isChrome = !!navigator.webkitGetUserMedia;
@@ -22,7 +21,7 @@
   var chromeVersion = !!navigator.mozGetUserMedia ? 0 : parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
   window.moz = !!navigator.mozGetUserMedia;
   window.IsDataChannelSupported = !((moz && !navigator.mozGetUserMedia) || (!moz && !navigator.webkitGetUserMedia));
-  // GLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALS
+  // GLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBAL
 
 
   window.SpeakEasyChannel = function (channel, extras) {

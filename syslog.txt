@@ -1,0 +1,318 @@
+New Manager Created, id: 5xHHrLVKc6_TZDodAAAA
+New Pleb handed to manager 5xHHrLVKc6_TZDodAAAA. Plebs: .
+Socket 5xHHrLVKc6_TZDodAAAA disconnect
+Manager: 5xHHrLVKc6_TZDodAAAA removed from managerList.
+Socket o6FW_PnEDLmv9w5uAAAB disconnect
+New Manager Created, id: P-axQHxlygsxLRYOAAAD
+Socket P-axQHxlygsxLRYOAAAD disconnect
+Manager: P-axQHxlygsxLRYOAAAD removed from managerList.
+New Manager Created, id: lp7HDOlEnO8MIII2AAAF
+Socket lp7HDOlEnO8MIII2AAAF disconnect
+Manager: lp7HDOlEnO8MIII2AAAF removed from managerList.
+New Manager Created, id: VRRjP-NGYqSfAInzAAAH
+New Pleb handed to manager VRRjP-NGYqSfAInzAAAH. Plebs: .
+New Manager Created, id: YDE5GJ2YgHXBrbZKAAAD
+New Manager Created, id: NkboUc8yxGPr4CofAAAH
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Manager Created, id: NkboUc8yxGPr4CofAAAH
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Manager Created, id: NkboUc8yxGPr4CofAAAH
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Pleb handed to manager NkboUc8yxGPr4CofAAAH. Plebs: .
+New Manager Created, id: RGqKMvYxnJiTcUHhAAAF
+New Pleb handed to manager RGqKMvYxnJiTcUHhAAAF. Plebs: .
+New Manager Created, id: Qat8H7VDkazzFhlhAAAD
+New Pleb handed to manager Qat8H7VDkazzFhlhAAAD. Plebs: .
+New Pleb handed to manager Qat8H7VDkazzFhlhAAAD. Plebs: .
+New Pleb handed to manager Qat8H7VDkazzFhlhAAAD. Plebs: .
+New Manager Created, id: Qat8H7VDkazzFhlhAAAD
+New Pleb handed to manager Qat8H7VDkazzFhlhAAAD. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: kadmQ6J4ZhF_LGtPAAAL
+New Pleb handed to manager kadmQ6J4ZhF_LGtPAAAL. Plebs: .
+New Manager Created, id: rgS0ESx2M3FiGnnDAABR
+New Pleb handed to manager rgS0ESx2M3FiGnnDAABR. Plebs: .
+New Pleb handed to manager rgS0ESx2M3FiGnnDAABR. Plebs: .
+New Pleb handed to manager rgS0ESx2M3FiGnnDAABR. Plebs: .
+New Manager Created, id: FO-mMX1GLCVbi2N1AACR
+New Pleb handed to manager FO-mMX1GLCVbi2N1AACR. Plebs: .
+New Pleb handed to manager FO-mMX1GLCVbi2N1AACR. Plebs: .
+New Pleb handed to manager FO-mMX1GLCVbi2N1AACR. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: -P29dipfM0q1SGhDAABu
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Manager Created, id: -P29dipfM0q1SGhDAABu
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Manager Created, id: -P29dipfM0q1SGhDAABu
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Pleb handed to manager -P29dipfM0q1SGhDAABu. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: SEJh2rSkDyy_tr1TAACU
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Pleb handed to manager SEJh2rSkDyy_tr1TAACU. Plebs: .
+New Manager Created, id: 85OA_6TDKJcpYWU5AAAA
+New Pleb handed to manager 85OA_6TDKJcpYWU5AAAA. Plebs: .
+New Manager Created, id: qDVFXB54WnvV6UW3AAAA
+New Pleb handed to manager qDVFXB54WnvV6UW3AAAA. Plebs: .
+New Pleb handed to manager qDVFXB54WnvV6UW3AAAA. Plebs: .
+Socket LiAxHuGxDIAKRQuCAAAC disconnect
+Socket qDVFXB54WnvV6UW3AAAA disconnect
+Manager: qDVFXB54WnvV6UW3AAAA removed from managerList.
+Socket Zt-AhGFthL86PagaAAAB disconnect
+New Manager Created, id: IbK2wM0bj0bWn_PUAAAD
+New Pleb handed to manager IbK2wM0bj0bWn_PUAAAD. Plebs: .
+Socket gyWuTyH3C1Zv_iFzAAAE disconnect
+New Manager Created, id: 9eDGAi1Mye7IdmVBAAAB
+New Pleb handed to manager 9eDGAi1Mye7IdmVBAAAB. Plebs: .
+New Manager Created, id: fXhoyC6k84Z3wMlPAAAB
+New Pleb handed to manager fXhoyC6k84Z3wMlPAAAB. Plebs: .
+New Manager Created, id: BeBLtHSdEY5ieFATAAAB
+New Pleb handed to manager BeBLtHSdEY5ieFATAAAB. Plebs: .
+New Manager Created, id: yrHI6Y3f9rd4G17PAAAA
+New Pleb handed to manager yrHI6Y3f9rd4G17PAAAA. Plebs: .
+New Manager Created, id: vt3slXegAFNPJS7nAAAB
+New Pleb handed to manager vt3slXegAFNPJS7nAAAB. Plebs: .
+New Manager Created, id: 7ZwHEKvOsSlH9Ai6AAAB
+New Pleb handed to manager 7ZwHEKvOsSlH9Ai6AAAB. Plebs: .
+New Manager Created, id: J7UVsZ9d5hNS5TzTAAAA
+New Pleb handed to manager J7UVsZ9d5hNS5TzTAAAA. Plebs: .
+New Manager Created, id: yofs5-oaAACfTTELAAAA
+New Pleb handed to manager yofs5-oaAACfTTELAAAA. Plebs: .
+New Manager Created, id: WBPNl9vKQA6q6o9eAAAB
+New Pleb handed to manager WBPNl9vKQA6q6o9eAAAB. Plebs: .
+New Manager Created, id: 7KMk2RqDIJJSHIzpAAAB
+New Pleb handed to manager 7KMk2RqDIJJSHIzpAAAB. Plebs: .
+New Manager Created, id: oWDbQ7kdB0DU6_n6AAAA
+New Pleb handed to manager oWDbQ7kdB0DU6_n6AAAA. Plebs: .
+New Manager Created, id: rWtR5Lklj9EIBUOfAAAB
+New Pleb handed to manager rWtR5Lklj9EIBUOfAAAB. Plebs: .
+New Pleb handed to manager rWtR5Lklj9EIBUOfAAAB. Plebs: .
+New Manager Created, id: ekbCNNIhVvyLyepIAAAB
+New Pleb handed to manager ekbCNNIhVvyLyepIAAAB. Plebs: .
