@@ -97,6 +97,14 @@ md-card-image {
   z-index: 2;
 }
 
+/* SPEED DIAL AND DIAL ICONS *********************/
+
+.speedDialIcon {
+  color: black !important;
+}
+
+/**************************/
+
 /* CARDS AND CARD IMAGES ***************/
 
 .mainCard:hover {
