@@ -12,7 +12,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
 <script src="/speakEasy_Signaler.js"></script>
 <script>
-SpeakEasy.init();
+var SpeakEasy = new SpeakEasyBuild();
+SpeakEasy.init(SpeakEasyChannel,socketListener,"/");
+
 document.getElementById('input-text-chat').onkeyup = function(e) {
   if(e.keyCode != 13 || !this.value.length) return;
   SpeakEasy.LocalDataChannel.send(this.value);

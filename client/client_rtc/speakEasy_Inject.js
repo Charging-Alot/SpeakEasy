@@ -1,21 +1,23 @@
-function SpeakEasy() {
+function SpeakEasyBuild() {
   this.LocalDataChannel = null;
   this.socket = null;
   this.ManagerInfo = null;
   this.PlebInfo = null;
 }
 
-SpeakEasy.prototype.init = function (channelArg) {
-  this.LocalDataChannel = new channelArg();
-  initSpeakEasySignaler(this, '/');
+SpeakEasyBuild.prototype.init = function (channelArg, socketSetup, socketEndPoint) {
+  this.LocalDataChannel = new channelArg(this);
+  socketSetup(this, socketEndPoint || '/');
 };
 
-SpeakEasy.prototype.resetState = function (first_argument) {
+SpeakEasyBuild.prototype.resetState = function () {
+  this.LocalDataChannel = null;
+  this.socket = null;
   this.ManagerInfo = null;
   this.PlebInfo = null;
 };
 
-SpeakEasy.prototype.initiatePleb = function () {
+SpeakEasyBuild.prototype.initiatePleb = function () {
   this.ManagerInfo.plebRtcIds[data.plebSocketId] = rtcId; //lets us look up plebs rtc id's by their socket ids
   this.ManagerInfo.plebs[rtcId] = {
     oldSocketId: data.plebSocketId //stores the old socket id for no reason atm.
@@ -23,7 +25,7 @@ SpeakEasy.prototype.initiatePleb = function () {
   this.socket.emit("plebrecieved", data.plebSocketId);
   console.log("Pleb handshake confirmed", this.ManagerInfo.plebs);
 };
-SpeakEasy.prototype.onMessageInject = function (first_argument) {
+SpeakEasyBuild.prototype.onMessageInject = function () {
   if (this.ManagerInfo.managerStatus && data.isPleb_initiation) { //check to see if is pleb connection intiation
     return this.initiatePleb(data, rtcId)
   }
@@ -33,7 +35,7 @@ SpeakEasy.prototype.onMessageInject = function (first_argument) {
   console.log("PLEB RECIEVED MEASSAGE: ", data, rtcId)
 };
 
-SpeakEasy.prototype.onClose = function (first_argument) {
+SpeakEasyBuild.prototype.onClose = function () {
   console.log("ON LEAVE INJECT FIRED", rtcId);
   if (this.ManagerInfo.managerStatus) {
     return this.socket.emit('pleblost', plebSocketId);
@@ -41,7 +43,7 @@ SpeakEasy.prototype.onClose = function (first_argument) {
   this.init();
 };
 
-SpeakEasy.prototype.onOpenInject = function (first_argument) {
+SpeakEasyBuild.prototype.onOpenInject = function () {
   console.log("ON OPEN INJECT FIRED", userId);
   if (this.PlebInfo.plebStatus) {
     console.log("Pleb connection event to manager fired");
@@ -52,9 +54,16 @@ SpeakEasy.prototype.onOpenInject = function (first_argument) {
   }
 };
 
+SpeakEasyBuild.prototype.managerSetup = function () {
+  this.ManagerInfo = new ManagerInfo();
+};
 
+SpeakEasyBuild.prototype.plebSetup = function () {
+  this.PlebInfo = new PlebInfo();
+};
 
 function ManagerInfo() {
+  this.model = null;
   this.managerId = '';
   this.managerStatus = true;
   this.plebs = {};
@@ -77,14 +86,13 @@ ManagerInfo.prototype.message = function (toLevelId, msg) {
   }
 };
 
-
-
 function PlebInfo() {
   this.oldPlebSocketId = '';
+  this.model = null;
   this.plebStatus = true;
 }
 
-Pleb.prototype.respond = function (toLevelId, msg) {
+PlebInfo.prototype.respond = function (toLevelId, msg) {
   SpeakEasy.LocalDataChannel.send(msg);
 };
 

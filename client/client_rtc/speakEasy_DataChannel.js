@@ -25,18 +25,35 @@
 
 
   window.SpeakEasyChannel = function (channel) {
-    if (channel) this.automatic = true;
-    this.channel = channel || location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
+    if (!channel) throw Error("No channel arg provided")
+    var self = this;
+    var dataConnector;
+    var textReceiver;
+    channel.openSignalingChannel = function (config) {
+      var channel = config.channel;
+      // var channel = config.channel || this.channel || 'default-channel';
+      onMessageCallbacks[channel] = config.onmessage;
+      if (config.onopen) setTimeout(config.onopen, 1);
+      return {
+        send: function (message) {
+          SpeakEasy.socket.emit('message', {
+            sender: channel.userid,
+            channel: channel,
+            message: message
+          });
+        },
+        channel: channel
+      };
+    };
 
-    var self = this,
-      dataConnector, textReceiver;
+    this.channel = channel;
+    this.channels = {};
+
 
     this.onmessage = function (message, userid) {
       console.debug(userid, 'sent message:', message);
       SpeakEasy.onMessageInject(message, userid);
     };
-
-    this.channels = {};
 
     this.onopen = function (userid) {
       console.debug(userid, 'is connected with you.');
@@ -212,15 +229,13 @@
       this.chunkInterval = isFirefox || chromeVersion >= 32 ? 100 : 500; // 500ms for RTP and 100ms for SCTP
     }
 
-    if (self.automatic) {
-      if (window.Firebase) {
-        console.debug('checking presence of the room..');
-        new window.Firebase('https://' + (self.firebase || 'chat') + '.firebaseIO.com/' + self.channel).once('value', function (data) {
-          console.debug('room is present?', data.val() != null);
-          self.openNewSession(data.val() == null);
-        });
-      } else self.openNewSession(false, true);
-    }
+    if (window.Firebase) {
+      console.debug('checking presence of the room..');
+      new window.Firebase('https://' + (self.firebase || 'chat') + '.firebaseIO.com/' + self.channel).once('value', function (data) {
+        console.debug('room is present?', data.val() != null);
+        self.openNewSession(data.val() == null);
+      });
+    } else self.openNewSession(false, true);
   };
   //  ____    _  _____  _    ____ ___  _   _ _   _ _____ ____ _____ ___  ____
   // |  _ \  / \|_   _|/ \  / ___/ _ \| \ | | \ | | ____/ ___|_   _/ _ \|  _ \ 

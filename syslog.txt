@@ -316,3 +316,23 @@ New Pleb handed to manager rWtR5Lklj9EIBUOfAAAB. Plebs: .
 New Pleb handed to manager rWtR5Lklj9EIBUOfAAAB. Plebs: .
 New Manager Created, id: ekbCNNIhVvyLyepIAAAB
 New Pleb handed to manager ekbCNNIhVvyLyepIAAAB. Plebs: .
+New Manager Created, id: OyTjwYHW9wEbAKQBAAAB
+New Pleb handed to manager OyTjwYHW9wEbAKQBAAAB. Plebs: .
+Socket OyTjwYHW9wEbAKQBAAAB disconnect
+Manager: OyTjwYHW9wEbAKQBAAAB removed from managerList.
+Socket 8FPBzcZuzxJoX5uPAAAA disconnect
+New Manager Created, id: 32vlEZ8AKmgkyV6cAAAA
+New Pleb handed to manager 32vlEZ8AKmgkyV6cAAAA. Plebs: .
+Socket 32vlEZ8AKmgkyV6cAAAA disconnect
+Manager: 32vlEZ8AKmgkyV6cAAAA removed from managerList.
+New Manager Created, id: ADorjY3DD3DgqA1tAAAA
+New Manager Created, id: XuVni8LmtCrBY8E3AAAA
+New Manager Created, id: vG2Lq4I7XxlVG-m9AAAA
+New Manager Created, id: zIG0DvFxhWHilvasAAAA
+New Manager Created, id: bEpj3L6SWGKyG8usAAAA
+New Manager Created, id: JQOA1JeQvFr7JvrNAAAA
+New Manager Created, id: 4vC8cs2rYayk-lOeAAAA
+New Manager Created, id: u4_RoHxRVRc8z1_BAAAB
+New Pleb handed to manager u4_RoHxRVRc8z1_BAAAB. Plebs: .
+Socket u4_RoHxRVRc8z1_BAAAB disconnect
+Manager: u4_RoHxRVRc8z1_BAAAB removed from managerList.
