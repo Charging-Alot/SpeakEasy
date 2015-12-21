@@ -1,15 +1,18 @@
 function SpeakEasyBuild(DataChannel) {
-  this.LocalDataChannel = new DataChannel();
+  this.LocalDataChannelContstructor = DataChannel;
   this.socket = null;
   this.AdminInfo = null;
   this.PlayerInfo = null;
 }
 SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   if (typeof signalerSetup !== "function") throw Error("SignalerSetup needs to be a function")
-  signalerSetup(this, socketEndPoint || '/');
+  this.signaler = signalerSetup;
+  this.socketEndPoint = socketEndPoint;
+  this.LocalDataChannel = new this.LocalDataChannelContstructor();
   this.LocalDataChannel.onmessage = this.onMessageInject.bind(this);
   this.LocalDataChannel.onopen = this.onOpenInject.bind(this);
-  this.LocalDataChannel.onclose = this.onLeave.bind(this);
+  this.LocalDataChannel.onclose = this.onclose.bind(this);
+  signalerSetup(this, socketEndPoint || '/');
 };
 SpeakEasyBuild.prototype.onOpenInject = function () {
   console.log("ON OPEN FIRING", this)
@@ -41,13 +44,13 @@ SpeakEasyBuild.prototype.ejectPlayer = function (data) {
   delete this.AdminInfo.players[data];
 };
 
-SpeakEasyBuild.prototype.onLeave = function () {
-  console.log("ON LEAVE INJECT FIRED", rtcId);
+SpeakEasyBuild.prototype.onclose = function (event) {
   if (this.AdminInfo) {
-    return this.socket.emit('playerlost', PlayerSocketId);
+    return console.log("ON CLOSE FIREDDDDDD", event)
+      // return this.socket.emit('playerlost', PlayerSocketId);
   }
   //need to check if admin left
-  this.init();
+  // this.init(this.signaler, this.socketEndPoint);
 };
 SpeakEasyBuild.prototype.resetState = function () {
   this.LocalDataChannel = null;
@@ -70,12 +73,19 @@ SpeakEasyBuild.prototype.confirmPlayer = function (data) {
 };
 
 SpeakEasyBuild.prototype.adminSetup = function (data) {
-  this.AdminInfo = new AdminInfo(data);
-  this.LocalDataChannel.userid = data.adminId;
+  this.AdminInfo = new AdminInfo(data, this);
+  this.LocalDataChannel.userid = this.AdminInfo.adminId;
   this.LocalDataChannel.transmitRoomOnce = true;
-
-  this.LocalDataChannel.open(data.adminId);
+  this.LocalDataChannel.open(this.AdminInfo.adminId);
+  console.log("IN ADMIN SETUP,channel opened with ", this.AdminInfo.adminId, this.LocalDataChannel.userid)
 };
+// SpeakEasyBuild.prototype.adminSetup = function (data) {
+//   this.AdminInfo = new AdminInfo(data);
+//   this.LocalDataChannel.userid = data.adminId;
+//   this.LocalDataChannel.transmitRoomOnce = true;
+
+//   this.LocalDataChannel.open(data.adminId);
+// };
 
 SpeakEasyBuild.prototype.playerSetup = function (data) {
   this.PlayerInfo = new PlayerInfo(data);
@@ -87,33 +97,41 @@ SpeakEasyBuild.prototype.playerSetup = function (data) {
   });
 };
 
-function AdminInfo(data) {
+function AdminInfo(data, parent) {
+  this.parent = parent;
   this.adminId = data.adminId;
   this.players = {};
   this.playerRtcIds = {};
 }
 
-AdminInfo.prototype.broadcast = function (msg) {
-  SpeakEasy.LocalDataChannel.send(msg); //SO GHETTOOOO
-  // body...
-};
-AdminInfo.prototype.message = function (toLevelId, msg) {
-  if (!toLevelId) {
-    //this.players[playerId].occupied = true;
-    //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
-    //send to next avail player
-  } else if (toLevelId === 1) {
-    throw Error("Somehow this admin thought it was a player...")
-  } else {
-    //send to mother
-  }
-};
+// AdminInfo.prototype.broadcast = function (msg) {
+//   SpeakEasy.LocalDataChannel.send(msg); //SO GHETTOOOO
+//   // body...
+// };
+// AdminInfo.prototype.message = function (toLevelId, msg) {
+//   if (!toLevelId) {
+//     //this.players[playerId].occupied = true;
+//     //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
+//     //send to next avail player
+//   } else if (toLevelId === 1) {
+//     throw Error("Somehow this admin thought it was a player...")
+//   } else {
+//     //send to mother
+//   }
+// };
 
-function PlayerInfo(data, rtcId) {
-  this.PlayerSocketId = data.playerId;
-  this.rtcid = rtcId;
+function PlayerInfo(data, parent) {
+  console.log("IN PLAYER INFO ", arguments)
+  if (parent) {
+    this.adminId = data.adminId;
+    this.parent = parent;
+  } else {
+    this.PlayerSocketId = data.PlayerSocketId;
+    this.confirmed = false;
+    this.rtcid = data.playerRtc;
+  }
 }
 
-PlayerInfo.prototype.respond = function (toLevelId, msg) {
-  SpeakEasy.LocalDataChannel.send(msg);
-};
+// PlayerInfo.prototype.respond = function (toLevelId, msg) {
+//   SpeakEasy.LocalDataChannel.send(msg);
+// };
