@@ -1,12 +1,26 @@
 function socketListener(SpeakEasy) {
-  // var onMessageCallbacks = {};
-  if (!SpeakEasy.LocalDataChannel) throw '"SpeakEasy.LocalDataChannel" argument is required.';
+  if (!SpeakEasy.LocalDataChannel) throw '"SpeakEasy.LocalDataChannel" argument is required, its possible you did not init()';
+
+  // SpeakEasy.LocalDataChannel.openSignalingChannel = function (config) {
+  //   var channel = config.channel;
+  //   if (config.onopen) setTimeout(config.onopen, 1);
+  //   return {
+  //     send: function (message) {
+  //       SpeakEasy.socket.emit('message', {
+  //         sender: channel.userid,
+  //         channel: channel,
+  //         message: message
+  //       });
+  //     },
+  //     channel: channel
+  //   };
+  // };
+
 
   initSocket();
 
   function initSocket() { //all the handlers!
     console.log("Init socket")
-    SpeakEasy.resetState();
     SpeakEasy.socket = io.connect('http://localhost:1337/', {
       'force new connection': true,
       'reconnect': false
@@ -14,6 +28,7 @@ function socketListener(SpeakEasy) {
 
     SpeakEasy.socket.on('error', function () {
       socket.isHavingError = true;
+      SpeakEasy.resetState();
       initSocket();
     });
 
@@ -28,39 +43,25 @@ function socketListener(SpeakEasy) {
       }
       console.log("Socket disconnected for unexpected reason, attempting reconnect")
       SpeakEasy.socket.isHavingError = true;
+      SpeakEasy.resetState();
       initSocket(); //if not pleb, means was manager or hadn't been established yet, attempt reconnect
     });
 
     SpeakEasy.socket.on('managersetup', function (data) {
       console.log("MANAGER SETUP SIGNAL RECIEVED", data);
-      SpeakEasy.managerSetup();
-      SpeakEasy.ManagerInfo.managerId = data.managerId; //might not need this.
-      SpeakEasy.ManagerInfo.managerStatus = true;
-      SpeakEasy.LocalDataChannel.userid = data.managerId;
-      SpeakEasy.LocalDataChannel.transmitRoomOnce = true;
-      SpeakEasy.LocalDataChannel.open(SpeakEasy.LocalDataChannel.userid);
-      // SpeakEasy.ManagerInfo.Model = new Manager(null, SpeakEasy.ManagerInfo.message.bind(SpeakEasy.ManagerInfo))
+      SpeakEasy.managerSetup(data);
     });
 
     SpeakEasy.socket.on('plebsetup', function (data) {
       console.log("PLEB SETUP SIGNAL RECIEVED", data);
-      SpeakEasy.plebSetup();
-      SpeakEasy.LocalDataChannel.connect(data.managerId);
-      SpeakEasy.LocalDataChannel.join({
-        id: data.managerId,
-        owner: data.managerId
-      });
-      SpeakEasy.PlebInfo.plebStatus = true;
-      SpeakEasy.PlebInfo.oldPlebSocketId = data.plebId;
-      // SpeakEasy.PlebInfo.Model = new Manager(null, SpeakEasy.PlebInfo.respond.bind(SpeakEasy.PlebInfo));
+      SpeakEasy.plebSetup(data);
     });
 
     SpeakEasy.socket.on('plebeject', function (data) {
       if (SpeakEasy.ManagerInfo.managerStatus) {
         console.log("Pleb Eject called for:", data)
         var plebrtcid = SpeakEasy.ManagerInfo.plebRtcIds[data];
-        SpeakEasy.LocalDataChannel.channels[plebrtcid].channel.peer.close(plebrtcid); //ghetto
-        delete SpeakEasy.ManagerInfo.plebs[data];
+        SpeakEasy.ejectPleb(plebrtcid);
       };
     });
 
@@ -70,6 +71,7 @@ function socketListener(SpeakEasy) {
       };
     });
   }
+
 
 
   //======================================== Connection error handling!!!!!
@@ -86,9 +88,10 @@ function socketListener(SpeakEasy) {
 
   function onLineOffLineHandler() {
     if (!navigator.onLine) {
-      return console.warn('Internet channel seems disconnected or having issues.');
+      return alert('Internet channel seems disconnected or having issues.');
     }
     if (SpeakEasy.socket.isHavingError) {
+      SpeakEasy.resetState();
       initSocket();
     }
   }

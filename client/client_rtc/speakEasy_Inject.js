@@ -1,15 +1,53 @@
-function SpeakEasyBuild() {
-  this.LocalDataChannel = null;
+function SpeakEasyBuild(DataChannel) {
+  this.LocalDataChannel = new DataChannel();
   this.socket = null;
   this.ManagerInfo = null;
   this.PlebInfo = null;
 }
-
-SpeakEasyBuild.prototype.init = function (channelArg, socketSetup, socketEndPoint) {
-  this.LocalDataChannel = new channelArg(this);
-  socketSetup(this, socketEndPoint || '/');
+SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
+  if (typeof signalerSetup !== "function") throw Error("SignalerSetup needs to be a function")
+  signalerSetup(this, socketEndPoint || '/');
+  this.LocalDataChannel.onMessage = this.onMessageInject;
+  this.LocalDataChannel.onopen = this.onOpenInject;
+  this.LocalDataChannel.onleave = this.onLeave;
+};
+SpeakEasyBuild.prototype.onOpenInject = function () {
+  console.log("ON OPEN INJECT FIRED", userId);
+  if (this.PlebInfo.plebStatus) {
+    console.log("Pleb connection event to manager fired");
+    this.LocalDataChannel.send({ //send message to manager to complete initial handshake
+      isPleb_initiation: true,
+      plebSocketId: this.PlebInfo.oldPlebSocketId
+    })
+  }
+};
+SpeakEasyBuild.prototype.onMessageInject = function (data) {
+  if (this.ManagerInfo.managerStatus && data.isPleb_initiation) { //check to see if is pleb connection intiation
+    return this.initiatePleb(data, rtcId)
+  }
+  if (this.ManagerInfo) { //if pleb response to instruction
+    return console.log("PLEB RESPONSE MESSAGE: ", data);
+    //toggle pleb is occupied
+  } else if (this.PlebInfo) {
+    return console.log("PLEB RECIEVED MEASSAGE: ", data, rtcId);
+  }
+  throw Error("Somehow arrived to onMessage inject without pleb or manager status");
 };
 
+SpeakEasyBuild.prototype.ejectPleb = function (data) {
+  console.log("THIS IS WHAT EJECT PLEB IS TRYING TO EJECT ", data);
+  this.LocalDataChannel.eject(data);
+  delete this.ManagerInfo.plebs[data];
+};
+
+SpeakEasyBuild.prototype.onLeave = function () {
+  console.log("ON LEAVE INJECT FIRED", rtcId);
+  if (this.ManagerInfo.managerStatus) {
+    return this.socket.emit('pleblost', plebSocketId);
+  }
+  //need to check if manager left
+  this.init();
+};
 SpeakEasyBuild.prototype.resetState = function () {
   this.LocalDataChannel = null;
   this.socket = null;
@@ -25,46 +63,27 @@ SpeakEasyBuild.prototype.initiatePleb = function () {
   this.socket.emit("plebrecieved", data.plebSocketId);
   console.log("Pleb handshake confirmed", this.ManagerInfo.plebs);
 };
-SpeakEasyBuild.prototype.onMessageInject = function () {
-  if (this.ManagerInfo.managerStatus && data.isPleb_initiation) { //check to see if is pleb connection intiation
-    return this.initiatePleb(data, rtcId)
-  }
-  if (this.ManagerInfo.managerStatus) { //if pleb response to instruction
-    //toggle pleb is occupied
-  }
-  console.log("PLEB RECIEVED MEASSAGE: ", data, rtcId)
+
+
+SpeakEasyBuild.prototype.managerSetup = function (data) {
+  this.ManagerInfo = new ManagerInfo(data);
+  this.LocalDataChannel.userid = data.managerId;
+  this.LocalDataChannel.transmitRoomOnce = true;
+  this.LocalDataChannel.open(SpeakEasy.LocalDataChannel.userid);
 };
 
-SpeakEasyBuild.prototype.onClose = function () {
-  console.log("ON LEAVE INJECT FIRED", rtcId);
-  if (this.ManagerInfo.managerStatus) {
-    return this.socket.emit('pleblost', plebSocketId);
-  }
-  this.init();
+SpeakEasyBuild.prototype.plebSetup = function (data) {
+  this.PlebInfo = new PlebInfo(data);
+  this.LocalDataChannel.connect(data.managerId);
+  this.LocalDataChannel.join({
+    id: data.managerId,
+    owner: data.managerId
+  });
 };
 
-SpeakEasyBuild.prototype.onOpenInject = function () {
-  console.log("ON OPEN INJECT FIRED", userId);
-  if (this.PlebInfo.plebStatus) {
-    console.log("Pleb connection event to manager fired");
-    this.LocalDataChannel.send({ //send message to manager to complete initial handshake
-      isPleb_initiation: true,
-      plebSocketId: this.PlebInfo.oldPlebSocketId
-    })
-  }
-};
-
-SpeakEasyBuild.prototype.managerSetup = function () {
-  this.ManagerInfo = new ManagerInfo();
-};
-
-SpeakEasyBuild.prototype.plebSetup = function () {
-  this.PlebInfo = new PlebInfo();
-};
-
-function ManagerInfo() {
+function ManagerInfo(data) {
   this.model = null;
-  this.managerId = '';
+  this.managerId = data.managerId;
   this.managerStatus = true;
   this.plebs = {};
   this.plebRtcIds = {};
@@ -86,8 +105,8 @@ ManagerInfo.prototype.message = function (toLevelId, msg) {
   }
 };
 
-function PlebInfo() {
-  this.oldPlebSocketId = '';
+function PlebInfo(data) {
+  this.oldPlebSocketId = data.plebId;
   this.model = null;
   this.plebStatus = true;
 }
@@ -95,53 +114,3 @@ function PlebInfo() {
 PlebInfo.prototype.respond = function (toLevelId, msg) {
   SpeakEasy.LocalDataChannel.send(msg);
 };
-
-// init: function () {
-//   this.LocalDataChannel = new SpeakEasyChannel();
-//   initSpeakEasySignaler(this, '/');
-// },
-
-// resetState: function () {
-//   this.ManagerInfo.managerStatus = false;
-//   this.ManagerInfo.plebRtcIds = {};
-//   this.PlebInfo.plebStatus = false;
-// },
-
-// initiatePleb: function (data, rtcId) {
-//   this.ManagerInfo.plebRtcIds[data.plebSocketId] = rtcId; //lets us look up plebs rtc id's by their socket ids
-//   this.ManagerInfo.plebs[rtcId] = {
-//     oldSocketId: data.plebSocketId //stores the old socket id for no reason atm.
-//   };
-//   this.socket.emit("plebrecieved", data.plebSocketId);
-//   console.log("Pleb handshake confirmed", this.ManagerInfo.plebs);
-// },
-
-// onMessageInject: function (data, rtcId) {
-//   if (this.ManagerInfo.managerStatus && data.isPleb_initiation) { //check to see if is pleb connection intiation
-//     return this.initiatePleb(data, rtcId)
-//   }
-//   if (this.ManagerInfo.managerStatus) { //if pleb response to instruction
-//     //toggle pleb is occupied
-//   }
-
-//   console.log("PLEB RECIEVED MEASSAGE: ", data, rtcId)
-// },
-
-// onClose: function (rtcId) {
-//   console.log("ON LEAVE INJECT FIRED", rtcId);
-//   if (this.ManagerInfo.managerStatus) {
-//     return this.socket.emit('pleblost', plebSocketId);
-//   }
-//   this.init();
-// },
-
-// onOpenInject: function (userId) {
-//   console.log("ON OPEN INJECT FIRED", userId);
-//   if (this.PlebInfo.plebStatus) {
-//     console.log("Pleb connection event to manager fired");
-//     this.LocalDataChannel.send({ //send message to manager to complete initial handshake
-//       isPleb_initiation: true,
-//       plebSocketId: this.PlebInfo.oldPlebSocketId
-//     })
-//   }
-// }

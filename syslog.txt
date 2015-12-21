@@ -336,3 +336,65 @@ New Manager Created, id: u4_RoHxRVRc8z1_BAAAB
 New Pleb handed to manager u4_RoHxRVRc8z1_BAAAB. Plebs: .
 Socket u4_RoHxRVRc8z1_BAAAB disconnect
 Manager: u4_RoHxRVRc8z1_BAAAB removed from managerList.
+New Manager Created, id: 9zBffAGwGz9bFV0qAAAA
+New Manager Created, id: yoQVrE7sySVRG_ZeAAAA
+New Manager Created, id: e_ki1AVjum6mGwlhAAAA
+New Manager Created, id: ZMJrFOcUpk1-B6kNAAAA
+New Manager Created, id: w4JqSWYI5CV5WYXfAAAA
+New Pleb handed to manager w4JqSWYI5CV5WYXfAAAA. Plebs: .
+Socket w4JqSWYI5CV5WYXfAAAA disconnect
+Manager: w4JqSWYI5CV5WYXfAAAA removed from managerList.
+Socket oOMdgXuM3MzyD-1_AAAB disconnect
+New Manager Created, id: YKrBmj_apXIxU-GFAAAD
+Socket YKrBmj_apXIxU-GFAAAD disconnect
+Manager: YKrBmj_apXIxU-GFAAAD removed from managerList.
+Socket 2-qaFR9D_831zacTAAAC disconnect
+New Manager Created, id: 0wq-fMlq7P_7fGP2AAAE
+New Pleb handed to manager 0wq-fMlq7P_7fGP2AAAE. Plebs: .
+Socket 0wq-fMlq7P_7fGP2AAAE disconnect
+Manager: 0wq-fMlq7P_7fGP2AAAE removed from managerList.
+Socket oVWNPf9tAzj3gxAoAAAG disconnect
+New Manager Created, id: Cenxk553hd-0iMfjAAAH
+Socket 5sK3sMTyy5PHfWV4AAAF disconnect
+Socket Cenxk553hd-0iMfjAAAH disconnect
+Manager: Cenxk553hd-0iMfjAAAH removed from managerList.
+New Manager Created, id: 5eBxjz4SF7ua_p9jAAAI
+New Manager Created, id: bNngE3IHx7u-cXbhAAAA
+New Pleb handed to manager bNngE3IHx7u-cXbhAAAA. Plebs: .
+Socket bNngE3IHx7u-cXbhAAAA disconnect
+Manager: bNngE3IHx7u-cXbhAAAA removed from managerList.
+New Manager Created, id: 2aRvGhzYwgXfwY91AAAC
+Socket o6rAfiM5FvZT6DdUAAAB disconnect
+Socket 2aRvGhzYwgXfwY91AAAC disconnect
+Manager: 2aRvGhzYwgXfwY91AAAC removed from managerList.
+New Manager Created, id: uNpVZEOsIl91XqXeAAAD
+New Pleb handed to manager uNpVZEOsIl91XqXeAAAD. Plebs: .
+New Pleb handed to manager uNpVZEOsIl91XqXeAAAD. Plebs: .
+New Pleb handed to manager uNpVZEOsIl91XqXeAAAD. Plebs: .
+Socket uNpVZEOsIl91XqXeAAAD disconnect
+Manager: uNpVZEOsIl91XqXeAAAD removed from managerList.
+Socket OtBkNPbwPEJ414ABAAAE disconnect
+Socket XFm-cQjDICn6fdf_AAAF disconnect
+Socket JoLWjmXdfUBDCuSdAAAG disconnect
+New Manager Created, id: KrZE0aK734-KQKtZAAAH
+New Pleb handed to manager KrZE0aK734-KQKtZAAAH. Plebs: .
+Socket KrZE0aK734-KQKtZAAAH disconnect
+Manager: KrZE0aK734-KQKtZAAAH removed from managerList.
+Socket fdkj6gaLVFCWSf1-AAAI disconnect
+New Manager Created, id: O6DWIolc6th6NljGAAAJ
+Socket O6DWIolc6th6NljGAAAJ disconnect
+Manager: O6DWIolc6th6NljGAAAJ removed from managerList.
+New Manager Created, id: Q9u2mgaHPs_5_axbAAAK
+Socket Q9u2mgaHPs_5_axbAAAK disconnect
+Manager: Q9u2mgaHPs_5_axbAAAK removed from managerList.
+New Manager Created, id: i449N1KGxq0MaMtUAAAL
+New Pleb handed to manager i449N1KGxq0MaMtUAAAL. Plebs: .
+Socket gY-jD4nornlxpDEJAAAM disconnect
+New Pleb handed to manager i449N1KGxq0MaMtUAAAL. Plebs: .
+Socket i449N1KGxq0MaMtUAAAL disconnect
+Manager: i449N1KGxq0MaMtUAAAL removed from managerList.
+New Manager Created, id: vxqqQohZ_qvKD9A4AAAO
+Socket 1TjT9Ce2ND3Zda3QAAAN disconnect
+Socket vxqqQohZ_qvKD9A4AAAO disconnect
+Manager: vxqqQohZ_qvKD9A4AAAO removed from managerList.
+New Manager Created, id: MCHZ98g6feRo2cdlAAAP
