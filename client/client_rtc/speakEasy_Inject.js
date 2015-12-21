@@ -11,6 +11,7 @@ SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   this.LocalDataChannel.onopen = this.onOpenInject.bind(this);
   this.LocalDataChannel.onclose = this.onLeave.bind(this);
 };
+
 SpeakEasyBuild.prototype.onOpenInject = function () {
   console.log("ON OPEN FIRING", this)
   if (this.PlayerInfo) {
@@ -41,8 +42,8 @@ SpeakEasyBuild.prototype.ejectPlayer = function (data) {
   delete this.AdminInfo.players[data];
 };
 
-SpeakEasyBuild.prototype.onLeave = function () {
-  console.log("ON LEAVE INJECT FIRED", rtcId);
+SpeakEasyBuild.prototype.onclose = function () {
+  console.log("ON close INJECT FIRED", rtcId);
   if (this.AdminInfo) {
     return this.socket.emit('playerlost', PlayerSocketId);
   }
@@ -70,18 +71,16 @@ SpeakEasyBuild.prototype.confirmPlayer = function (data) {
 };
 
 SpeakEasyBuild.prototype.adminSetup = function (data) {
-  this.AdminInfo = new AdminInfo(data);
+  this.AdminInfo = new AdminInfo(data, this);
   this.LocalDataChannel.userid = data.adminId;
   this.LocalDataChannel.transmitRoomOnce = true;
-
   this.LocalDataChannel.open(data.adminId);
 };
 
 SpeakEasyBuild.prototype.playerSetup = function (data) {
-  this.PlayerInfo = new PlayerInfo(data);
+  this.PlayerInfo = new PlayerInfo(data, null, this);
   this.LocalDataChannel.connect(data.adminId);
   this.LocalDataChannel.join({
-    // id: "foo",
     id: data.adminId,
     owner: data.adminId
   });
@@ -93,11 +92,11 @@ function AdminInfo(data) {
   this.playerRtcIds = {};
 }
 
-AdminInfo.prototype.broadcast = function (msg) {
-  SpeakEasy.LocalDataChannel.send(msg); //SO GHETTOOOO
+AdminInfo.prototype.broadcast = function (msg, parent) {
+  parent.LocalDataChannel.send(msg); //SO GHETTOOOO
   // body...
 };
-AdminInfo.prototype.message = function (toLevelId, msg) {
+AdminInfo.prototype.message = function (toLevelId, msg, parent) {
   if (!toLevelId) {
     //this.players[playerId].occupied = true;
     //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
@@ -109,7 +108,7 @@ AdminInfo.prototype.message = function (toLevelId, msg) {
   }
 };
 
-function PlayerInfo(data, rtcId) {
+function PlayerInfo(data, rtcId, parent) {
   this.PlayerSocketId = data.playerId;
   this.rtcid = rtcId;
 }
