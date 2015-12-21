@@ -79,20 +79,20 @@ SpeakEasyBuild.prototype.confirmPlayer = function (data) {
 
 SpeakEasyBuild.prototype.adminSetup = function (data) {
   this.AdminInfo = new AdminInfo(data, this);
-  this.LocalDataChannel.userid = data.adminId;
+  this.LocalDataChannel.userid = this.AdminInfo.adminId;
   this.LocalDataChannel.transmitRoomOnce = true;
-  this.LocalDataChannel.open(data.adminId);
-  console.log("IN ADMIN SETUP,channel opened with ", data.adminId)
+  this.LocalDataChannel.open(this.AdminInfo.adminId);
+  console.log("IN ADMIN SETUP,channel opened with ", this.AdminInfo.adminId)
 };
 
 SpeakEasyBuild.prototype.playerSetup = function (data) {
-  this.PlayerInfo = new PlayerInfo(data, null);
-  this.LocalDataChannel.connect(data.adminId);
+  this.PlayerInfo = new PlayerInfo(data, this);
+  this.LocalDataChannel.connect(this.PlayerInfo.adminId);
   this.LocalDataChannel.join({
-    id: data.adminId,
-    owner: data.adminId
+    id: this.PlayerInfo.adminId,
+    owner: this.PlayerInfo.adminId
   });
-  console.log("IN PLAYER SETUP, join called with", data.adminId)
+  console.log("IN PLAYER SETUP, join called with", this.PlayerInfo.adminId)
 };
 
 function AdminInfo(data, parent) {
@@ -121,11 +121,13 @@ AdminInfo.prototype.message = function (toLevelId, msg, parent) {
 
 function PlayerInfo(data, parent) {
   console.log("IN PLAYER INFO ", arguments)
-  this.PlayerSocketId = data.PlayerSocketId;
   if (parent) {
+    this.adminId = data.adminId;
+    this.parent = parent;
+  } else {
+    this.PlayerSocketId = data.PlayerSocketId;
     this.confirmed = false;
     this.rtcid = data.playerRtc;
-    this.parent = parent;
   }
 }
 

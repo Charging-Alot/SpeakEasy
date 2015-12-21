@@ -55,11 +55,11 @@ function socketListener(SpeakEasy) {
     });
 
     SpeakEasy.socket.on('adminsetup', function (data) {
+      console.log("ADMIN SETUP SIGNAL RECIEVED", data);
       SpeakEasy.adminSetup(data);
       SpeakEasy.LocalDataChannel.openSignalingChannel({
         channel: data.adminId
       })
-      console.log("ADMIN SETUP SIGNAL RECIEVED", data);
     });
 
     SpeakEasy.socket.on('playersetup', function (data) {
