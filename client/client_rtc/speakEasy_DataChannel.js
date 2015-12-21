@@ -307,6 +307,7 @@
       }
 
       function onChannelOpened(channel) {
+        channel.SpkEzId = _config.userid
         channel.peer = peer.peer;
         RTCDataChannels.push(channel);
 
