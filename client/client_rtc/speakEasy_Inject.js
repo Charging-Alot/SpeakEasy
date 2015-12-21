@@ -69,7 +69,7 @@ SpeakEasyBuild.prototype.managerSetup = function (data) {
   this.ManagerInfo = new ManagerInfo(data);
   this.LocalDataChannel.userid = data.managerId;
   this.LocalDataChannel.transmitRoomOnce = true;
-  this.LocalDataChannel.open(SpeakEasy.LocalDataChannel.userid);
+  this.LocalDataChannel.open(this.LocalDataChannel.userid);
 };
 
 SpeakEasyBuild.prototype.plebSetup = function (data) {

@@ -398,3 +398,15 @@ Socket 1TjT9Ce2ND3Zda3QAAAN disconnect
 Socket vxqqQohZ_qvKD9A4AAAO disconnect
 Manager: vxqqQohZ_qvKD9A4AAAO removed from managerList.
 New Manager Created, id: MCHZ98g6feRo2cdlAAAP
+Socket MCHZ98g6feRo2cdlAAAP disconnect
+Manager: MCHZ98g6feRo2cdlAAAP removed from managerList.
+New Manager Created, id: aEgv9JVwA51SfziCAAAQ
+New Pleb handed to manager aEgv9JVwA51SfziCAAAQ. Plebs: .
+Socket n_zyRE3wDIO2FNAXAAAR disconnect
+New Pleb handed to manager aEgv9JVwA51SfziCAAAQ. Plebs: .
+Socket Q2Lp2vTGwtjRuf89AAAT disconnect
+New Pleb handed to manager aEgv9JVwA51SfziCAAAQ. Plebs: .
+New Manager Created, id: 79N7rrlUltG_9ZAzAAAA
+New Pleb handed to manager 79N7rrlUltG_9ZAzAAAA. Plebs: .
+New Manager Created, id: JnJvgIOpreD-25RaAAAA
+New Manager Created, id: O9zj27oZ45Puj8rlAAAB
