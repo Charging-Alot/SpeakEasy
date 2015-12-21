@@ -39,7 +39,6 @@ SpeakEasyBuild.prototype.onMessageInject = function (data, rtcId) {
 
 SpeakEasyBuild.prototype.ejectPlayer = function (data) {
   console.log("THIS IS WHAT EJECT PLAYER IS TRYING TO EJECT ", data);
-  // this.LocalDataChannel.eject(data); //doesnt work for whatever reason.
   this.LocalDataChannel.channels[data].channel.peer.close()
   delete this.AdminInfo.players[data];
 };
@@ -72,7 +71,7 @@ SpeakEasyBuild.prototype.initiatePlayer = function (data, rtcId) {
 };
 
 SpeakEasyBuild.prototype.confirmPlayer = function (data) {
-  this.AdminInfo.players[data.playerRtc] = new PlayerInfo(data, data.playerRtc);
+  this.AdminInfo.players[data.playerRtc] = new PlayerInfo(data);
   console.log("Player confirmed", data);
 };
 
@@ -81,12 +80,11 @@ SpeakEasyBuild.prototype.adminSetup = function (data) {
   this.LocalDataChannel.userid = this.AdminInfo.adminId;
   this.LocalDataChannel.transmitRoomOnce = true;
   this.LocalDataChannel.open(this.AdminInfo.adminId);
-  console.log("IN ADMIN SETUP,channel opened with ", this.AdminInfo.adminId, this.LocalDataChannel.userid)
 };
 
 SpeakEasyBuild.prototype.playerSetup = function (data) {
   console.log("Player Setup", data)
-  this.PlayerInfo = new PlayerInfo(data);
+  this.PlayerInfo = new PlayerInfo(data, this);
   this.LocalDataChannel.connect(data.adminId);
   this.LocalDataChannel.join({
     id: data.adminId,
@@ -98,7 +96,6 @@ function AdminInfo(data, parent) {
   this.parent = parent;
   this.adminId = data.adminId;
   this.players = {};
-  this.playerRtcIds = {};
 }
 
 
@@ -110,7 +107,6 @@ function PlayerInfo(data, parent) {
     this.parent = parent;
   } else {
     this.PlayerSocketId = data.PlayerSocketId;
-    this.confirmed = false;
     this.rtcid = data.playerRtc;
   }
 }
