@@ -103,21 +103,21 @@ function AdminInfo(data, parent) {
   this.playerRtcIds = {};
 }
 
-AdminInfo.prototype.broadcast = function (msg, parent) {
-  parent.LocalDataChannel.send(msg); //SO GHETTOOOO
-  // body...
-};
-AdminInfo.prototype.message = function (toLevelId, msg, parent) {
-  if (!toLevelId) {
-    //this.players[playerId].occupied = true;
-    //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
-    //send to next avail player
-  } else if (toLevelId === 1) {
-    throw Error("Somehow this admin thought it was a player...")
-  } else {
-    //send to mother
-  }
-};
+// AdminInfo.prototype.broadcast = function (msg, parent) {
+//   parent.LocalDataChannel.send(msg); //SO GHETTOOOO
+//   // body...
+// };
+// AdminInfo.prototype.message = function (toLevelId, msg, parent) {
+//   if (!toLevelId) {
+//     //this.players[playerId].occupied = true;
+//     //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
+//     //send to next avail player
+//   } else if (toLevelId === 1) {
+//     throw Error("Somehow this admin thought it was a player...")
+//   } else {
+//     //send to mother
+//   }
+// };
 
 function PlayerInfo(data, parent) {
   console.log("IN PLAYER INFO ", arguments)
@@ -130,7 +130,6 @@ function PlayerInfo(data, parent) {
     this.rtcid = data.playerRtc;
   }
 }
-
-PlayerInfo.prototype.respond = function (toLevelId, msg) {
-  SpeakEasy.LocalDataChannel.send(msg);
-};
+// PlayerInfo.prototype.respond = function (toLevelId, msg) {
+//   SpeakEasy.LocalDataChannel.send(msg);
+// };
