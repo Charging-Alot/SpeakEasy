@@ -66,12 +66,17 @@ function socketListener(SpeakEasy) {
       console.log("PLAYER SETUP SIGNAL RECIEVED", data);
       SpeakEasy.playerSetup(data);
     });
+    SpeakEasy.socket.on('playerconfirmed', function (data) {
+      if (SpeakEasy.AdminInfo) {
+        return SpeakEasy.confirmPlayer(data);
+      };
+      console.error("Received playerconfirmation but not established as admin");
+    });
 
     SpeakEasy.socket.on('playereject', function (data) {
       if (SpeakEasy.AdminInfo) {
         console.log("Player Eject called for:", data)
-        var playerrtcid = SpeakEasy.AdminInfo.playerRtcIds[data];
-        SpeakEasy.ejectPlayer(playerrtcid);
+        SpeakEasy.ejectPlayer(data.playerRtc);
       };
     });
   }

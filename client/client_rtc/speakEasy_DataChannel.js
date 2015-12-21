@@ -381,7 +381,6 @@
 
           console.debug('ice candidate', response.candidate.candidate);
         }
-
         if (response.left) {
           if (peer && peer.peer) {
             peer.peer.close();
@@ -487,6 +486,7 @@
       if (channel) {
         socket = self.socketObjects[channel];
         if (socket) {
+          console.log("IN LEAVE CHANNELS", alert, channel, socket)
           socket.send(alert);
 
           if (self.sockets[socket.index])
@@ -583,6 +583,7 @@
           }
       },
       leave: function (userid, autoCloseEntireSession) {
+        console.log("IN LEAVE", arguments)
         if (autoCloseEntireSession) root.autoCloseEntireSession = true;
         leaveChannels(userid);
         if (!userid) {

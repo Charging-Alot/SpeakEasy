@@ -108,18 +108,19 @@ module.exports = function AdminList(adminSize) {
      * @param {string} playerSocketId - The id representing the player's socket id in the pending connections object.
      * 
      */
-  this.playerRecieved = function (manSocket, playerSocketId) {
+  this.playerRecieved = function (manSocket, data) {
+      console.log("PLAYER REC", data)
       var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
-        if (pendingObj.socket.id === playerSocketId) return true;
+        if (pendingObj.socket.id === data.playerSocketId) return true;
         return false;
       });
       if (pendingIdx !== -1) {
-        this.storage[manSocket.id].players.push(playerSocketId);
+        this.storage[manSocket.id].players.push(data.playerSocketId);
         this.storage[manSocket.id].pending[pendingIdx].socket.disconnect();
-        return this.storage[manSocket.id].pending.splice(pendingIdx, 1);
+        this.storage[manSocket.id].pending.splice(pendingIdx, 1);
+        return manSocket.emit("playerconfirmed", data);
       }
-      debugger;
-      manSocket.emit('playereject', playerSocketId);
+      manSocket.emit('playereject', data);
     }
     // 
     // 

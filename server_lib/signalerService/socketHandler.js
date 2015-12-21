@@ -41,8 +41,8 @@ function easySignaler(app) {
      *
      * @param {string} adminSocketId - The unique identifier admins socket in the AdminList
      */
-    socket.on('playerrecieved', function (playerSocketId) { //having two of these might be overkill
-      AdminList.playerRecieved(socket, playerSocketId)
+    socket.on('playerrecieved', function (data) { //having two of these might be overkill
+      AdminList.playerRecieved(socket, data)
     });
     /*
      * Signals to the mother that a player was lost and it can be removed from the pool of players of that admin 
