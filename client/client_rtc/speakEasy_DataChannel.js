@@ -1,11 +1,3 @@
-// Last time updated at Nov 21, 2014, 08:32:23
-
-// Muaz Khan         - www.MuazKhan.com
-// MIT License       - www.WebRTC-Experiment.com/licence
-// Documentation     - github.com/muaz-khan/WebRTC-Experiment/tree/master/DataChannel
-// ______________
-// DataChannel.js
-
 (function () {
   window.DataChannel = function (channel, extras) {
     if (channel) this.automatic = true;
@@ -138,7 +130,6 @@
       dataConnector = IsDataChannelSupported ?
         new DataConnector(self, self.config) :
         new SocketConnector(self.channel, self.config);
-
       // fileReceiver = new FileReceiver(self);
       textReceiver = new TextReceiver(self);
 
@@ -169,7 +160,6 @@
       if (!room.id || !room.owner) {
         throw 'Invalid room info passed.';
       }
-
       dataConnector.joinRoom({
         roomToken: room.id,
         joinUser: room.owner

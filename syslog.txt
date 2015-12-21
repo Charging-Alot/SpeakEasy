@@ -410,3 +410,229 @@ New Manager Created, id: 79N7rrlUltG_9ZAzAAAA
 New Pleb handed to manager 79N7rrlUltG_9ZAzAAAA. Plebs: .
 New Manager Created, id: JnJvgIOpreD-25RaAAAA
 New Manager Created, id: O9zj27oZ45Puj8rlAAAB
+New Manager Created, id: jcwdiMBLfeA9R_z9AAAA
+New Manager Created, id: Dix3KhC219T4RdVcAAAA
+New Manager Created, id: KLIYg25Or7aLYljvAAAB
+New Manager Created, id: 7EOxGa9KIehrUPCjAAAA
+New Manager Created, id: pbBqn3TN0PeQlvWVAAAA
+New Pleb handed to manager pbBqn3TN0PeQlvWVAAAA. Plebs: .
+New Manager Created, id: Mjqo9HDTyeZVAV8KAAAA
+New Manager Created, id: XoD0aB-dBxMUVs4aAAAB
+Socket XKedGel9ig0-AGDAAAAA disconnect
+Socket JGC0KbpowExO-ANOAAAC disconnect
+New Pleb handed to manager XoD0aB-dBxMUVs4aAAAB. Plebs: .
+Socket Qn35-hngnsjpKNsnAAAD disconnect
+New Pleb handed to manager XoD0aB-dBxMUVs4aAAAB. Plebs: .
+New Manager Created, id: 9sf883sFFzugSYtYAAAA
+New Manager Created, id: QWUTPRF5coDDgOf6AAAA
+New Manager Created, id: KybRwmSG54htDsywAAAA
+Socket KybRwmSG54htDsywAAAA disconnect
+Manager: KybRwmSG54htDsywAAAA removed from managerList.
+New Manager Created, id: PrNgaCt7Y_9nGmVRAAAB
+New Pleb handed to manager PrNgaCt7Y_9nGmVRAAAB. Plebs: .
+Socket PrNgaCt7Y_9nGmVRAAAB disconnect
+Manager: PrNgaCt7Y_9nGmVRAAAB removed from managerList.
+Socket j23Ry8Q7LnNOdXWbAAAC disconnect
+New Manager Created, id: YQwKR1o4Iw4KNMNCAAAD
+New Manager Created, id: eCzbBElqrggq6lXAAAAA
+Socket EH5ycBK3QKuBEdmiAAAB disconnect
+New Pleb handed to manager eCzbBElqrggq6lXAAAAA. Plebs: .
+New Manager Created, id: qpLiyE7VGNj0RLASAAAA
+New Pleb handed to manager qpLiyE7VGNj0RLASAAAA. Plebs: .
+Socket qpLiyE7VGNj0RLASAAAA disconnect
+Manager: qpLiyE7VGNj0RLASAAAA removed from managerList.
+Socket hRw_lkL_FaaPUuaEAAAB disconnect
+New Manager Created, id: jv9IDin4IC65VqJzAAAD
+New Manager Created, id: KzKxq_3xMo4JdQd0AAAA
+New Manager Created, id: T9Fsvz2vrUBVQKTjAAAA
+Socket T9Fsvz2vrUBVQKTjAAAA disconnect
+Manager: T9Fsvz2vrUBVQKTjAAAA removed from managerList.
+New Manager Created, id: ufMSfFSn2U13YQzJAAAB
+New Pleb handed to manager ufMSfFSn2U13YQzJAAAB. Plebs: .
+New Manager Created, id: V-oSv8bkzIOo4otMAAAA
+New Manager Created, id: 5zwdILiBhqNggZHfAAAA
+New Manager Created, id: Rqt_FsNZNTzr_8_qAAAA
+New Pleb handed to manager Rqt_FsNZNTzr_8_qAAAA. Plebs: .
+New Manager Created, id: DHYBgEvhuk0Gh6fTAAAA
+New Pleb handed to manager DHYBgEvhuk0Gh6fTAAAA. Plebs: .
+Socket 05bQHgS1OFmRpLY1AAAB disconnect
+New Pleb handed to manager DHYBgEvhuk0Gh6fTAAAA. Plebs: .
+New Manager Created, id: XehXZDcgJ7xQkos4AAAA
+New Pleb handed to manager XehXZDcgJ7xQkos4AAAA. Plebs: .
+New Manager Created, id: R9Plfy0UsLY-ViPWAAAA
+New Pleb handed to manager R9Plfy0UsLY-ViPWAAAA. Plebs: .
+New Manager Created, id: RZJFLMWgla7aqM28AAAA
+New Pleb handed to manager RZJFLMWgla7aqM28AAAA. Plebs: .
+New Pleb handed to manager RZJFLMWgla7aqM28AAAA. Plebs: .
+Socket SUMU01hSBPbKHaf7AAAB disconnect
+New Pleb handed to manager RZJFLMWgla7aqM28AAAA. Plebs: .
+Socket gtRFa3-zt41M50I_AAAC disconnect
+Socket WY-v7fzcNJmS7iQmAAAD disconnect
+New Manager Created, id: wJ0aiGHFPngYhEhyAAAE
+New Pleb handed to manager wJ0aiGHFPngYhEhyAAAE. Plebs: .
+New Manager Created, id: 2DlnzspSzjv63kxbAAAA
+New Pleb handed to manager 2DlnzspSzjv63kxbAAAA. Plebs: .
+New Pleb handed to manager 2DlnzspSzjv63kxbAAAA. Plebs: .
+New Manager Created, id: bqGfi6B2fE4cNH2IAAAA
+New Pleb handed to manager bqGfi6B2fE4cNH2IAAAA. Plebs: .
+Socket bqGfi6B2fE4cNH2IAAAA disconnect
+Manager: bqGfi6B2fE4cNH2IAAAA removed from managerList.
+New Manager Created, id: cYlSnSxK-RJa6J9cAAAC
+Socket d5MMAScg-tDbBxMmAAAB disconnect
+New Pleb handed to manager cYlSnSxK-RJa6J9cAAAC. Plebs: .
+Socket cYlSnSxK-RJa6J9cAAAC disconnect
+Manager: cYlSnSxK-RJa6J9cAAAC removed from managerList.
+Socket L78KWXHNFf6MV3DuAAAD disconnect
+New Manager Created, id: 5BdQ-YB3xC9gjqi4AAAE
+New Pleb handed to manager 5BdQ-YB3xC9gjqi4AAAE. Plebs: .
+New Manager Created, id: I9BeFa56ALh1jSXWAAAA
+New Pleb handed to manager I9BeFa56ALh1jSXWAAAA. Plebs: .
+New Pleb handed to manager I9BeFa56ALh1jSXWAAAA. Plebs: .
+New Manager Created, id: hjtY-X1-K-HlgBenAAAB
+New Pleb handed to manager hjtY-X1-K-HlgBenAAAB. Plebs: .
+New Manager Created, id: BioKPFKtpw3KUBLKAAAA
+New Pleb handed to manager BioKPFKtpw3KUBLKAAAA. Plebs: .
+New Manager Created, id: CQgaAAypuIJR-Z8gAAAA
+New Manager Created, id: p_YwRMwapbE7QuweAAAA
+New Manager Created, id: UZCsk6JR4igkuu_wAAAA
+New Pleb handed to manager UZCsk6JR4igkuu_wAAAA. Plebs: .
+New Manager Created, id: 5yAU9I-eWZ3dqEQsAAAA
+Socket 2H7ph7TU-mXy-KuDAAAB disconnect
+Socket 5yAU9I-eWZ3dqEQsAAAA disconnect
+Manager: 5yAU9I-eWZ3dqEQsAAAA removed from managerList.
+New Manager Created, id: R1OpSVs9e0ODb64kAAAC
+New Pleb handed to manager R1OpSVs9e0ODb64kAAAC. Plebs: .
+New Manager Created, id: M_6e7AA4AN_xL875AAAA
+New Pleb handed to manager M_6e7AA4AN_xL875AAAA. Plebs: .
+New Pleb handed to manager M_6e7AA4AN_xL875AAAA. Plebs: .
+Socket M_6e7AA4AN_xL875AAAA disconnect
+Manager: M_6e7AA4AN_xL875AAAA removed from managerList.
+New Manager Created, id: 4wsF9RKm5utvbVKYAAAD
+New Manager Created, id: wPsnTAxrX_51ebiAAAAA
+New Pleb handed to manager wPsnTAxrX_51ebiAAAAA. Plebs: .
+New Pleb handed to manager wPsnTAxrX_51ebiAAAAA. Plebs: .
+Socket z-muV9KdSIokcBDFAAAB disconnect
+Socket DzAlHWDvxxvyw7fFAAAC disconnect
+New Pleb handed to manager wPsnTAxrX_51ebiAAAAA. Plebs: .
+New Manager Created, id: Whl3WBB4Fs5onN3pAAAB
+New Pleb handed to manager Whl3WBB4Fs5onN3pAAAB. Plebs: .
+New Pleb handed to manager Whl3WBB4Fs5onN3pAAAB. Plebs: .
+New Manager Created, id: qvopFGporxKiySCkAAAA
+New Pleb handed to manager qvopFGporxKiySCkAAAA. Plebs: .
+New Pleb handed to manager qvopFGporxKiySCkAAAA. Plebs: .
+New Manager Created, id: _l5N2Um2ncfOCGy_AAAA
+New Pleb handed to manager _l5N2Um2ncfOCGy_AAAA. Plebs: .
+New Pleb handed to manager _l5N2Um2ncfOCGy_AAAA. Plebs: .
+New Manager Created, id: Jddrx8slQe6JmMgrAAAB
+New Pleb handed to manager Jddrx8slQe6JmMgrAAAB. Plebs: .
+Socket k_-Tx17Dzeud9pNmAAAC disconnect
+New Pleb handed to manager Jddrx8slQe6JmMgrAAAB. Plebs: .
+New Manager Created, id: iUJpgdPbyTv7VB6LAAAA
+New Manager Created, id: CnQ5m1OZ3u8CZ6c8AAAB
+New Manager Created, id: K_EDbAalWR17BWV8AAAA
+New Manager Created, id: QxJMBSee6FQ1UJy0AAAB
+New Pleb handed to manager QxJMBSee6FQ1UJy0AAAB. Plebs: .
+New Manager Created, id: i1EDLaf44L6JngoRAAAA
+New Manager Created, id: UjmA4aSi59sLssYeAAAA
+New Manager Created, id: JCtEIIDmeS1E9gfJAAAA
+New Manager Created, id: D_2EjtjQI5C0Zl96AAAA
+New Pleb handed to manager D_2EjtjQI5C0Zl96AAAA. Plebs: .
+New Manager Created, id: YDtDfPnYHEKBTp3cAAAA
+New Manager Created, id: tOtF5Crxy6tp2sygAAAB
+New Manager Created, id: uMYEAVj8jPgpO6wXAAAA
+New Pleb handed to manager uMYEAVj8jPgpO6wXAAAA. Plebs: .
+New Manager Created, id: 3krNAn40f-7V5YiDAAAA
+New Pleb handed to manager 3krNAn40f-7V5YiDAAAA. Plebs: .
+New Manager Created, id: 1s17xw6OxefdrqnxAAAA
+New Pleb handed to manager 1s17xw6OxefdrqnxAAAA. Plebs: .
+New Manager Created, id: nu3Ti2Ad-R0ZVNaNAAAB
+New Pleb handed to manager nu3Ti2Ad-R0ZVNaNAAAB. Plebs: .
+New Manager Created, id: 80UXKp99IP9kr2AbAAAA
+New Pleb handed to manager 80UXKp99IP9kr2AbAAAA. Plebs: .
+New Manager Created, id: rLUXn9eVRddoZMhwAAAB
+New Manager Created, id: mWMETb6g8LPjqj0hAAAA
+New Pleb handed to manager mWMETb6g8LPjqj0hAAAA. Plebs: .
+Socket mWMETb6g8LPjqj0hAAAA disconnect
+Manager: mWMETb6g8LPjqj0hAAAA removed from managerList.
+Socket EvfAMryeB1Z3Rk-bAAAB disconnect
+New Manager Created, id: m1OiGwY7MP1995UuAAAC
+New Pleb handed to manager m1OiGwY7MP1995UuAAAC. Plebs: .
+New Manager Created, id: XHOM3LkHUvGRHiJ2AAAA
+New Manager Created, id: 6MXc04dUQwyy--dAAAAA
+New Pleb handed to manager 6MXc04dUQwyy--dAAAAA. Plebs: .
+New Pleb handed to manager 6MXc04dUQwyy--dAAAAA. Plebs: .
+New Pleb handed to manager 6MXc04dUQwyy--dAAAAA. Plebs: .
+New Manager Created, id: CogA-Gc61YtasNJQAAAB
+New Pleb handed to manager CogA-Gc61YtasNJQAAAB. Plebs: .
+New Manager Created, id: 81BffVjXD4qOkcOnAAAA
+New Manager Created, id: cZNcgwSP4LMSuin7AAAC
+New Manager Created, id: sLoPM76iDiLiaV1fAAAC
+New Pleb handed to manager sLoPM76iDiLiaV1fAAAC. Plebs: .
+New Pleb handed to manager sLoPM76iDiLiaV1fAAAC. Plebs: .
+New Manager Created, id: EChlXFgA6v0nT4e4AAAC
+New Manager Created, id: KKNM6Tab-2lIFhAoAAAC
+New Manager Created, id: vuIJiwcQQytC-RH-AAAA
+New Manager Created, id: LcL4KoK50lldhhdVAAAC
+New Pleb handed to manager LcL4KoK50lldhhdVAAAC. Plebs: .
+New Pleb handed to manager LcL4KoK50lldhhdVAAAC. Plebs: .
+New Manager Created, id: Rb63e9hbe9JqZhu7AAAA
+New Manager Created, id: p3UM6iNFBHGjfvmMAAAC
+New Manager Created, id: BLqXW83adtdQw7G2AAAC
+New Manager Created, id: HzdDxPu_88WpaEO5AAAA
+New Manager Created, id: hbfuXVi34nDwT7VzAAAC
+New Manager Created, id: W4_i_dD90MMrmKL7AAAB
+New Manager Created, id: EJg7cYNJl1mngJ3XAAAC
+New Manager Created, id: bkSjhZATzaCFuPReAAAC
+New Manager Created, id: ExDSpnDBuVT2m7GBAAAA
+New admin Created, id: WzlwPyb1kBDWaTMOAAAC
+New admin Created, id: RmisBJay7EKzBDn6AAAC
+New admin Created, id: iT9NMK2RuWimsWDhAAAC
+New Player handed to admin iT9NMK2RuWimsWDhAAAC. Players: .
+New Player handed to admin iT9NMK2RuWimsWDhAAAC. Players: .
+New admin Created, id: hUv_HlRfkR-I3Eh1AAAA
+New Player handed to admin hUv_HlRfkR-I3Eh1AAAA. Players: .
+New Player handed to admin hUv_HlRfkR-I3Eh1AAAA. Players: .
+Socket 8T_woeAJdZ3p1zuhAAAB disconnect
+New admin Created, id: i9Pa8rY1NFjtzgTpAAAA
+New Player handed to admin i9Pa8rY1NFjtzgTpAAAA. Players: .
+New Player handed to admin i9Pa8rY1NFjtzgTpAAAA. Players: .
+New admin Created, id: QKhNWOAv_5LdSoJxAAAA
+New Player handed to admin QKhNWOAv_5LdSoJxAAAA. Players: .
+New Player handed to admin QKhNWOAv_5LdSoJxAAAA. Players: .
+New admin Created, id: ZzPVAQKjGpatnJSSAAAA
+New Player handed to admin ZzPVAQKjGpatnJSSAAAA. Players: .
+New Player handed to admin ZzPVAQKjGpatnJSSAAAA. Players: .
+New admin Created, id: jxW70oIH7iEtd3l7AAAA
+New Player handed to admin jxW70oIH7iEtd3l7AAAA. Players: .
+New Player handed to admin jxW70oIH7iEtd3l7AAAA. Players: .
+New admin Created, id: WU0MCZEP_dXexivlAAAC
+New Player handed to admin WU0MCZEP_dXexivlAAAC. Players: .
+New Player handed to admin WU0MCZEP_dXexivlAAAC. Players: .
+Socket lWac04zi09jTzCEbAAAB disconnect
+Socket WU0MCZEP_dXexivlAAAC disconnect
+Admin: WU0MCZEP_dXexivlAAAC removed from adminList.
+Socket zw8RzqeZJt0Q607NAAAA disconnect
+New admin Created, id: qh3Dys-bWZvSScxeAAAD
+New Player handed to admin qh3Dys-bWZvSScxeAAAD. Players: .
+Socket qh3Dys-bWZvSScxeAAAD disconnect
+Admin: qh3Dys-bWZvSScxeAAAD removed from adminList.
+New admin Created, id: NiH9mcmJpa18w6R7AAAF
+Socket wciXW_WZnTz6bqUjAAAE disconnect
+New Player handed to admin NiH9mcmJpa18w6R7AAAF. Players: .
+New admin Created, id: fh7TTIPg82XklBtHAAAC
+New Player handed to admin fh7TTIPg82XklBtHAAAC. Players: .
+New Player handed to admin fh7TTIPg82XklBtHAAAC. Players: .
+Socket fh7TTIPg82XklBtHAAAC disconnect
+Admin: fh7TTIPg82XklBtHAAAC removed from adminList.
+Socket MXeZdPyYaePh0SQqAAAB disconnect
+Socket f8zT0jGSFonatg7lAAAA disconnect
+New admin Created, id: cVBF0avDPRcsD0XEAAAD
+New Player handed to admin cVBF0avDPRcsD0XEAAAD. Players: .
+New admin Created, id: Mo2E6nXoz00hkxhCAAAA
+New Player handed to admin Mo2E6nXoz00hkxhCAAAA. Players: .
+New admin Created, id: hJE00qJoXYQQzBJkAAAA
+New Player handed to admin hJE00qJoXYQQzBJkAAAA. Players: .
+New admin Created, id: VK4jiNywbEIsHqgKAAAA
+New Player handed to admin VK4jiNywbEIsHqgKAAAA. Players: .
+New admin Created, id: NnLeAgUh1-qN7gDvAAAA
+New Player handed to admin NnLeAgUh1-qN7gDvAAAA. Players: .

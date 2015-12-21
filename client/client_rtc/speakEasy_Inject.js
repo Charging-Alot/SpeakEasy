@@ -1,116 +1,112 @@
 function SpeakEasyBuild(DataChannel) {
   this.LocalDataChannel = new DataChannel();
   this.socket = null;
-  this.ManagerInfo = null;
-  this.PlebInfo = null;
+  this.AdminInfo = null;
+  this.PlayerInfo = null;
 }
 SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   if (typeof signalerSetup !== "function") throw Error("SignalerSetup needs to be a function")
   signalerSetup(this, socketEndPoint || '/');
-  this.LocalDataChannel.onMessage = this.onMessageInject;
-  this.LocalDataChannel.onopen = this.onOpenInject;
-  this.LocalDataChannel.onleave = this.onLeave;
+  this.LocalDataChannel.onmessage = this.onMessageInject.bind(this);
+  this.LocalDataChannel.onopen = this.onOpenInject.bind(this);
+  this.LocalDataChannel.onleave = this.onLeave.bind(this);
 };
 SpeakEasyBuild.prototype.onOpenInject = function () {
-  console.log("ON OPEN INJECT FIRED", userId);
-  if (this.PlebInfo.plebStatus) {
-    console.log("Pleb connection event to manager fired");
-    this.LocalDataChannel.send({ //send message to manager to complete initial handshake
-      isPleb_initiation: true,
-      plebSocketId: this.PlebInfo.oldPlebSocketId
+  console.log("ON OPEN FIRING", this)
+  if (this.PlayerInfo) {
+    console.log("Player connection event to admin fired");
+    this.LocalDataChannel.send({ //send message to admin to complete initial handshake
+      isPlayer_initiation: true,
+      playerSocketId: this.PlayerInfo.oldPlayerSocketId
     })
   }
 };
 SpeakEasyBuild.prototype.onMessageInject = function (data) {
-  if (this.ManagerInfo.managerStatus && data.isPleb_initiation) { //check to see if is pleb connection intiation
-    return this.initiatePleb(data, rtcId)
+  console.log("ON MESSAGE FIRING", data)
+  if (this.AdminInfo && data.isPlayer_initiation) { //check to see if is player connection intiation
+    return this.initiatePlayer(data, rtcId)
   }
-  if (this.ManagerInfo) { //if pleb response to instruction
-    return console.log("PLEB RESPONSE MESSAGE: ", data);
-    //toggle pleb is occupied
-  } else if (this.PlebInfo) {
-    return console.log("PLEB RECIEVED MEASSAGE: ", data, rtcId);
+  if (this.AdminInfo) { //if player response to instruction
+    return console.log("PLAYER RESPONSE MESSAGE: ", data);
+  } else if (this.PlayerInfo) {
+    return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
   }
-  throw Error("Somehow arrived to onMessage inject without pleb or manager status");
+  throw Error("Somehow arrived to onMessage inject without PLAYER or admin status");
 };
 
-SpeakEasyBuild.prototype.ejectPleb = function (data) {
-  console.log("THIS IS WHAT EJECT PLEB IS TRYING TO EJECT ", data);
+SpeakEasyBuild.prototype.ejectPlayer = function (data) {
+  console.log("THIS IS WHAT EJECT PLAYER IS TRYING TO EJECT ", data);
   this.LocalDataChannel.eject(data);
-  delete this.ManagerInfo.plebs[data];
+  delete this.AdminInfo.players[data];
 };
 
 SpeakEasyBuild.prototype.onLeave = function () {
   console.log("ON LEAVE INJECT FIRED", rtcId);
-  if (this.ManagerInfo.managerStatus) {
-    return this.socket.emit('pleblost', plebSocketId);
+  if (this.AdminInfo) {
+    return this.socket.emit('playerlost', playerSocketId);
   }
-  //need to check if manager left
+  //need to check if admin left
   this.init();
 };
 SpeakEasyBuild.prototype.resetState = function () {
   this.LocalDataChannel = null;
   this.socket = null;
-  this.ManagerInfo = null;
-  this.PlebInfo = null;
+  this.AdminInfo = null;
+  this.PlayerInfo = null;
 };
 
-SpeakEasyBuild.prototype.initiatePleb = function () {
-  this.ManagerInfo.plebRtcIds[data.plebSocketId] = rtcId; //lets us look up plebs rtc id's by their socket ids
-  this.ManagerInfo.plebs[rtcId] = {
-    oldSocketId: data.plebSocketId //stores the old socket id for no reason atm.
+SpeakEasyBuild.prototype.initiatePlayer = function () {
+  this.AdminInfo.playerRtcIds[data.playerSocketId] = rtcId; //lets us look up players rtc id's by their socket ids
+  this.AdminInfo.players[rtcId] = {
+    oldSocketId: data.playerSocketId //stores the old socket id for no reason atm.
   };
-  this.socket.emit("plebrecieved", data.plebSocketId);
-  console.log("Pleb handshake confirmed", this.ManagerInfo.plebs);
+  this.socket.emit("playerrecieved", data.playerSocketId);
+  console.log("Player handshake confirmed", this.AdminInfo.players);
 };
 
 
-SpeakEasyBuild.prototype.managerSetup = function (data) {
-  this.ManagerInfo = new ManagerInfo(data);
-  this.LocalDataChannel.userid = data.managerId;
+SpeakEasyBuild.prototype.adminSetup = function (data) {
+  this.AdminInfo = new AdminInfo(data);
+  this.LocalDataChannel.userid = data.adminId;
   this.LocalDataChannel.transmitRoomOnce = true;
-  this.LocalDataChannel.open(this.LocalDataChannel.userid);
+  this.LocalDataChannel.open(data.adminId);
 };
 
-SpeakEasyBuild.prototype.plebSetup = function (data) {
-  this.PlebInfo = new PlebInfo(data);
-  this.LocalDataChannel.connect(data.managerId);
+SpeakEasyBuild.prototype.playerSetup = function (data) {
+  this.PlayerInfo = new PlayerInfo(data);
+  this.LocalDataChannel.connect(data.adminId);
   this.LocalDataChannel.join({
-    id: data.managerId,
-    owner: data.managerId
+    id: data.adminId,
+    owner: data.adminId
   });
 };
 
-function ManagerInfo(data) {
-  this.model = null;
-  this.managerId = data.managerId;
-  this.managerStatus = true;
-  this.plebs = {};
-  this.plebRtcIds = {};
+function AdminInfo(data) {
+  this.adminId = data.adminId;
+  this.players = {};
+  this.playerRtcIds = {};
 }
 
-ManagerInfo.prototype.broadcast = function (msg) {
+AdminInfo.prototype.broadcast = function (msg) {
   SpeakEasy.LocalDataChannel.send(msg); //SO GHETTOOOO
   // body...
 };
-ManagerInfo.prototype.message = function (toLevelId, msg) {
+AdminInfo.prototype.message = function (toLevelId, msg) {
   if (!toLevelId) {
-    //this.plebs[plebId].occupied = true;
-    //SpeakEasy.LocalDataChannel.channels[plebId].send(msg); //SO GHETTOOOO
-    //send to next avail pleb
+    //this.players[playerId].occupied = true;
+    //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
+    //send to next avail player
   } else if (toLevelId === 1) {
-    throw Error("Somehow this manager thought it was a pleb...")
+    throw Error("Somehow this admin thought it was a player...")
   } else {
     //send to mother
   }
 };
 
-function PlebInfo(data) {
-  this.oldPlebSocketId = data.plebId;
-  this.model = null;
-  this.plebStatus = true;
+function PlayerInfo(data) {
+  this.oldPlayerSocketId = data.playerId;
 }
 
-PlebInfo.prototype.respond = function (toLevelId, msg) {
+PlayerInfo.prototype.respond = function (toLevelId, msg) {
   SpeakEasy.LocalDataChannel.send(msg);
 };
