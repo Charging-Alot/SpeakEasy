@@ -1,15 +1,18 @@
 function SpeakEasyBuild(DataChannel) {
-  this.LocalDataChannel = new DataChannel();
+  this.LocalDataChannelContstructor = DataChannel;
   this.socket = null;
   this.AdminInfo = null;
   this.PlayerInfo = null;
 }
 SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   if (typeof signalerSetup !== "function") throw Error("SignalerSetup needs to be a function")
-  signalerSetup(this, socketEndPoint || '/');
+  this.signaler = signalerSetup;
+  this.socketEndPoint = socketEndPoint;
+  this.LocalDataChannel = new this.LocalDataChannelContstructor();
   this.LocalDataChannel.onmessage = this.onMessageInject.bind(this);
   this.LocalDataChannel.onopen = this.onOpenInject.bind(this);
-  this.LocalDataChannel.onclose = this.onLeave.bind(this);
+  this.LocalDataChannel.onclose = this.onclose.bind(this);
+  signalerSetup(this, socketEndPoint || '/');
 };
 
 SpeakEasyBuild.prototype.onOpenInject = function () {
@@ -43,12 +46,12 @@ SpeakEasyBuild.prototype.ejectPlayer = function (data) {
 };
 
 SpeakEasyBuild.prototype.onclose = function () {
-  console.log("ON close INJECT FIRED", rtcId);
+  console.log("ON close INJECT FIRED", arguments);
   if (this.AdminInfo) {
     return this.socket.emit('playerlost', PlayerSocketId);
   }
   //need to check if admin left
-  this.init();
+  this.init(this.signaler, this.socketEndPoint);
 };
 SpeakEasyBuild.prototype.resetState = function () {
   this.LocalDataChannel = null;

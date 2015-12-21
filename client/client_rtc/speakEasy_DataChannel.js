@@ -307,6 +307,7 @@
       }
 
       function onChannelOpened(channel) {
+        channel.SpkEzId = _config.userid
         channel.peer = peer.peer;
         RTCDataChannels.push(channel);
 
@@ -486,7 +487,6 @@
       if (channel) {
         socket = self.socketObjects[channel];
         if (socket) {
-          console.log("IN LEAVE CHANNELS", alert, channel, socket)
           socket.send(alert);
 
           if (self.sockets[socket.index])
