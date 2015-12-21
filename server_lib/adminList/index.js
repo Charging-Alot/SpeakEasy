@@ -12,7 +12,7 @@ module.exports = function AdminList(adminSize) {
    */
   function playerData(playerId, manId) {
     return {
-      playerId: playerId,
+      PlayerSocketId: playerId,
       adminId: manId
     };
   }
@@ -109,7 +109,7 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.playerRecieved = function (manSocket, data) {
-      console.log("PLAYER REC", data)
+
       var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
         if (pendingObj.socket.id === data.playerSocketId) return true;
         return false;
@@ -122,16 +122,6 @@ module.exports = function AdminList(adminSize) {
       }
       manSocket.emit('playereject', data);
     }
-    // 
-    // 
-    // 
-    // 
-    // 
-    // 
-    // 
-    // 
-    // 
-    // 
     // 
     // 
     // 

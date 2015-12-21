@@ -55,17 +55,18 @@ function socketListener(SpeakEasy) {
     });
 
     SpeakEasy.socket.on('adminsetup', function (data) {
-      console.log("ADMIN SETUP SIGNAL RECIEVED", data);
+      SpeakEasy.adminSetup(data);
       SpeakEasy.LocalDataChannel.openSignalingChannel({
         channel: data.adminId
       })
-      SpeakEasy.adminSetup(data);
+      console.log("ADMIN SETUP SIGNAL RECIEVED", data);
     });
 
     SpeakEasy.socket.on('playersetup', function (data) {
       console.log("PLAYER SETUP SIGNAL RECIEVED", data);
       SpeakEasy.playerSetup(data);
     });
+
     SpeakEasy.socket.on('playerconfirmed', function (data) {
       if (SpeakEasy.AdminInfo) {
         return SpeakEasy.confirmPlayer(data);

@@ -1,0 +1,190 @@
+Socket g05pDcBINx0DZFcRAAAA disconnect
+Socket GWsZhBwbno7VAxnwAAAB disconnect
+Admin: GWsZhBwbno7VAxnwAAAB removed from adminList.
+New admin Created, id: bPkkm3GHAbiXQEWYAAAC
+New Player handed to admin bPkkm3GHAbiXQEWYAAAC. Players: .
+Socket eEANXiqHWcp5MQ9KAAAD disconnect
+New admin Created, id: hBhsMBw2blSnfheQAAAA
+New Player handed to admin hBhsMBw2blSnfheQAAAA. Players: .
+Socket cZWJaStPPCePNY5YAAAB disconnect
+New Player handed to admin hBhsMBw2blSnfheQAAAA. Players: cZWJaStPPCePNY5YAAAB.
+Socket 38ktJheo4XvPIpHYAAAC disconnect
+New admin Created, id: pL-75iZ0zkP5MFP2AAAB
+New Player handed to admin pL-75iZ0zkP5MFP2AAAB. Players: .
+New admin Created, id: E5H8lV0rCYUwz-F3AAAA
+New Player handed to admin E5H8lV0rCYUwz-F3AAAA. Players: .
+Socket lo6rBs96ZdeaTN3_AAAB disconnect
+New admin Created, id: 1ThDxSuyDLnPXF0rAAAA
+New Player handed to admin 1ThDxSuyDLnPXF0rAAAA. Players: .
+Socket xOS1mCbx5gQjK3XYAAAB disconnect
+New admin Created, id: DGzMgoL94fVCj_bdAAAA
+New Player handed to admin DGzMgoL94fVCj_bdAAAA. Players: .
+Socket tptHyE8ucyT5MIKtAAAB disconnect
+New Player handed to admin DGzMgoL94fVCj_bdAAAA. Players: tptHyE8ucyT5MIKtAAAB.
+New Player handed to admin DGzMgoL94fVCj_bdAAAA. Players: tptHyE8ucyT5MIKtAAAB.
+Socket wzxUDx14zrNbqu_mAAAD disconnect
+New admin Created, id: zzoshJtn_oMU79mfAAAA
+Socket zzoshJtn_oMU79mfAAAA disconnect
+Admin: zzoshJtn_oMU79mfAAAA removed from adminList.
+New admin Created, id: YJLkP2I5YT_ZJdaeAAAB
+New Player handed to admin YJLkP2I5YT_ZJdaeAAAB. Players: .
+Socket lLiOnWg0-tarwfhrAAAC disconnect
+New admin Created, id: Dyz5hJVaiKz79HJLAAAB
+New admin Created, id: Q7Mcoic_dWIzdzoCAAAB
+New Player handed to admin Q7Mcoic_dWIzdzoCAAAB. Players: .
+New admin Created, id: XRa-tIYzZ48nqW1IAAAA
+New admin Created, id: m-ggtJ9Kw9bx0zMMAAAA
+New Player handed to admin m-ggtJ9Kw9bx0zMMAAAA. Players: .
+New Player handed to admin m-ggtJ9Kw9bx0zMMAAAA. Players: .
+New Player handed to admin m-ggtJ9Kw9bx0zMMAAAA. Players: .
+Socket _ma2BgUWd68dAtvLAAAD disconnect
+Socket oi-IaIuCj_zhnC_WAAAB disconnect
+Socket wNDWGQdja2SUCnjVAAAC disconnect
+Socket m-ggtJ9Kw9bx0zMMAAAA disconnect
+Admin: m-ggtJ9Kw9bx0zMMAAAA removed from adminList.
+New admin Created, id: JppoD2_3Ff0pnpT-AAAE
+New Player handed to admin JppoD2_3Ff0pnpT-AAAE. Players: .
+New Player handed to admin JppoD2_3Ff0pnpT-AAAE. Players: .
+New Player handed to admin JppoD2_3Ff0pnpT-AAAE. Players: .
+Socket kSlpEL2CD4TTueJBAAAH disconnect
+Socket tC-oyUxJt7gkxq4uAAAF disconnect
+Socket LFKtzNlAG35eB-GnAAAG disconnect
+Socket JppoD2_3Ff0pnpT-AAAE disconnect
+Admin: JppoD2_3Ff0pnpT-AAAE removed from adminList.
+New admin Created, id: JaOlWCrmTVH2-e3UAAAI
+New admin Created, id: 8LlVbhTOcHvdZJ7XAAAB
+New Player handed to admin 8LlVbhTOcHvdZJ7XAAAB. Players: .
+Socket XURBbO8qQ_402EqAAAAA disconnect
+Socket 8LlVbhTOcHvdZJ7XAAAB disconnect
+Admin: 8LlVbhTOcHvdZJ7XAAAB removed from adminList.
+New admin Created, id: ba-m553LhLXee8O0AAAC
+New Player handed to admin ba-m553LhLXee8O0AAAC. Players: .
+New Player handed to admin ba-m553LhLXee8O0AAAC. Players: .
+New Player handed to admin ba-m553LhLXee8O0AAAC. Players: .
+Socket u2OrgbBZljso145jAAAF disconnect
+New admin Created, id: HlJKiiXJWZaQYs4zAAAB
+New Player handed to admin HlJKiiXJWZaQYs4zAAAB. Players: .
+New Player handed to admin HlJKiiXJWZaQYs4zAAAB. Players: .
+New Player handed to admin HlJKiiXJWZaQYs4zAAAB. Players: .
+New admin Created, id: HYM2WfCvvKcsBThDAAAA
+New Player handed to admin HYM2WfCvvKcsBThDAAAA. Players: .
+New admin Created, id: 0dkaId-BGXMvC_ChAAAB
+New Player handed to admin 0dkaId-BGXMvC_ChAAAB. Players: .
+New admin Created, id: bWIbsrq5JN74zOgjAAAA
+New Player handed to admin bWIbsrq5JN74zOgjAAAA. Players: .
+New Player handed to admin bWIbsrq5JN74zOgjAAAA. Players: .
+New Player handed to admin bWIbsrq5JN74zOgjAAAA. Players: .
+Socket LFWQabPCh3R8yBnPAAAD disconnect
+New admin Created, id: 1yfYoY3dQdAMdd3qAAAB
+New Player handed to admin 1yfYoY3dQdAMdd3qAAAB. Players: .
+New Player handed to admin 1yfYoY3dQdAMdd3qAAAB. Players: .
+New Player handed to admin 1yfYoY3dQdAMdd3qAAAB. Players: .
+New admin Created, id: 4bGu7EJKej5oRXBsAAAA
+New Player handed to admin 4bGu7EJKej5oRXBsAAAA. Players: .
+New Player handed to admin 4bGu7EJKej5oRXBsAAAA. Players: .
+New Player handed to admin 4bGu7EJKej5oRXBsAAAA. Players: .
+New admin Created, id: oyaKDtVM-aO7b9LOAAAE
+Socket oyaKDtVM-aO7b9LOAAAE disconnect
+Admin: oyaKDtVM-aO7b9LOAAAE removed from adminList.
+New admin Created, id: Syo8DPnV7vYtU1cRAAAF
+Socket Syo8DPnV7vYtU1cRAAAF disconnect
+Admin: Syo8DPnV7vYtU1cRAAAF removed from adminList.
+New admin Created, id: dmDaqpDphWq4H0fEAAAG
+New Player handed to admin dmDaqpDphWq4H0fEAAAG. Players: .
+New admin Created, id: ZgxbelPf09sc2IhtAAAA
+New Player handed to admin ZgxbelPf09sc2IhtAAAA. Players: .
+New Player handed to admin ZgxbelPf09sc2IhtAAAA. Players: .
+New Player handed to admin ZgxbelPf09sc2IhtAAAA. Players: .
+New admin Created, id: 2p9PHYBtZJK81NJ3AAAE
+New admin Created, id: -ey6CPbTw8SxjXlAAAAA
+New Player handed to admin -ey6CPbTw8SxjXlAAAAA. Players: .
+New Player handed to admin -ey6CPbTw8SxjXlAAAAA. Players: .
+New Player handed to admin -ey6CPbTw8SxjXlAAAAA. Players: .
+New admin Created, id: qftZMtMNhtDh23yOAAAE
+New Player handed to admin qftZMtMNhtDh23yOAAAE. Players: .
+Socket QUki1OgIIE1vfBq1AAAB disconnect
+Socket qftZMtMNhtDh23yOAAAE disconnect
+Admin: qftZMtMNhtDh23yOAAAE removed from adminList.
+New admin Created, id: IiaIxLpOjDgg6NufAAAG
+New Player handed to admin IiaIxLpOjDgg6NufAAAG. Players: .
+New admin Created, id: UPq5ypOkFiM6_pl8AAAB
+New Player handed to admin UPq5ypOkFiM6_pl8AAAB. Players: .
+New Player handed to admin UPq5ypOkFiM6_pl8AAAB. Players: .
+New Player handed to admin UPq5ypOkFiM6_pl8AAAB. Players: .
+Socket 0DXF6icQq5yosx_pAAAE disconnect
+New admin Created, id: UPq5ypOkFiM6_pl8AAAB
+New Player handed to admin UPq5ypOkFiM6_pl8AAAB. Players: .
+Socket nV5Zeartxcs3n8hbAAAG disconnect
+New admin Created, id: 3r8ENYmph7Z2zaoAAAAB
+Socket 3r8ENYmph7Z2zaoAAAAB disconnect
+Admin: 3r8ENYmph7Z2zaoAAAAB removed from adminList.
+New admin Created, id: KzbmnF_wI5qrastGAAAC
+New Player handed to admin KzbmnF_wI5qrastGAAAC. Players: .
+New admin Created, id: I0UQjry96jE861c_AAAB
+New Player handed to admin I0UQjry96jE861c_AAAB. Players: .
+New Player handed to admin I0UQjry96jE861c_AAAB. Players: .
+Socket i6ts0Fw75DxfhRQAAAAC disconnect
+New Player handed to admin I0UQjry96jE861c_AAAB. Players: .
+New admin Created, id: 639ibfAPhwQB8VBSAAAA
+New Player handed to admin 639ibfAPhwQB8VBSAAAA. Players: .
+New admin Created, id: lJzOjuCcY_UuHWYQAAAA
+Socket lJzOjuCcY_UuHWYQAAAA disconnect
+Admin: lJzOjuCcY_UuHWYQAAAA removed from adminList.
+New admin Created, id: drbw4vyS_RpN_-QoAAAB
+New Player handed to admin drbw4vyS_RpN_-QoAAAB. Players: .
+New admin Created, id: Z5IPLfc0pqnRWQljAAAB
+New Player handed to admin Z5IPLfc0pqnRWQljAAAB. Players: .
+New admin Created, id: anMfSncPTEnOsYITAAAA
+New Player handed to admin anMfSncPTEnOsYITAAAA. Players: .
+New admin Created, id: Yt7UtuWX1TUF67TlAAAA
+New admin Created, id: dhHYIlpnX8NQ03BaAAAA
+New Player handed to admin dhHYIlpnX8NQ03BaAAAA. Players: .
+New Player handed to admin dhHYIlpnX8NQ03BaAAAA. Players: .
+New admin Created, id: 7FzuDMxJKEQOHb49AAAA
+New Player handed to admin 7FzuDMxJKEQOHb49AAAA. Players: .
+New Player handed to admin 7FzuDMxJKEQOHb49AAAA. Players: .
+New Player handed to admin 7FzuDMxJKEQOHb49AAAA. Players: .
+New admin Created, id: lp3MXvdR-8ZTcWYUAAAA
+New Player handed to admin lp3MXvdR-8ZTcWYUAAAA. Players: .
+New admin Created, id: YpJxbiPhMk8aDz72AAAA
+New Player handed to admin YpJxbiPhMk8aDz72AAAA. Players: .
+Socket hwhTRNrlNvmfnEcRAAAB disconnect
+New admin Created, id: 9zYLvL5yOuIT2uW3AAAA
+New admin Created, id: P_Mcw2bU3e4nkNupAAAA
+New Player handed to admin P_Mcw2bU3e4nkNupAAAA. Players: .
+New Player handed to admin P_Mcw2bU3e4nkNupAAAA. Players: .
+New Player handed to admin P_Mcw2bU3e4nkNupAAAA. Players: .
+Socket rR7zBPXO-CpSq_sOAAAD disconnect
+New admin Created, id: M5RmC32lPml1qeyXAAAA
+New Player handed to admin M5RmC32lPml1qeyXAAAA. Players: .
+New Player handed to admin M5RmC32lPml1qeyXAAAA. Players: .
+New Player handed to admin M5RmC32lPml1qeyXAAAA. Players: .
+Socket FcVmSnxIFgbvgfaSAAAB disconnect
+Socket TlG2Iega6yDUuKPnAAAC disconnect
+Socket M5RmC32lPml1qeyXAAAA disconnect
+Admin: M5RmC32lPml1qeyXAAAA removed from adminList.
+Socket I1jESOUJpu2gkufLAAAD disconnect
+New admin Created, id: -DZztFApNswXqXHaAAAE
+New admin Created, id: 3_qUTgK3rCigx25bAAAB
+New admin Created, id: BvUZxDaHtNMv_wGYAAAA
+New admin Created, id: cQGN56A7i36yOSQGAAAB
+Socket CZ4oFtBOFCox0WWxAAAA disconnect
+New Player handed to admin cQGN56A7i36yOSQGAAAB. Players: .
+New admin Created, id: Oq0poxTzEas4cVjYAAAA
+New Player handed to admin Oq0poxTzEas4cVjYAAAA. Players: .
+New admin Created, id: Npr4WPDyBd8v3rotAAAB
+New Player handed to admin Npr4WPDyBd8v3rotAAAB. Players: .
+New admin Created, id: mVWPa6Aw4RamnQpiAAAA
+New Player handed to admin mVWPa6Aw4RamnQpiAAAA. Players: .
+New admin Created, id: i5IlsXW2t1EdVUCfAAAA
+New Player handed to admin i5IlsXW2t1EdVUCfAAAA. Players: .
+New admin Created, id: iOyuaNHrtnB5YB23AAAA
+New Player handed to admin iOyuaNHrtnB5YB23AAAA. Players: .
+New admin Created, id: K3YvynTArYLK58VKAAAB
+New Player handed to admin K3YvynTArYLK58VKAAAB. Players: .
+New admin Created, id: aZTSlx8f0HgvB5fbAAAA
+New Player handed to admin aZTSlx8f0HgvB5fbAAAA. Players: .
+New admin Created, id: -y-uV3AaUU0Po41qAAAB
+New Player handed to admin -y-uV3AaUU0Po41qAAAB. Players: .
+Socket iwsYLTKW7PvwCLgiAAAA disconnect
+New admin Created, id: -xqBKW1UqXrW27FcAAAA

@@ -45,10 +45,14 @@ SpeakEasyBuild.prototype.ejectPlayer = function (data) {
   delete this.AdminInfo.players[data];
 };
 
-SpeakEasyBuild.prototype.onclose = function () {
-  console.log("ON close INJECT FIRED", arguments);
+SpeakEasyBuild.prototype.onclose = function (event) {
+  var playerRtcId = event.target.SpkEzId;
   if (this.AdminInfo) {
-    return this.socket.emit('playerlost', PlayerSocketId);
+    var players = this.AdminInfo.players;
+    for (var player in players) {
+      console.log("ON CLSOE LOOP", players[player])
+        // return this.socket.emit('playerlost', PlayerSocketId);
+    }
   }
   //need to check if admin left
   this.init(this.signaler, this.socketEndPoint);
@@ -69,7 +73,7 @@ SpeakEasyBuild.prototype.initiatePlayer = function (data, rtcId) {
 };
 
 SpeakEasyBuild.prototype.confirmPlayer = function (data) {
-  this.AdminInfo.players[data.playerRtc] = new PlayerInfo(data, data.playerRtc);
+  this.AdminInfo.players[data.playerRtc] = new PlayerInfo(data, this);
   console.log("Player confirmed", data);
 };
 
@@ -78,18 +82,22 @@ SpeakEasyBuild.prototype.adminSetup = function (data) {
   this.LocalDataChannel.userid = data.adminId;
   this.LocalDataChannel.transmitRoomOnce = true;
   this.LocalDataChannel.open(data.adminId);
+  console.log("IN ADMIN SETUP,channel opened with ", data.adminId)
 };
 
 SpeakEasyBuild.prototype.playerSetup = function (data) {
-  this.PlayerInfo = new PlayerInfo(data, null, this);
+  this.PlayerInfo = new PlayerInfo(data, null);
   this.LocalDataChannel.connect(data.adminId);
   this.LocalDataChannel.join({
     id: data.adminId,
     owner: data.adminId
   });
+  console.log("IN PLAYER SETUP, join called with", data.adminId)
 };
 
-function AdminInfo(data) {
+function AdminInfo(data, parent) {
+  console.log("In ADmin info constructor", arguments)
+  this.parent = parent;
   this.adminId = data.adminId;
   this.players = {};
   this.playerRtcIds = {};
@@ -111,9 +119,14 @@ AdminInfo.prototype.message = function (toLevelId, msg, parent) {
   }
 };
 
-function PlayerInfo(data, rtcId, parent) {
-  this.PlayerSocketId = data.playerId;
-  this.rtcid = rtcId;
+function PlayerInfo(data, parent) {
+  console.log("IN PLAYER INFO ", arguments)
+  this.PlayerSocketId = data.PlayerSocketId;
+  if (parent) {
+    this.confirmed = false;
+    this.rtcid = data.playerRtc;
+    this.parent = parent;
+  }
 }
 
 PlayerInfo.prototype.respond = function (toLevelId, msg) {
