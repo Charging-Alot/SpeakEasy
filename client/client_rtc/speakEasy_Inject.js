@@ -40,13 +40,11 @@ SpeakEasyBuild.prototype.onMessageInject = function (data, rtcId) {
   } else if (this.PlayerInfo) {
     return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
   }
-  throw Error("Somehow arrived to onMessage inject without PLAYER or admin status");
+  console.error("Somehow arrived to onMessage inject without PLAYER or admin status");
 };
 
 SpeakEasyBuild.prototype.ejectPlayer = function (data) {
-  console.log("THIS IS WHAT EJECT PLAYER IS TRYING TO EJECT ", data);
   this.LocalDataChannel.channels[data].channel.peer.close()
-
 };
 
 SpeakEasyBuild.prototype.onclose = function (event) {
@@ -116,11 +114,10 @@ function PlayerInfo(data, parent) {
 }
 
 AdminInfo.prototype.broadcast = function (msg) {
-  SpeakEasy.LocalDataChannel.send(msg); //SO GHETTOOOO
-  // body...
+  this.parent.LocalDataChannel.send(msg);
 };
 
-AdminInfo.prototype.message = function (toLevelId, msg) {
+AdminInfo.prototype.message = function (msg, plebId, toLevelId) {
   if (!toLevelId) {
     //this.players[playerId].occupied = true;
     //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
@@ -132,6 +129,6 @@ AdminInfo.prototype.message = function (toLevelId, msg) {
   }
 };
 
-PlayerInfo.prototype.respond = function (toLevelId, msg) {
-  SpeakEasy.LocalDataChannel.send(msg);
+PlayerInfo.prototype.respond = function (msg, toLevelId) {
+  this.parent.LocalDataChannel.send(msg);
 };
