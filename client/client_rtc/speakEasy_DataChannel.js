@@ -289,6 +289,7 @@
         onmessage: function (event) {
           config.onmessage(event.data, _config.userid);
         },
+        userid: self.userToken,
         onclose: config.onclose,
         onerror: root.onerror,
         preferSCTP: root.preferSCTP
@@ -803,10 +804,10 @@
 
     var peerConnection = new PeerConnection(iceServers, optional);
 
-    peerConnection.oniceconnectionstatechange = function (z) {
+    peerConnection.oniceconnectionstatechange = function (event) {
       if (peerConnection.iceConnectionState == 'disconnected') {
-        console.log("SHIT HAPPENED", z, options)
-        options.onclose(z)
+        console.log("QQQQQQQQQQQQQQQQQQQQQQQQQQQQ", event, options, peerConnection)
+        options.onclose(event, this);
       }
     }
 

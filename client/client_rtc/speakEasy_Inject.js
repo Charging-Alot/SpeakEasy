@@ -61,7 +61,10 @@ SpeakEasyBuild.prototype.onclose = function (event) {
         return console.log("Player removed from admin's local player collection")
       }
     }
-  } else if (playerRtcId === this.PlayerInfo.adminId) {
+  } else if (playerRtcId === this.PlayerInfo.adminId) { //dont think this is neccessary anymore.
+    this.resetState();
+    return this.init(this.signaler, this.socketEndPoint);
+  } else if (this.LocalDataChannel.channels[this.PlayerInfo.adminId].channel.peer === event.target) { //Not ideal.  But this is reliable
     this.resetState();
     return this.init(this.signaler, this.socketEndPoint);
   }
