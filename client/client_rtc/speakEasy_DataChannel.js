@@ -806,7 +806,6 @@
 
     peerConnection.oniceconnectionstatechange = function (event) {
       if (peerConnection.iceConnectionState == 'disconnected') {
-        console.log("QQQQQQQQQQQQQQQQQQQQQQQQQQQQ", event, options, peerConnection)
         options.onclose(event, this);
       }
     }
