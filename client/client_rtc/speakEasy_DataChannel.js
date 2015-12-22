@@ -803,6 +803,11 @@
 
     var peerConnection = new PeerConnection(iceServers, optional);
 
+    // peerConnection.oniceconnectionstatechange = function (z) {
+    //   if (peerConnection.iceConnectionState == 'disconnected') {
+    //     console.log("SHIT HAPPENED", z, peerConnection)
+    //   }
+    // }
     openOffererChannel();
     peerConnection.onicecandidate = onicecandidate;
 

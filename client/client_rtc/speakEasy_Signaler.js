@@ -1,7 +1,5 @@
 function socketListener(SpeakEasy) {
   if (!SpeakEasy.LocalDataChannel) throw '"SpeakEasy.LocalDataChannel" argument is required, its possible you did not init()';
-
-  var onMessageCallbacks = {};
   SpeakEasy.LocalDataChannel.openSignalingChannel = function (config) {
     var channel = config.channel || this.channel || 'default-channel';
     onMessageCallbacks[channel] = config.onmessage;
@@ -18,6 +16,7 @@ function socketListener(SpeakEasy) {
     };
   };
 
+  var onMessageCallbacks = {};
   initSocket();
 
   function initSocket() { //all the handlers!
@@ -63,9 +62,11 @@ function socketListener(SpeakEasy) {
     });
 
     SpeakEasy.socket.on('playersetup', function (data) {
+      // if (SpeakEasy.AdminInfo || SpeakEasy)
       console.log("PLAYER SETUP SIGNAL RECIEVED", data);
       SpeakEasy.playerSetup(data);
     });
+
     SpeakEasy.socket.on('playerconfirmed', function (data) {
       if (SpeakEasy.AdminInfo) {
         return SpeakEasy.confirmPlayer(data);

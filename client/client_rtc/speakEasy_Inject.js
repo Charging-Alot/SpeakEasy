@@ -4,6 +4,12 @@ function SpeakEasyBuild(DataChannel) {
   this.AdminInfo = null;
   this.PlayerInfo = null;
 }
+SpeakEasyBuild.prototype.resetState = function () {
+  this.LocalDataChannel = null;
+  this.socket = null;
+  this.AdminInfo = null;
+  this.PlayerInfo = null;
+};
 SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   if (typeof signalerSetup !== "function") throw Error("SignalerSetup needs to be a function")
   this.signaler = signalerSetup;
@@ -40,33 +46,33 @@ SpeakEasyBuild.prototype.onMessageInject = function (data, rtcId) {
 SpeakEasyBuild.prototype.ejectPlayer = function (data) {
   console.log("THIS IS WHAT EJECT PLAYER IS TRYING TO EJECT ", data);
   this.LocalDataChannel.channels[data].channel.peer.close()
-  delete this.AdminInfo.players[data];
+
 };
 
 SpeakEasyBuild.prototype.onclose = function (event) {
+  console.log("ON CLOSE FIRED", event)
   var playerRtcId = event.target.SpkEzId;
   if (this.AdminInfo) {
     var players = this.AdminInfo.players;
     for (var player in players) {
-      console.log("ON CLSOE LOOP", players[player])
-        // return this.socket.emit('playerlost', PlayerSocketId);
+      if (player == playerRtcId) { //the one time its ok to use `==` (string == number)
+        this.socket.emit('playerlost', players[player].PlayerSocketId);
+        delete this.AdminInfo.players[player];
+        return console.log("Player removed from admin's local player collection")
+      }
     }
+  } else if (playerRtcId === this.PlayerInfo.adminId) {
+    this.resetState();
+    return this.init(this.signaler, this.socketEndPoint);
   }
-  //need to check if admin left
-  // this.init(this.signaler, this.socketEndPoint);
-};
-SpeakEasyBuild.prototype.resetState = function () {
-  this.LocalDataChannel = null;
-  this.socket = null;
-  this.AdminInfo = null;
-  this.PlayerInfo = null;
+  console.error("On Close event error: Somehow a player left that was neither an admin or a registered player")
 };
 
 SpeakEasyBuild.prototype.initiatePlayer = function (data, rtcId) {
   console.log("init player", data, rtcId)
   this.socket.emit("playerrecieved", {
     playerRtc: rtcId,
-    playerSocketId: data.PlayerSocketId
+    PlayerSocketId: data.PlayerSocketId
   });
 };
 
@@ -98,18 +104,17 @@ function AdminInfo(data, parent) {
   this.players = {};
 }
 
-
 function PlayerInfo(data, parent) {
   console.log("IN PLAYER INFO ", arguments)
+  this.PlayerSocketId = data.PlayerSocketId;
   if (parent) {
     this.adminId = data.adminId;
-    this.PlayerSocketId = data.PlayerSocketId;
     this.parent = parent;
   } else {
-    this.PlayerSocketId = data.PlayerSocketId;
     this.rtcid = data.playerRtc;
   }
 }
+
 AdminInfo.prototype.broadcast = function (msg) {
   SpeakEasy.LocalDataChannel.send(msg); //SO GHETTOOOO
   // body...

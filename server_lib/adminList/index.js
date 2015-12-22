@@ -109,13 +109,12 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.playerRecieved = function (manSocket, data) {
-
       var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
-        if (pendingObj.socket.id === data.playerSocketId) return true;
+        if (pendingObj.socket.id === data.PlayerSocketId) return true;
         return false;
       });
       if (pendingIdx !== -1) {
-        this.storage[manSocket.id].players.push(data.playerSocketId);
+        this.storage[manSocket.id].players.push(data.PlayerSocketId);
         this.storage[manSocket.id].pending[pendingIdx].socket.disconnect();
         this.storage[manSocket.id].pending.splice(pendingIdx, 1);
         return manSocket.emit("playerconfirmed", data);
