@@ -27,6 +27,11 @@ angular.module('speakEasy.chat', [])
   var chatWrap = angular.element(document.querySelector('.chatBoxWrap'));
   $scope.message = {};
   $scope.sendMessage = function () {
+    var regexTest = $scope.message.text.match(/[<>+_@#$%^&*?\[\]{}\\\/|=-]/g);
+    if ( regexTest && regexTest.length ) {
+      $scope.renderMessage('robot', "Sorry, you used some characters I don't understand! Try to stick to simple punctuation.");
+      return;
+    }
 
     $scope.renderMessage('user', $scope.message.text);
 
@@ -44,8 +49,7 @@ angular.module('speakEasy.chat', [])
   }
 
   $scope.renderMessage = function (context, message) {
-    // context is either 'user' or 'robot', defining the origin of the message
-    message.replace(/^\s*$/g, ''); // FUTZ WITH REGEX
+    
     if (message.length === 0) {
       $scope.message = {};
       return;
