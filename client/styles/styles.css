@@ -246,6 +246,11 @@ md-card-image {
 
 /* ABOUT PAGE TESTING **********************/
 
+.aboutBoxHeader {
+  background: white !important;
+  color: #2196F3 !important;
+}
+
 .testCard {
   height: 400px;
   width: 0%;

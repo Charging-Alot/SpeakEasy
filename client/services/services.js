@@ -33,10 +33,8 @@ angular.module('speakEasy.services', [])
         fullscreen: $mdMedia('sm') && $scope.customFullscreen
       })
       .then(function (answer) {
-        console.log("Bizzle")
         $scope.status = 'You said the information was "' + answer + '".';
       }, function () {
-        console.log("Fizzle")
         $scope.status = 'You cancelled the dialog.';
       });
     $scope.$watch(function () {
@@ -127,7 +125,10 @@ angular.module('speakEasy.services', [])
   var signout = function () {
     $window.localStorage.removeItem('com.speakEasy');
     logoutSwap();
-    $location.path('/landing');
+    // Protect the chat page by returning users to landing
+    if ( $location.$$path === '/chat') {
+      $location.path('/landing');
+    }
   };
 
   var loginSwap = function () {
