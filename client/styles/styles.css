@@ -340,6 +340,9 @@ md-card-image {
 }
 
 /****** TOOLBAR BUTTONS ********/
+/* Everything needs to use !important tags
+ * in order to overwrite some Material settings
+ */
 
 .toolButton {
   border-radius: 0px !important;
