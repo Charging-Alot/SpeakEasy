@@ -1,5 +1,6 @@
 var Neuron = function (partialNeuron) {
   if(partialNeuron !== undefined && partialNeuron !== null) {
+    this.isOutput = partialNeuron.isOutput;
     this.rate = partialNeuron.rate;
     this.maxGradient = partialNeuron.maxGradient;
     this.node = partialNeuron.node || {}
@@ -15,8 +16,6 @@ var Neuron = function (partialNeuron) {
       this.connections.gated = [];
     }
     this.gatedNodes = partialNeuron.gatedNodes || {}
-    this.inputNodes = partialNeuron.inputNodes || [];
-    this.outputNodes = partialNeuron.outputNodes || [];
   } else {
     this.node = {};
     this.connections = {};
@@ -24,8 +23,6 @@ var Neuron = function (partialNeuron) {
     this.connections.outputs = [];
     this.connections.gated = [];
     this.gatedNodes = {};
-    this.inputNodes = [];
-    this.outputNodes = [];
   }
 };
 
@@ -41,28 +38,6 @@ Neuron.prototype.update = function (command, section, partialNeuron) {
         }
       } else {
         this.node[nodeProp] = partialNeuron.node[nodeProp];
-      }
-    }
-  }
-  //properties of input nodes
-  if(partialNeuron.inputNodes) {
-    for(var fromNode in partialNeuron.inputNodes) {
-      if(!this.inputNodes[fromNode]) {
-        this.inputNodes[fromNode] = {};
-      }
-      for(fromProp in partialNeuron.inputNodes[fromNode]) {
-        this.inputNodes[fromNode][fromProp] = partialNeuron.inputNodes[fromNode][fromProp];
-      }
-    }
-  }
-  //properties of output nodes
-  if(partialNeuron.outputNodes) {
-    for(var toNode in partialNeuron.outputNodes) {
-      if(!this.outputNodes[toNode]) {
-        this.outputNodes[toNode] = {};
-      }
-      for(toProp in partialNeuron.outputNodes[toNode]) {
-        this.outputNodes[toNode][toProp] = partialNeuron.outputNodes[toNode][toProp];
       }
     }
   }

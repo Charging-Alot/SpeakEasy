@@ -158,7 +158,7 @@ Pleb.prototype.learningStep = function () {
       for(var m in this.gatedNodes) {
         gradient += this.gatedNodes[m].errorResponsibility * this.node.extendedElegibilities[m][l]
       }
-      this.connections.inputs[l].weight += this.rate * Math.min(gradient, this.maxGradient);
+      this.connections.inputs[l].weight += this.rate * (gradient > 0 ? Math.min(gradient, this.maxGradient) : Math.min(gradient, -this.maxGradient));
     }
     this.queueCommandManager('learningStep', null);
     this.toManager.runAllOutputs();

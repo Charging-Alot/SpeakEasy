@@ -16,13 +16,13 @@ Manager.prototype.update = function(command, section, partialNeuron) {
 
 Manager.prototype.activate = function(section) {
   this.node.prevState = this.node.state;
-  this.node.state = this.node.bias + this.node.prevState * this.node.selfConnection.gain * this.node.selfConnection.weight;
+  this.node.state = this.node.bias + this.node.prevState * (this.node.selfConnection.gateNode ? this.node.selfConnection.gateNode.activation : 1) * this.node.selfConnection.weight;
 
   this.queueCommandPleb('activationStep', null, function () {
     // this.queueCommandMother('activationStep');
     // this.toMother.runAllOutputs();
   });
-
+  
   this.queueCommandPleb('influenceStep', null, function () {
     // this.queueCommandMother('influenceStep', null);
     // this.toMother.runAllOutputs();
@@ -62,40 +62,50 @@ Manager.prototype.activate = function(section) {
 }
 
 Manager.prototype.backPropagate = function (section) {
-  this.node.errorProjected = 0;
-  var hasLearned = false;
-  var hasGatedError = false;
-  var hasProjectedError = false
-  //race condition?  depends if it handles learning and gatedError at the same time
-  this.queueCommandPleb('projectedErrorStep', null, function () {
-    hasProjectedError = true
+  if(this.isOutput) {
     this.queueCommandPleb('learningStep', null, function () {
-      hasLearned = true
-      if(hasGatedError) {
-        this.queueCommandMother('backPropagate', section)
-        this.toMother.runAllOutputs();
-        this.toMother.runAllInputs();
-      }
-    }.bind(this))
-    this.toPleb.runAllOutputs()
-  }.bind(this))
-  this.queueCommandPleb('gatedErrorStep', null, function () {
-    hasGatedError = true
-  })
-  this.toPleb.runAllOutputs(function () {
-    this.node.errorResponsibility = this.node.errorGated + this.node.errorProjected;
-    for(var n = 0; n < this.connections.outputs.length; ++n) {
-      this.connections.inputs[n].errorResponsibility = this.node.errorResponsibility
-    }
-    this.node.bias += this.rate * this.node.errorResponsibility
-    if(hasLearned) {
-      this.toPleb.runAllOutputs(function () {
-      this.queueCommandMother('backPropagate', section);
+      this.node.bias += this.rate * this.node.errorResponsibility
+      this.queueCommandMother('backPropagate', section)
       this.toMother.runAllOutputs();
       this.toMother.runAllInputs();
+    }.bind(this));
+    this.toPleb.runAllOutputs();
+  } else {
+    this.node.errorProjected = 0;
+    var hasLearned = false;
+    var hasGatedError = false;
+    var hasProjectedError = false
+    //race condition?  depends if it handles learning and gatedError at the same time
+    this.queueCommandPleb('projectedErrorStep', null, function () {
+      hasProjectedError = true
+      this.queueCommandPleb('learningStep', null, function () {
+        hasLearned = true
+        if(hasGatedError) {
+          this.queueCommandMother('backPropagate', section)
+          this.toMother.runAllOutputs();
+          this.toMother.runAllInputs();
+        }
       }.bind(this))
-    }
-  }.bind(this))
+      this.toPleb.runAllOutputs()
+    }.bind(this))
+    this.queueCommandPleb('gatedErrorStep', null, function () {
+      hasGatedError = true
+    })
+    this.toPleb.runAllOutputs(function () {
+      this.node.errorResponsibility = this.node.errorGated + this.node.errorProjected;
+      // for(var n = 0; n < this.connections.outputs.length; ++n) {
+      //   this.connections.inputs[n]..errorResponsibility = this.node.errorResponsibility
+      // }
+      this.node.bias += this.rate * this.node.errorResponsibility
+      if(hasLearned) {
+        this.toPleb.runAllOutputs(function () {
+        this.queueCommandMother('backPropagate', section);
+        this.toMother.runAllOutputs();
+        this.toMother.runAllInputs();
+        }.bind(this))
+      }
+    }.bind(this))
+  }
 }
 
 Manager.prototype.queueCommandPleb = function (command, section, callback) {

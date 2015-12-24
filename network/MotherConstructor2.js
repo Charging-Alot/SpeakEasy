@@ -2,8 +2,8 @@ var Mother = function (sendFunction) {
   //make all nodes
   //make all connections and gates
   //initialize neurons
-  this.rate = 0.01;
-  this.maxGradient = 1;
+  this.rate = 0.1;
+  this.maxGradient = 5;
   this.connections = {}; // will become an object of objects of arrays.  cause simple would be boring.
   this.nodes = [];
   this.layers = [];
@@ -88,11 +88,12 @@ Mother.prototype.activationUpdatesForLayer = function (layerId, inputArr) {
 Mother.prototype.backPropagate = function (targetArr, callback) {
   if(this.initialized) {
     this.errorUpdatesForLayer(this.layers.length-1, targetArr);
-    var layerCounter = this.layers.length - 2;
+    var layerCounter = this.layers.length - 1;
     var backPropagationCallback = function () {
       layerCounter--
       if(layerCounter >= 0) {
         // console.log(layerCounter)
+        // debugger
         this.backPropagateLayer(layerCounter, backPropagationCallback);
       } else {
         callback();
@@ -112,19 +113,25 @@ Mother.prototype.backPropagateLayer = function (layerId, callback) {
 }
 
 Mother.prototype.errorUpdatesForLayer = function(layerId, targetArr) {
+  var error;
   for(var i = 0; i < this.layers[layerId].length; ++i) {
-    this.errorUpdate(this.layers[layerId][i], targetArr[i]);
+    error = targetArr[i] - this.layers[layerId][i].node.activation
+    this.layers[layerId][i].node.errorProjected = error;
+    this.layers[layerId][i].node.errorResponsibility = error;
+    this.layers[layerId][i].node.errorGated = 0
+    // this.errorUpdate(this.layers[layerId][i], targetArr[i]);
   }
 }
 
 Mother.prototype.errorUpdate = function (neuron, target) {
-  var error = target - neuron.node.activation
+  var error = target - neuron.node.activation;
   neuron.node.errorProjected = error;
   neuron.node.errorResponsibility = error;
-  var inputs = neuron.connections.inputs
-  for(var i = 0; i < inputs.length; ++i) {
-    inputs[i].errorResponsibility = error
-  }
+  neuron.node.errorGated = 0;
+  // var inputs = neuron.connections.inputs
+  // for(var i = 0; i < inputs.length; ++i) {
+  //   inputs[i].errorResponsibility = error
+  // }
 }
 
 Mother.prototype.initNeurons = function () {
@@ -132,6 +139,7 @@ Mother.prototype.initNeurons = function () {
     this.layers.push([]);
     for(var node = 0; node < this.nodes[layer].nodes.length; ++node) {
       this.layers[layer].push(new Neuron({node: this.nodes[layer].nodes[node]}));
+      this.layers[layer][node].isOutput = (layer === this.nodes.length - 1)
     }
   }
   this.placeConnectionsInNeurons();
@@ -166,18 +174,15 @@ Mother.prototype.placeConnectionsInNeurons = function () {
     for(var fromLayerId in this.connections[toLayerId]) {
       for(var i = 0; i < this.connections[toLayerId][fromLayerId].length; ++i) {
         connection = this.connections[toLayerId][fromLayerId][i];
-        fromNeuron = this.layers[fromLayerId][connection.fromNodeId]
-        toNeuron = this.layers[toLayerId][connection.toNodeId]
-        fromNode = this.nodes[fromLayerId].nodes[connection.fromNodeId]
-        toNode = this.nodes[toLayerId].nodes[connection.toNodeId]
+        fromNeuron = this.layers[fromLayerId][connection.fromNodeId];
+        toNeuron = this.layers[toLayerId][connection.toNodeId];
+        fromNode = this.nodes[fromLayerId].nodes[connection.fromNodeId];
+        toNode = this.nodes[toLayerId].nodes[connection.toNodeId];
         fromNeuron.connections.outputs.push(connection);
         toNeuron.connections.inputs.push(connection);
-        // fromNeuron.outputNodes.push(toNode);
-        // toNeuron.inputNodes.push(fromNode);
-        // console.log(connection)
         if(connection.gateNodeId !== -1) {
-          gateNode = this.layers[connection.gateLayerId][connection.gateNodeId]
-          gateNode.connections.gated.push(connection)
+          gateNode = this.layers[connection.gateLayerId][connection.gateNodeId];
+          gateNode.connections.gated.push(connection);
           if(!gateNode.gatedNodes[toNode.id]) {
             gateNode.gatedNodes[toNode.id] = toNode;
           }
@@ -213,16 +218,20 @@ Mother.prototype.createAllNodesInLayer = function (layerId, numberOfNodes) {
   return nodeLayer;
 }
 
-var Node = function (layerId, id) {
+Node = function (layerId, id) {
   return {
     id: id,
     layerId: layerId,
     state: 0,
     prevState: 0,
     activation: 0,
+    derivative: 0,
     selfConnection: {weight: 0, gain: 1, gateId: -1, gateLayer: -1},
     elegibilities: [],
     extendedElegibilities: {},
+    errorResponsibility: 0,
+    errorProjected: 0,
+    errorGated: 0,
     bias: Math.random() * 0.2 - 0.1
   }
 }
