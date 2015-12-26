@@ -8,9 +8,7 @@ Pleb.prototype.constructor = Pleb;
 Pleb.prototype.update = function (command, section, partialNeuron) {
   Neuron.call(this, partialNeuron);
 }
-var states = []
 Pleb.prototype.activationStep = function () {
-
   for(var i = 0; i < this.connections.inputs.length; ++i) {
     if(this.connections.inputs[i].gateNode) {
       this.node.state += (this.connections.inputs[i].weight * this.connections.inputs[i].gateNode.activation * this.connections.inputs[i].fromNode.activation);
@@ -18,9 +16,8 @@ Pleb.prototype.activationStep = function () {
       this.node.state += (this.connections.inputs[i].weight * this.connections.inputs[i].fromNode.activation);
     }
   }
-  this.node.activation = this.squashAct(this.node.state);
-  this.node.derivative = this.squashDer(this.node.state);
-  // states.push(new Neuron(this))
+  this.node.activation = squash[this.node.squash].activation(this.node.state); //this.squashAct(this.node.state);
+  this.node.derivative = squash[this.node.squash].derivative(this.node.state); //this.squashDer(this.node.state);
   this.queueCommandManager('activationStep', null);
   this.toManager.runAllOutputs();
 
@@ -154,11 +151,13 @@ Pleb.prototype.gatedErrorStep = function () {
 Pleb.prototype.learningStep = function () {
     var gradient;
     for(var l = 0; l < this.connections.inputs.length; ++l) {
-      gradient = this.node.errorProjected * this.node.elegibilities[l]
-      for(var m in this.gatedNodes) {
-        gradient += this.gatedNodes[m].errorResponsibility * this.node.extendedElegibilities[m][l]
+      if(this.connections.inputs[i].trainable) {
+        gradient = this.node.errorProjected * this.node.elegibilities[l]
+        for(var m in this.gatedNodes) {
+          gradient += this.gatedNodes[m].errorResponsibility * this.node.extendedElegibilities[m][l]
+        }
+        this.connections.inputs[l].weight += this.rate * (gradient > 0 ? Math.min(gradient, this.maxGradient) : Math.min(gradient, -this.maxGradient));
       }
-      this.connections.inputs[l].weight += this.rate * (gradient > 0 ? Math.min(gradient, this.maxGradient) : Math.min(gradient, -this.maxGradient));
     }
     this.queueCommandManager('learningStep', null);
     this.toManager.runAllOutputs();
@@ -190,11 +189,29 @@ Pleb.prototype.queueCommandManager = function (command, section, callback) {
   this.toManager.addToOut(command, section, value, callback);
 }
 
-Pleb.prototype.squashAct = function(x) {
-  return 1/(1 + Math.exp(-x))
-}
-Pleb.prototype.squashDer = function (x) {
-  // var logistic = 1/(1 + Math.exp(-x));
-  // return logistic * (1 - logistic)
-  return Math.exp(x)/Math.pow(1 + Math.exp(x), 2)
+var squash = {
+  'sigmoid': {
+    'activation': function (x) {
+      return 1/(1 + Math.exp(-x))
+    },
+    'derivative': function (x) {
+      return Math.exp(x)/Math.pow(1 + Math.exp(x), 2)
+    }
+  },
+  'hyperbolicTangent': {
+    'activation': function (x) {
+      return (Math.exp(2*x)  - 1) / (Math.exp(2*x) + 1)
+    },
+    'derivative': function (dx) {
+      return 4*Math.exp(2*x) / ((Math.exp(2*x) + 1)^2)
+    }
+  },
+  'none': {
+    'activation': function (x) {
+      return x
+    },
+    'derivative': function (x) {
+      return x
+    }
+  },
 }

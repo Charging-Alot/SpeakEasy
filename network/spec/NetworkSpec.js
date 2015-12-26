@@ -539,10 +539,10 @@ describe('Pleb Constructor', function () {
     }, function (toLevel, taskObj) {
       sentSomething = true;
       expect(taskObj.command).to.eql('learningStep')
-      var gradient = 76  * 3 + 9 * 56;
-      expect(taskObj.value.connections.inputs[0].weight).to.eql(5 + 5*62)
-      gradient = 76 * 94 + 9 * 43;
-      expect(taskObj.value.connections.inputs[1].weight).to.eql(7 + 5*62)
+      var gradient = Math.min(5, 76  * 3 + 9 * 56);
+      expect(taskObj.value.connections.inputs[0].weight).to.eql(5 + gradient*62)
+      gradient = Math.min(5, 76 * 94 + 9 * 43);
+      expect(taskObj.value.connections.inputs[1].weight).to.eql(7 + gradient*62)
     })
     n.learningStep()
     expect(sentSomething).to.eql(true);
@@ -1208,10 +1208,14 @@ describe('Mother Constructor', function () {
       // console.log(taskObj.command)
       if(taskObj.command === 'backPropagate') {
         counter++;
-        var layer = 1;
+        var layer = 2;
         if(counter >= 3) {
+          layer = 1;
+        }
+        if(counter >= 5) {
           layer = 0;
         }
+        // debugger
         expect(taskObj.value.node).to.eql(m.layers[layer][taskObj.section].node)
         expect(taskObj.value.gatedNodes).to.eql(m.layers[layer][taskObj.section].gatedNodes)
         expect(taskObj.value.connections).to.eql(m.layers[layer][taskObj.section].connections)
@@ -1230,7 +1234,7 @@ describe('Mother Constructor', function () {
     m.initNeurons();
     m.backPropagate([1,1], function () {
       sentSomething = true;
-      expect(counter).to.eql(4);
+      expect(counter).to.eql(6);
       done();
     });
     // expect(sentSomething).to.eql(true);
@@ -1240,21 +1244,25 @@ describe('Mother Constructor', function () {
 
 describe('MONSTER END TO END TEST!!!', function () {
   var mother;
-  var biases = [
-    0,
-    0,
-    -0.009895327035337687,
-    -0.006141480477526787,
-    -0.029357955278828743,
-    -0.08668609405867755
+  var weights = [ 
+    -0.0733711616601795,
+    0.03829572834074496,
+    0.05767388842068613,
+    -0.008777539199218157,
+    0.019310780474916106,
+    0.09771623467095197,
+    0.07201561317779123,
+    -0.006101550720632079 
   ]
-  var weights = [
-    -0.03437288929708303,
-    0.069337324379012,
-    -0.006118636578321457,
-    0.038851925032213325,
-    -0.08829510072246194,
-    -0.003387802373617882,
+  var biases = [ 
+    0.05782533055171371,
+    -0.019654044089838868,
+    0.06503446158021689,
+    0.010771379200741643,
+    0.05458700209856035,
+    -0.024711737316101795,
+    -0.04195384504273534,
+    0.08664298541843893 
   ]
 
   beforeEach(function() {
@@ -1305,13 +1313,15 @@ describe('MONSTER END TO END TEST!!!', function () {
     mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
     mother.initNeurons();
     mother.layers[0][0].node.bias = biases[0]
-    mother.layers[1][0].node.bias = biases[1]
+    mother.layers[1][0].node.bias = biases[2]
     mother.layers[0][0].connections.outputs[0].weight = weights[0]
     // debugger;
     mother.activate([1], function () {
       gotToCallback = true;
       expect(mother.layers[0][0].node.activation).to.eql(1);
-      expect(mother.layers[1][0].node.activation).to.eql(0.4914076236469172);
+      expect(mother.layers[1][0].node.activation).to.eql(0.4979158370508711);
+      expect(mother.layers[0][0].node.elegibilities).to.eql([]);
+      expect(mother.layers[1][0].node.elegibilities).to.eql([1]);
       done();
     })
     // setTimeout(function () {
@@ -1320,51 +1330,109 @@ describe('MONSTER END TO END TEST!!!', function () {
     // }, 0);
   });
 
-  it('should have correct activation for output nodes after activation (slightly larger case with gates)', function (done) {
+  it('should have correct activation and elegibilities for output nodes after activation (slightly larger case with gates)', function (done) {
     var gotToCallback = false
+    mother.appendNodeLayer(2);
     mother.appendNodeLayer(2);
     mother.appendNodeLayer(2);
     mother.appendNodeLayer(2);
     mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
     mother.joinLayers(mother.nodes[1], mother.nodes[2], false);
-    mother.gateLayerOneToOne(mother.nodes[1], 1, 2);
+    mother.joinLayers(mother.nodes[2], mother.nodes[3], false)
+    mother.gateLayerOneToOne(mother.nodes[1], 2, 3);
     mother.nodes[0].nodes[0].bias = biases[0];
     mother.nodes[0].nodes[1].bias = biases[1];
     mother.nodes[1].nodes[0].bias = biases[2];
     mother.nodes[1].nodes[1].bias = biases[3];
     mother.nodes[2].nodes[0].bias = biases[4];
     mother.nodes[2].nodes[1].bias = biases[5];
+    mother.nodes[3].nodes[0].bias = biases[6];
+    mother.nodes[3].nodes[1].bias = biases[7];
     mother.connections[1][0][0].weight = weights[0];
     mother.connections[1][0][1].weight = weights[1];
     mother.connections[1][0][2].weight = weights[2];
     mother.connections[1][0][3].weight = weights[3];
     mother.connections[2][1][0].weight = weights[4];
     mother.connections[2][1][1].weight = weights[5];
+    mother.connections[3][2][0].weight = weights[6];
+    mother.connections[3][2][1].weight = weights[7];
     mother.initNeurons();
     mother.activate([1,1], function () {
       gotToCallback = true
-      var activations = [ 
+      var activations = [ 1,
         1,
-        1,
-        0.48740595117718055,
-        0.5254898256884515,
-        0.4874192204543708,
-        0.47810860414632056 
-      ]
+        0.5123317957248984,
+        0.5100710298064006,
+        0.5161145492805806,
+        0.5062822901592291,
+        0.49427241549080003,
+        0.521254014927215 ]
+      var elegibility =  [ [],
+        [],
+        [ 1, 1 ],
+        [ 1, 1 ],
+        [ 0.5123317957248984 ],
+        [ 0.5100710298064006 ],
+        [ 0.26442189383266645 ],
+        [ 0.2582399291142609 ] ]
+      var extendedElegibility = [ {},
+        {},
+        { 0: [ 0, 0 ] }, //still need to set up separating gatedNodes by layers
+        { 1: [ 0, 0 ] },
+        {},
+        {},
+        {},
+        {} ]
       var i = 0
-      debugger
-      expect(mother.layers[0][0].node.activation).to.eql(activations[i]);
-      console.log(i++)
-      expect(mother.layers[0][1].node.activation).to.eql(activations[i]);
-      console.log(i++)
-      expect(mother.layers[1][0].node.activation).to.eql(activations[i]);
-      console.log(i++)
-      expect(mother.layers[1][1].node.activation).to.eql(activations[i]);
-      console.log(i++) //4
-      expect(mother.layers[2][0].node.activation).to.eql(activations[i]);
-      console.log(i++)
-      expect(mother.layers[2][1].node.activation).to.eql(activations[i]);
-      console.log(i++)
+      // debugger
+      expect(mother.layers[0][0].node.activation).to.eql(activations[0]);
+      // console.log(i++) //0
+      expect(mother.layers[0][1].node.activation).to.eql(activations[1]);
+      // console.log(i++)
+      expect(mother.layers[1][0].node.activation).to.eql(activations[2]);
+      // console.log(i++) //2
+      expect(mother.layers[1][1].node.activation).to.eql(activations[3]);
+      // console.log(i++)
+      expect(mother.layers[2][0].node.activation).to.eql(activations[4]);
+      // console.log(i++) //4
+      expect(mother.layers[2][1].node.activation).to.eql(activations[5]);
+      // console.log(i++)
+      expect(mother.layers[3][0].node.activation).to.eql(activations[6]);
+      // console.log(i++) //6
+      expect(mother.layers[3][1].node.activation).to.eql(activations[7]);
+      // console.log(i++)
+      expect(mother.layers[0][0].node.elegibilities).to.eql(elegibility[0]);
+      // console.log(i++) //8
+      expect(mother.layers[0][1].node.elegibilities).to.eql(elegibility[1]);
+      // console.log(i++)
+      expect(mother.layers[1][0].node.elegibilities).to.eql(elegibility[2]);
+      // console.log(i++) //10
+      expect(mother.layers[1][1].node.elegibilities).to.eql(elegibility[3]);
+      // console.log(i++)
+      expect(mother.layers[2][0].node.elegibilities).to.eql(elegibility[4]);
+      // console.log(i++) //12
+      expect(mother.layers[2][1].node.elegibilities).to.eql(elegibility[5]);
+      // console.log(i++)
+      expect(mother.layers[3][0].node.elegibilities).to.eql(elegibility[6]);
+      // console.log(i++) //14
+      expect(mother.layers[3][1].node.elegibilities).to.eql(elegibility[7]);
+      // console.log(i++)
+      expect(mother.layers[0][0].node.extendedElegibilities).to.eql(extendedElegibility[0]);
+      // console.log(i++) //16
+      expect(mother.layers[0][1].node.extendedElegibilities).to.eql(extendedElegibility[1]);
+      // console.log(i++) //
+      expect(mother.layers[1][0].node.extendedElegibilities).to.eql(extendedElegibility[2]);
+      // console.log(i++) //18
+      expect(mother.layers[1][1].node.extendedElegibilities).to.eql(extendedElegibility[3]);
+      // console.log(i++)
+      expect(mother.layers[2][0].node.extendedElegibilities).to.eql(extendedElegibility[4]);
+      // console.log(i++) //20
+      expect(mother.layers[2][1].node.extendedElegibilities).to.eql(extendedElegibility[5]);
+      // console.log(i++)
+      expect(mother.layers[2][0].node.extendedElegibilities).to.eql(extendedElegibility[6]);
+      // console.log(i++) //22
+      expect(mother.layers[3][1].node.extendedElegibilities).to.eql(extendedElegibility[7]);
+      // console.log(i++)
       done();
     })
     // setTimeout(function () {
@@ -1380,22 +1448,150 @@ describe('MONSTER END TO END TEST!!!', function () {
     mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
     mother.initNeurons();
     mother.layers[0][0].node.bias = biases[0]
-    mother.layers[1][0].node.bias = biases[1]
+    mother.layers[1][0].node.bias = biases[2]
     mother.layers[0][0].connections.outputs[0].weight = weights[0]
-    mother.layers[0][0].node.activation = 1;
-    mother.layers[1][0].node.activation = 0.4914076236469172;
-
+    expect(mother.layers[1][0].connections.inputs[0].weight).to.eql(weights[0])
+    // mother.layers[0][0].node.activation = 0;
+    // mother.layers[1][0].node.activation = 0;
+    mother.rate = 0.1;
+    mother.maxGradient = 5;
     // debugger;
-    mother.backPropagate([1], function () {
-      gotToCallback = true;
-      expect(mother.layers[0][0].node.bias).to.eql(0);
-      expect(mother.layers[1][0].node.bias).to.eql(0.0412111976764754);
-      expect(mother.layers[0][0].connections.outputs[0].weight).to.eql(0.01673363541473006);
-      expect(mother.layers[0][0].node.errorResponsibility).to.eql(0);
-      expect(mother.layers[1][0].node.errorResponsibility).to.eql(0.5110652471181308);
-      done();
-    })
+    mother.activate([1], function () {
+      expect(mother.layers[0][0].node.activation).to.eql(1)
+      expect(mother.layers[1][0].node.activation).to.eql(0.4979158370508711)
+      mother.backPropagate([1], function () {
+        gotToCallback = true;
+        var i = 0;
+        // console.log(i)
+        expect(mother.layers[0][0].node.errorProjected).to.eql(0);
+        // console.log(++i)
+        expect(mother.layers[1][0].node.errorProjected).to.eql(0.5020841629491288);
+        // console.log(++i)
+        expect(mother.layers[0][0].node.errorResponsibility).to.eql(0);
+        // console.log(++i) //3
+        expect(mother.layers[1][0].node.errorResponsibility).to.eql(0.5020841629491288);
+        // console.log(++i)
+        expect(mother.layers[0][0].node.bias).to.eql(0);
+        // console.log(++i) //5
+        expect(mother.layers[1][0].node.bias).to.eql(0.11524287787512977);
+        // console.log(++i)
+        expect(mother.layers[0][0].connections.outputs[0].weight).to.eql(-0.023162745365266614);
+        // console.log(++i)
+        done();
+      });
+    });
   });
 
+  it('should have correct errors, weights and biases for input nodes after backPropagation (slightly larger case with gates)', function (done) {
+    var gotToCallback = false
+    mother.appendNodeLayer(2);
+    mother.appendNodeLayer(2);
+    mother.appendNodeLayer(2);
+    mother.appendNodeLayer(2);
+    mother.joinLayers(mother.nodes[0], mother.nodes[1], true);
+    mother.joinLayers(mother.nodes[1], mother.nodes[2], false);
+    mother.joinLayers(mother.nodes[2], mother.nodes[3], false)
+    mother.gateLayerOneToOne(mother.nodes[1], 2, 3);
+    mother.nodes[0].nodes[0].bias = biases[0];
+    mother.nodes[0].nodes[1].bias = biases[1];
+    mother.nodes[1].nodes[0].bias = biases[2];
+    mother.nodes[1].nodes[1].bias = biases[3];
+    mother.nodes[2].nodes[0].bias = biases[4];
+    mother.nodes[2].nodes[1].bias = biases[5];
+    mother.nodes[3].nodes[0].bias = biases[6];
+    mother.nodes[3].nodes[1].bias = biases[7];
+    mother.connections[1][0][0].weight = weights[0];
+    mother.connections[1][0][1].weight = weights[1];
+    mother.connections[1][0][2].weight = weights[2];
+    mother.connections[1][0][3].weight = weights[3];
+    mother.connections[2][1][0].weight = weights[4];
+    mother.connections[2][1][1].weight = weights[5];
+    mother.connections[3][2][0].weight = weights[6];
+    mother.connections[3][2][1].weight = weights[7];
+    mother.initNeurons();
+    mother.activate([1,1], function () {
+      gotToCallback = true
+      var i = 0
+      // debugger
+      var activations = [ 1,
+        1,
+        0.5123317957248984,
+        0.5100710298064006,
+        0.5161145492805806,
+        0.5062822901592291,
+        0.49427241549080003,
+        0.521254014927215 ]
+      var errors = [ 0,
+        0,
+        0.0055955221808239655,
+        0.000388602476288614,
+        0.005525279624066444,
+        0.00038220057052997387,
+        0.5057275845092,
+        0.478745985072785 ]
+      var newBiases = [ 0,
+        0,
+        0.06559401379829928,
+        0.010810239448370505,
+        0.055139530060966994,
+        -0.0246735172590488,
+        0.008618913408184659,
+        0.13451758392571744 ]
+      var newWeights = [ -0.07336845676792189,
+        0.03829666182816351,
+        0.057676593312943746,
+        -0.008776605711799609,
+        0.01959385811808412,
+        0.09773572961481225,
+        0.08538815774372549,
+        0.006261582204261222 ]
+      // debugger
+      console.log('activation tests for backpropagation')
+      expect(mother.layers[0][0].node.activation).to.eql(activations[0]);
+      expect(mother.layers[0][1].node.activation).to.eql(activations[1]);
+      expect(mother.layers[1][0].node.activation).to.eql(activations[2]);
+      expect(mother.layers[1][1].node.activation).to.eql(activations[3]);
+      expect(mother.layers[2][0].node.activation).to.eql(activations[4]);
+      expect(mother.layers[2][1].node.activation).to.eql(activations[5]);
+      expect(mother.layers[3][0].node.activation).to.eql(activations[6]);
+      expect(mother.layers[3][1].node.activation).to.eql(activations[7]);
+      //technically, if the activation test passes, all of these ^ should pass.  If they don't then the test is broken.
+      console.log('end activation tests')
+      debugger
+      mother.backPropagate([1,1], function () {
+        console.log('error tests')
+        expect(Math.abs(mother.layers[0][0].node.errorResponsibility - errors[0]) < 0.00000000000000001).to.eql(true)
+        expect(Math.abs(mother.layers[0][1].node.errorResponsibility - errors[1]) < 0.00000000000000001).to.eql(true)
+        expect(Math.abs(mother.layers[1][0].node.errorResponsibility - errors[2]) < 0.00000000000000001).to.eql(true)
+        expect(Math.abs(mother.layers[1][1].node.errorResponsibility - errors[3]) < 0.00000000000000001).to.eql(true)
+        expect(Math.abs(mother.layers[2][0].node.errorResponsibility - errors[4]) < 0.00000000000000001).to.eql(true)
+        expect(Math.abs(mother.layers[2][1].node.errorResponsibility - errors[5]) < 0.00000000000000001).to.eql(true)
+        expect(Math.abs(mother.layers[3][0].node.errorResponsibility - errors[6]) < 0.00000000000000001).to.eql(true)
+        expect(Math.abs(mother.layers[3][1].node.errorResponsibility - errors[7]) < 0.00000000000000001).to.eql(true)
+
+
+        console.log('bias tests')
+        expect(mother.layers[0][0].node.bias).to.eql(newBiases[0])
+        expect(mother.layers[0][1].node.bias).to.eql(newBiases[1])
+        expect(mother.layers[1][0].node.bias).to.eql(newBiases[2])
+        expect(mother.layers[1][1].node.bias).to.eql(newBiases[3])
+        expect(mother.layers[2][0].node.bias).to.eql(newBiases[4])
+        expect(mother.layers[2][1].node.bias).to.eql(newBiases[5])
+        expect(mother.layers[3][0].node.bias).to.eql(newBiases[6])
+        expect(mother.layers[3][1].node.bias).to.eql(newBiases[7])
+
+        console.log('weight tests')
+        expect(mother.connections[1][0][0].weight).to.eql(newWeights[0]);
+        expect(mother.connections[1][0][1].weight).to.eql(newWeights[1]);
+        expect(mother.connections[1][0][2].weight).to.eql(newWeights[2]);
+        expect(mother.connections[1][0][3].weight).to.eql(newWeights[3]);
+        expect(mother.connections[2][1][0].weight).to.eql(newWeights[4]);
+        expect(mother.connections[2][1][1].weight).to.eql(newWeights[5]);
+        expect(mother.connections[3][2][0].weight).to.eql(newWeights[6]);
+        expect(mother.connections[3][2][1].weight).to.eql(newWeights[7]);
+        done();
+      });
+    })
+  });
 })
 

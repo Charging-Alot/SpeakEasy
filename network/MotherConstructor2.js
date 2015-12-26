@@ -1,18 +1,13 @@
-var Mother = function (sendFunction) {
-  //make all nodes
-  //make all connections and gates
-  //initialize neurons
+var Mother = function (network, sendFunction) {
   this.rate = 0.1;
   this.maxGradient = 5;
-  this.connections = {}; // will become an object of objects of arrays.  cause simple would be boring.
-  this.nodes = [];
-  this.layers = [];
+  this.model = network || new Network;
   this.toManager = new IoHandler(2, 1, this, sendFunction);
 }
 
 Mother.prototype.update = function (command, section, partialNeuron) {
   partialNeuron.gatedNodes = {};
-  this.layers[partialNeuron.node.layerId][partialNeuron.node.id].update(command, section, partialNeuron);
+  this.model.update(partialNeuron.node.layerId, partialNeuron.node.id, partialNeuron)
 }
 
 Mother.prototype.activate = function (inputArr, callback) {
@@ -22,7 +17,7 @@ Mother.prototype.activate = function (inputArr, callback) {
     var activationCallback = function () {
       // debugger
       layerCounter++
-      if(layerCounter < this.layers.length) {
+      if(layerCounter < this.model.layers.length) {
         this.activateLayer(layerCounter, activationCallback);
       } else {
         callback();
@@ -32,12 +27,11 @@ Mother.prototype.activate = function (inputArr, callback) {
   } else {
     console.error('You must call initNeurons before activation!');
   }
-  // this.activateLayer(layerCounter, activationCallback); //activates output layer
 }
 
 Mother.prototype.activateLayer = function (layerId, callback) {
-  for(var i = 0; i < this.layers[layerId].length; ++i) {
-    this.queueCommandManager('activate', i, this.layers[layerId][i])
+  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
+    this.queueCommandManager('activate', i, this.model.layers[layerId][i])
   }
   this.toManager.runAllOutputs(callback);
 }
@@ -45,15 +39,6 @@ Mother.prototype.activateLayer = function (layerId, callback) {
 Mother.prototype.queueCommandManager = function (command, section, neuron, callback) {
   if(command === 'activate' ) {
     var partialNeuron = neuron
-    // new Neuron({
-    //   node: neuron.node,
-    //   gatedNode: neuron.gatedNodes,
-    //   connections: {
-    //     outputs: neuron.connections.outputs,
-    //     inputs: neuron.connections.inputs,
-    //     gated: neuron.connections.gated,
-    //   }
-    // });
   } else if(command === 'backPropagate') {
     var partialNeuron = neuron
   }
@@ -63,37 +48,20 @@ Mother.prototype.queueCommandManager = function (command, section, neuron, callb
 }
 
 Mother.prototype.activationUpdatesForLayer = function (layerId, inputArr) {
-  for(var i = 0; i < this.layers[layerId].length; ++i) {
-    // this.activationUpdate(this.layers[layerId][i], inputArr[i]);
-    this.layers[layerId][i].node.activation = inputArr[i];
-    this.layers[layerId][i].node.bias = 0;
-    this.layers[layerId][i].node.derivative = 0;
+  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
+    this.model.layers[layerId][i].node.activation = inputArr[i];
+    this.model.layers[layerId][i].node.bias = 0;
+    this.model.layers[layerId][i].node.derivative = 0;
   }
 }
 
-// //node manager does this.
-// Mother.prototype.activationUpdate = function (neuron, activation) {
-//   neuron.node.activation = activation;
-//   var activation = neuron.node.activation;
-//   var outputs = neuron.connections.outputs;
-//   var gated = neuron.connections.gated;
-//   for(var i = 0; i < outputs.length; ++i) {
-//     outputs[i].activation = activation;
-//   }
-//   for(var j = 0; j < gated.length; ++j) {
-//     gated[j].gain = activation;
-//   }
-// }
-
 Mother.prototype.backPropagate = function (targetArr, callback) {
   if(this.initialized) {
-    this.errorUpdatesForLayer(this.layers.length-1, targetArr);
-    var layerCounter = this.layers.length - 1;
+    this.errorUpdatesForLayer(this.model.layers.length-1, targetArr);
+    var layerCounter = this.model.layers.length - 1;
     var backPropagationCallback = function () {
       layerCounter--
       if(layerCounter >= 0) {
-        // console.log(layerCounter)
-        // debugger
         this.backPropagateLayer(layerCounter, backPropagationCallback);
       } else {
         callback();
@@ -106,204 +74,19 @@ Mother.prototype.backPropagate = function (targetArr, callback) {
 }
 
 Mother.prototype.backPropagateLayer = function (layerId, callback) {
-  for(var i = 0; i < this.layers[layerId].length; ++i) {
-    this.queueCommandManager('backPropagate', i, this.layers[layerId][i])
+  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
+    this.queueCommandManager('backPropagate', i, this.model.layers[layerId][i])
   }
   this.toManager.runAllOutputs(callback);
 }
 
 Mother.prototype.errorUpdatesForLayer = function(layerId, targetArr) {
   var error;
-  for(var i = 0; i < this.layers[layerId].length; ++i) {
-    error = targetArr[i] - this.layers[layerId][i].node.activation
-    this.layers[layerId][i].node.errorProjected = error;
-    this.layers[layerId][i].node.errorResponsibility = error;
-    this.layers[layerId][i].node.errorGated = 0
-    // this.errorUpdate(this.layers[layerId][i], targetArr[i]);
+  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
+    error = targetArr[i] - this.model.layers[layerId][i].node.activation
+    this.model.layers[layerId][i].node.errorProjected = error;
+    this.model.layers[layerId][i].node.errorResponsibility = error;
+    this.model.layers[layerId][i].node.errorGated = 0
   }
 }
 
-Mother.prototype.errorUpdate = function (neuron, target) {
-  var error = target - neuron.node.activation;
-  neuron.node.errorProjected = error;
-  neuron.node.errorResponsibility = error;
-  neuron.node.errorGated = 0;
-  // var inputs = neuron.connections.inputs
-  // for(var i = 0; i < inputs.length; ++i) {
-  //   inputs[i].errorResponsibility = error
-  // }
-}
-
-Mother.prototype.initNeurons = function () {
-  for(var layer = 0; layer < this.nodes.length; ++layer) {
-    this.layers.push([]);
-    for(var node = 0; node < this.nodes[layer].nodes.length; ++node) {
-      this.layers[layer].push(new Neuron({node: this.nodes[layer].nodes[node]}));
-      this.layers[layer][node].isOutput = (layer === this.nodes.length - 1)
-    }
-  }
-  this.placeConnectionsInNeurons();
-  
-  for(layer = 0; layer < this.nodes.length; ++layer) {
-    for(node = 0; node < this.nodes[layer].nodes.length; ++node) {
-      this.layers[layer][node].node.elegibilities = [];
-      this.layers[layer][node].node.extendedElegibilities = {};
-      for(var input = 0; input < this.layers[layer][node].connections.inputs.length; ++input) {
-        this.layers[layer][node].node.elegibilities.push(0);
-        for(var gated in this.layers[layer][node].gatedNodes) {
-          if(!this.layers[layer][node].node.extendedElegibilities[gated]) {
-            this.layers[layer][node].node.extendedElegibilities[gated] = [];
-          }
-          this.layers[layer][node].node.extendedElegibilities[gated].push(0);
-        }
-      }
-    }
-  }
-
-  this.initialized = true;
-}
-
-Mother.prototype.placeConnectionsInNeurons = function () {
-  var connection;
-  var fromNode;
-  var toNode;
-  var fromNeuron;
-  var toNeuron;
-  var gateNode;
-  for(var toLayerId in this.connections) {
-    for(var fromLayerId in this.connections[toLayerId]) {
-      for(var i = 0; i < this.connections[toLayerId][fromLayerId].length; ++i) {
-        connection = this.connections[toLayerId][fromLayerId][i];
-        fromNeuron = this.layers[fromLayerId][connection.fromNodeId];
-        toNeuron = this.layers[toLayerId][connection.toNodeId];
-        fromNode = this.nodes[fromLayerId].nodes[connection.fromNodeId];
-        toNode = this.nodes[toLayerId].nodes[connection.toNodeId];
-        fromNeuron.connections.outputs.push(connection);
-        toNeuron.connections.inputs.push(connection);
-        if(connection.gateNodeId !== -1) {
-          gateNode = this.layers[connection.gateLayerId][connection.gateNodeId];
-          gateNode.connections.gated.push(connection);
-          if(!gateNode.gatedNodes[toNode.id]) {
-            gateNode.gatedNodes[toNode.id] = toNode;
-          }
-        }
-      }
-    }
-  }
-}
-
-Mother.prototype.createLSTMNetworkNodes = function (vocabularySize, hiddenSize, numberOfLSTMLayers) {
-  // needs gates and the right count of neurons in an lstm
-  var numberOfLayersInLSTM = 3;
-  this.nodes.push(this.createAllNodesInLayer(0, vocabularySize));
-  for(var i = 0; i < numberOfLSTMLayers; ++i) {
-    for(var j = 0; j < numberOfLayersInLSTM; ++j) {
-      this.nodes.push(this.createAllNodesInLayer(this.nodes.length, hiddenSize));
-      this.joinLayers(this.nodes[this.nodes.length - 2], this.nodes[this.nodes.length -1], j === 0);
-    }
-  }
-  this.layers.push(createAllNodesInLayer(this.layers.length, vocabularySize));
-  this.joinLayers(this.nodes[this.nodes.length - 2], this.nodes[this.nodes.length -1], true);
-}
-
-Mother.prototype.appendNodeLayer = function (numberOfNodes) {
-  this.nodes.push(this.createAllNodesInLayer(this.nodes.length, numberOfNodes))
-}
-
-Mother.prototype.createAllNodesInLayer = function (layerId, numberOfNodes) {
-  var nodeLayer = {id: layerId, nodes: []};
-  for(var i = 0; i < numberOfNodes; ++i) {
-    nodeLayer.nodes.push(Node(layerId, i));
-  }
-  return nodeLayer;
-}
-
-Node = function (layerId, id) {
-  return {
-    id: id,
-    layerId: layerId,
-    state: 0,
-    prevState: 0,
-    activation: 0,
-    derivative: 0,
-    selfConnection: {weight: 0, gain: 1, gateId: -1, gateLayer: -1},
-    elegibilities: [],
-    extendedElegibilities: {},
-    errorResponsibility: 0,
-    errorProjected: 0,
-    errorGated: 0,
-    bias: Math.random() * 0.2 - 0.1
-  }
-}
-
-Mother.prototype.joinLayers = function (fromLayer, toLayer, allToAll) {
-  if(allToAll) {
-    for(var i = 0; i < fromLayer.nodes.length; ++i) {
-      for(var j = 0; j < toLayer.nodes.length; ++j) {
-        this.joinNodes(fromLayer.nodes[i], toLayer.nodes[j]);
-      }
-    }
-  } else if(toLayer.nodes.length === fromLayer.nodes.length) {
-    for(var k = 0; k < fromLayer.nodes.length; ++k) {
-      this.joinNodes(fromLayer.nodes[k], toLayer.nodes[k]);
-    }
-  } else {
-    console.error('layers cannot be joined that way!')
-  }
-}
-
-Mother.prototype.joinNodes = function (fromNode, toNode) {
-  var fromLayerId = fromNode.layerId;
-  var toLayerId = toNode.layerId;
-  if(!this.connections[toLayerId]) {
-    this.connections[toLayerId] = {}
-  }
-  if(!this.connections[toLayerId][fromLayerId]) {
-    this.connections[toLayerId][fromLayerId] = [];
-  }  
-  var connId = this.connections[toLayerId][fromLayerId].length
-  var connection = this.Connection(toLayerId, fromLayerId, toNode.id, fromNode.id, connId)
-  if(fromNode.layerId === toNode.layerId && fromNode.id === toNode.id) {
-    connection.weight = 1;
-    toNode.selfConnection = connection;
-  }
-  this.connections[toLayerId][fromLayerId].push(connection);
-}
-
-Mother.prototype.gateLayerOneToOne = function (gatingLayer, fromLayerId, toLayerId) {
-  //gates all inputs to toLayer from fromLayer, provided there are the same number of outputs in the gatingLayer 
-  //as there are connections.
-  //otherwise, fuck you.
-  var connectionArr = this.connections[toLayerId][fromLayerId];
-  if(connectionArr.length === gatingLayer.nodes.length) {
-    for(var k = 0; k < gatingLayer.nodes.length; ++k) {
-      this.gateConnection(connectionArr[k], gatingLayer.nodes[k].id, gatingLayer.nodes[k].layerId);
-    }
-  } else {
-    console.alert('layers cannot be gated that way!')
-  }
-}
-
-Mother.prototype.gateConnection = function (connection, gateNodeId, gateLayerId) {
-  connection.gateNodeId = gateNodeId;
-  connection.gateLayerId = gateLayerId;
-  connection.gateNode = this.nodes[gateLayerId].nodes[gateNodeId];
-}
-
-Mother.prototype.Connection = function (toLayerId, fromLayerId, toNodeId, fromNodeId, connId) {
-  return {
-    id: connId,
-    toNode: this.nodes[toLayerId].nodes[toNodeId],
-    toNodeId: toNodeId,
-    toLayerId: toLayerId,
-    fromNode: this.nodes[fromLayerId].nodes[fromNodeId],
-    fromNodeId: fromNodeId,
-    fromLayerId: fromLayerId,
-    gateNode: null,
-    gateNodeId: -1,
-    gateLayerId: -1,
-    // activation: 0,
-    // gain: 1,
-    weight: Math.random() * .2 - .1 // -1 /sqrt(n) and 1/sqrt(n)
-  }
-}
