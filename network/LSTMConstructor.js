@@ -1,4 +1,4 @@
-var LSTM = function (enbWeights, selfWeights, biases) {
+var LSTM = function () {
   //this is a tensorflow style lstm.
   Network.call(this);
   //input agregator

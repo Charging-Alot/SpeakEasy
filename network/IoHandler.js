@@ -95,7 +95,7 @@ IoHandler.prototype.addToIn = function (taskObj) {
 IoHandler.prototype.runInput = function (taskObj) {
   this.model.update(taskObj.command, taskObj.section, taskObj.value);
   if(this.level < this.toLevel && taskObj.command !== 'update') {
-    this.model[taskObj.command](taskObj.section);
+    this.model.run(taskObj.command, taskObj.section);
   } else if(this.level > this.toLevel) {
     if(this.waiting.names[taskObj.command]) {
       if(taskObj.section === null) {

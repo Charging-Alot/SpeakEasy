@@ -1,18 +1,18 @@
 var Mother = function (network, sendFunction) {
   this.rate = 0.1;
   this.maxGradient = 5;
-  this.model = network || new Network;
+  this.model = new Network(network, this.rate, this.maxGradient);
   this.toManager = new IoHandler(2, 1, this, sendFunction);
 }
 
-Mother.prototype.update = function (command, section, partialNeuron) {
-  partialNeuron.gatedNodes = {};
-  this.model.update(partialNeuron.node.layerId, partialNeuron.node.id, partialNeuron)
+Mother.prototype.update = function (command, section, model) {
+  model.gatedNodes = {};
+  this.model.update(model.node.layerId, model.node.id, model)
 }
 
 Mother.prototype.activate = function (inputArr, callback) {
   if(this.initialized) {
-    this.activationUpdatesForLayer(0, inputArr);
+    this.model.activateFirstLayer(inputArr);
     var layerCounter = 1;
     var activationCallback = function () {
       // debugger
@@ -31,9 +31,9 @@ Mother.prototype.activate = function (inputArr, callback) {
 
 Mother.prototype.activateLayer = function (layerId, callback) {
   for(var i = 0; i < this.model.layers[layerId].length; ++i) {
-    this.queueCommandManager('activate', i, this.model.layers[layerId][i])
+    this.queueCommandManager('activate', index, neuron)
   }
-  this.toManager.runAllOutputs(callback);
+  this.toManager.runAllOutputs(callback)
 }
 
 Mother.prototype.queueCommandManager = function (command, section, neuron, callback) {
@@ -47,17 +47,9 @@ Mother.prototype.queueCommandManager = function (command, section, neuron, callb
   this.toManager.addToOut(command, section, partialNeuron, callback)
 }
 
-Mother.prototype.activationUpdatesForLayer = function (layerId, inputArr) {
-  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
-    this.model.layers[layerId][i].node.activation = inputArr[i];
-    this.model.layers[layerId][i].node.bias = 0;
-    this.model.layers[layerId][i].node.derivative = 0;
-  }
-}
-
 Mother.prototype.backPropagate = function (targetArr, callback) {
   if(this.initialized) {
-    this.errorUpdatesForLayer(this.model.layers.length-1, targetArr);
+    this.model.SetLastLayerError(targetArr);
     var layerCounter = this.model.layers.length - 1;
     var backPropagationCallback = function () {
       layerCounter--
@@ -78,15 +70,5 @@ Mother.prototype.backPropagateLayer = function (layerId, callback) {
     this.queueCommandManager('backPropagate', i, this.model.layers[layerId][i])
   }
   this.toManager.runAllOutputs(callback);
-}
-
-Mother.prototype.errorUpdatesForLayer = function(layerId, targetArr) {
-  var error;
-  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
-    error = targetArr[i] - this.model.layers[layerId][i].node.activation
-    this.model.layers[layerId][i].node.errorProjected = error;
-    this.model.layers[layerId][i].node.errorResponsibility = error;
-    this.model.layers[layerId][i].node.errorGated = 0
-  }
 }
 
