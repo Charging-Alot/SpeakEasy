@@ -310,6 +310,7 @@
       function onChannelOpened(channel) {
         channel.SpkEzId = _config.userid
         channel.peer = peer.peer;
+        console.log("IN CHANNEL OPENED THIS IS CHANNEL", channel)
         RTCDataChannels.push(channel);
 
         config.onopen(_config.userid, channel);
@@ -847,6 +848,7 @@
 
     peerConnection.oniceconnectionstatechange = function (event) {
       if (peerConnection.iceConnectionState == 'disconnected') {
+        console.log("STATE CHANGE DETECTED, this is this", this)
         options.onclose(event, this);
       }
     }

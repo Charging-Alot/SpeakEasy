@@ -3,13 +3,15 @@ function SpeakEasyBuild(DataChannel) {
   this.socket = null;
   this.AdminInfo = null;
   this.PlayerInfo = null;
-}
+};
+
 SpeakEasyBuild.prototype.resetState = function () {
   this.LocalDataChannel = null;
   this.socket = null;
   this.AdminInfo = null;
   this.PlayerInfo = null;
 };
+
 SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   if (typeof signalerSetup !== "function") throw Error("SignalerSetup needs to be a function")
   this.signaler = signalerSetup;
@@ -20,8 +22,9 @@ SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   this.LocalDataChannel.onclose = this.onclose.bind(this);
   signalerSetup(this, socketEndPoint || '/');
 };
-SpeakEasyBuild.prototype.onOpenInject = function () {
-  console.log("ON OPEN FIRING", this)
+SpeakEasyBuild.prototype.onOpenInject = function (q, z) {
+  console.log("ON OPEN FIRING", q, z)
+    // console.log("ON OPEN FIRING", this)
   if (this.PlayerInfo) {
     console.log("Player connection event to admin fired");
     this.LocalDataChannel.send({ //send message to admin to complete initial handshake
