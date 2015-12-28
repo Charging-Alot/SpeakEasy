@@ -91,8 +91,7 @@ function socketListener(SpeakEasy) {
 
   function onLineOffLineHandler() {
     if (!navigator.onLine) {
-      return console.log('Internet channel seems disconnected or having issues.');
-      // return alert('Internet channel seems disconnected or having issues.');
+      return alert('Internet channel seems disconnected or having issues.');
     }
     if (SpeakEasy.socket.isHavingError) {
       SpeakEasy.resetState();

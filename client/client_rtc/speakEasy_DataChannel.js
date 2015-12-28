@@ -310,7 +310,6 @@
       function onChannelOpened(channel) {
         channel.SpkEzId = _config.userid
         channel.peer = peer.peer;
-        console.log("IN CHANNEL OPENED THIS IS CHANNEL", channel)
         RTCDataChannels.push(channel);
 
         config.onopen(_config.userid, channel);
@@ -723,6 +722,7 @@
   window.IsDataChannelSupported = !((moz && !navigator.mozGetUserMedia) || (!moz && !navigator.webkitGetUserMedia));
 
   function RTCPeerConnection(options) {
+
     var w = window,
       PeerConnection = w.mozRTCPeerConnection || w.webkitRTCPeerConnection,
       SessionDescription = w.mozRTCSessionDescription || w.RTCSessionDescription,
@@ -848,7 +848,6 @@
 
     peerConnection.oniceconnectionstatechange = function (event) {
       if (peerConnection.iceConnectionState == 'disconnected') {
-        console.log("STATE CHANGE DETECTED, this is this", this)
         options.onclose(event, this);
       }
     }
@@ -989,6 +988,7 @@
         sdp = new SessionDescription(sdp);
         peerConnection.setRemoteDescription(sdp, onSdpSuccess, onSdpError);
       },
+
       addICE: function (candidate) {
         peerConnection.addIceCandidate(new IceCandidate({
           sdpMLineIndex: candidate.sdpMLineIndex,

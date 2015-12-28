@@ -23,8 +23,7 @@ SpeakEasyBuild.prototype.init = function (signalerSetup, socketEndPoint) {
   signalerSetup(this, socketEndPoint || '/');
 };
 SpeakEasyBuild.prototype.onOpenInject = function (q, z) {
-  console.log("ON OPEN FIRING", q, z)
-    // console.log("ON OPEN FIRING", this)
+  console.log("IN ON OPEN IN INJECT", q, z)
   if (this.PlayerInfo) {
     console.log("Player connection event to admin fired");
     this.LocalDataChannel.send({ //send message to admin to complete initial handshake
@@ -54,12 +53,21 @@ SpeakEasyBuild.prototype.onclose = function (event) {
   console.log("ON CLOSE FIRED", event)
   var playerRtcId = event.target.SpkEzId;
   if (this.AdminInfo) {
-    var players = this.AdminInfo.players;
-    for (var player in players) {
-      if (player == playerRtcId) { //the one time its ok to use `==` (string == number)
-        this.socket.emit('playerlost', players[player].PlayerSocketId);
-        delete this.AdminInfo.players[player];
-        return console.log("Player removed from admin's local player collection")
+    if (!playerRtcId) { //if not player rtcId, means the player lost connection without being 'ejected' - WILL RESULT IN CLOSE EVENT FIRING 2x. Once for disconnect, another to eject him.
+      var channels = this.LocalDataChannel.channels;
+      for (var channel in channels) {
+        if (channels[channel].channel.peer.iceConnectionState) {
+          return this.ejectPlayer(channel);
+        }
+      }
+    } else { //means the player was ejected and we have have his rtcId
+      var players = this.AdminInfo.players;
+      for (var player in players) {
+        if (player == playerRtcId) { //the one time its ok to use `==` (string == number)
+          this.socket.emit('playerlost', players[player].PlayerSocketId);
+          delete this.AdminInfo.players[player];
+          return console.log("Player removed from admin's local player collection")
+        }
       }
     }
   } else if (this.LocalDataChannel.channels[this.PlayerInfo.adminId].channel.peer === event.target) { //Not ideal.  But this is reliable
@@ -106,7 +114,6 @@ function AdminInfo(data, parent) {
 }
 
 function PlayerInfo(data, parent) {
-  console.log("IN PLAYER INFO ", arguments)
   this.PlayerSocketId = data.PlayerSocketId;
   if (parent) {
     this.adminId = data.adminId;
