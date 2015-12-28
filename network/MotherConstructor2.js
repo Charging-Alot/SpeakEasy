@@ -1,7 +1,9 @@
 var Mother = function (network, sendFunction) {
   this.rate = 0.1;
   this.maxGradient = 5;
-  this.model = new Network(network, this.rate, this.maxGradient);
+  this.model = network
+  this.model.rate = this.rate
+  this.model.maxGradient = this.maxGradient);
   this.toManager = new IoHandler(2, 1, this, sendFunction);
 }
 
@@ -71,4 +73,6 @@ Mother.prototype.backPropagateLayer = function (layerId, callback) {
   }
   this.toManager.runAllOutputs(callback);
 }
+
+Mother.prototype.train = function () {};
 
