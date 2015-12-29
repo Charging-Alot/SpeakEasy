@@ -54,7 +54,7 @@ angular.module('speakEasy.chat', [])
         console.log('then function from ChatCtrl serveMsg call', data);
         console.log('pendingGif!', pendingGif)
         console.log('pendingGif PARENT!', pendingGif.parentNode)
-        pendingGif.parentNode.removeChild(pendingGif);
+        pendingGif[0].parentNode.removeChild(pendingGif);
         $scope.renderMessage('robot', data.response);
       })
       .catch(function (error) {
