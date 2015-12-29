@@ -3,7 +3,7 @@ angular.module('speakEasy.chat', [])
 .factory('ChatFactory', function ($http, $location, $window) {
   // Your code here
   var serveMessage = function (message) {
-    message = { 'prompt': message };
+    message = { 'prompt': message.text };
     console.log('ChatFactory serveMessage', message);
     return $http({
         method: 'POST',
@@ -41,6 +41,7 @@ angular.module('speakEasy.chat', [])
     ChatFactory.serveMessage($scope.message)
       .then(function (data) {
         // this resets message to blank and also clears the message field
+        console.log('Marvin data?', data)
         $scope.message = {};
         console.log('then function from ChatCtrl serveMsg call', data);
         $scope.renderMessage('robot', data);
