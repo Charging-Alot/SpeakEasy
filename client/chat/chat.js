@@ -44,7 +44,7 @@ angular.module('speakEasy.chat', [])
         console.log('Marvin data?', data)
         $scope.message = {};
         console.log('then function from ChatCtrl serveMsg call', data);
-        $scope.renderMessage('robot', data);
+        $scope.renderMessage('robot', data.response);
       })
       .catch(function (error) {
         console.error(error);
