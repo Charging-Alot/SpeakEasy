@@ -52,6 +52,8 @@ angular.module('speakEasy.chat', [])
         // this resets message to blank and also clears the message field
         console.log('Marvin data?', data)
         console.log('then function from ChatCtrl serveMsg call', data);
+        console.log('pendingGif!', pendingGif)
+        console.log('pendingGif PARENT!', pendingGif.parentNode)
         pendingGif.parentNode.removeChild(pendingGif);
         $scope.renderMessage('robot', data.response);
       })
