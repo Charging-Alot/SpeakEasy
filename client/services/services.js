@@ -66,6 +66,70 @@ angular.module('speakEasy.services', [])
     });
   }
 
+  var andyWindow = function (ev, $scope) {
+    $mdDialog.show({
+        templateUrl: 'dialog/andy.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function () {
+        console.log('DIALOGUE SUCCESS STATUS')
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+        console.log('DIALOGUE FAIL STATUS', $scope.status)
+      });
+  }
+
+  var willWindow = function (ev, $scope) {
+    $mdDialog.show({
+        templateUrl: 'dialog/will.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function () {
+        console.log('DIALOGUE SUCCESS STATUS')
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+        console.log('DIALOGUE FAIL STATUS', $scope.status)
+      });
+  }
+
+  var lauraWindow = function (ev, $scope) {
+    $mdDialog.show({
+        templateUrl: 'dialog/laura.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function () {
+        console.log('DIALOGUE SUCCESS STATUS')
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+        console.log('DIALOGUE FAIL STATUS', $scope.status)
+      });
+  }
+
+  var samWindow = function (ev, $scope) {
+    $mdDialog.show({
+        templateUrl: 'dialog/sam.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function () {
+        console.log('DIALOGUE SUCCESS STATUS')
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+        console.log('DIALOGUE FAIL STATUS', $scope.status)
+      });
+  }
+
   var closeWindow = function () {
     $mdDialog.cancel();
   }
@@ -79,6 +143,10 @@ angular.module('speakEasy.services', [])
     loginWindow: loginWindow,
     signupWindow: signupWindow,
     downloadWindow: downloadWindow,
+    andyWindow: andyWindow,
+    willWindow: willWindow,
+    lauraWindow: lauraWindow,
+    samWindow: samWindow,
     closeWindow: closeWindow,
     hideWindow: hideWindow
   };

@@ -1,7 +1,27 @@
 angular.module('speakEasy.about', [])
 
-.controller('AboutCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', function ($scope, $mdDialog, $mdMedia, $state) {
+.controller('AboutCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', 'Dialog', function ($scope, $mdDialog, $mdMedia, $state, Dialog) {
   
+  $scope.andyInfo = function (ev) {
+    Dialog.andyWindow(ev, $scope);
+  }
+
+  $scope.willInfo = function (ev) {
+    Dialog.willWindow(ev, $scope);
+  }
+
+  $scope.lauraInfo = function (ev) {
+    Dialog.lauraWindow(ev, $scope);
+  }
+
+  $scope.samInfo = function (ev) {
+    Dialog.samWindow(ev, $scope);
+  }
+
+
+// STUFF BELOW HERE IS THE ATTEMPT AT ANIMATION
+// IT'S NOT BEING USED RIGHT NOW
+
   // The relationships object creates the connections between the clicked profile and the
   // info page that will shift in, and the card that will shift out
   var relationships = {

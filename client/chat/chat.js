@@ -3,13 +3,15 @@ angular.module('speakEasy.chat', [])
 .factory('ChatFactory', function ($http, $location, $window) {
   // Your code here
   var serveMessage = function (message) {
+    message = { 'prompt': message };
     console.log('ChatFactory serveMessage', message);
     return $http({
         method: 'POST',
-        url: '/api/chat/chat',
+        url:  '/marvin', //'/api/chat/chat', OLD TESTING PATH
         data: message
       })
       .then(function (resp) {
+        console.log('response from marvin?', resp)
         console.log('response in ChatFact.serveMsg', resp.data)
         return resp.data;
       });
@@ -27,7 +29,8 @@ angular.module('speakEasy.chat', [])
   var chatWrap = angular.element(document.querySelector('.chatBoxWrap'));
   $scope.message = {};
   $scope.sendMessage = function () {
-    var regexTest = $scope.message.text.match(/[<>+_@#$%^&*?\[\]{}\\\/|=-]/g);
+    // We don't want to allow users to send messages with odd characters as the robot can't interpret them easily
+    var regexTest = $scope.message.text.match(/[<>+_@#$%^&*\[\]{}\\\/|=-]/g);
     if ( regexTest && regexTest.length ) {
       $scope.renderMessage('robot', "Sorry, you used some characters I don't understand! Try to stick to simple punctuation.");
       return;
@@ -58,10 +61,10 @@ angular.module('speakEasy.chat', [])
     var messageElement = '<div flex class="messageWrap"><div ';
 
     if (context === 'user') {
-      // With context of 'user' we give the element class userMessage.
+      // With context of 'user' we give the element class of userMessage.
       messageElement += 'class="userMessage">';
     } else if (context === 'robot') {
-      // With context of 'robot' we give the element class robotMessage.
+      // With context of 'robot' we give the element class of robotMessage.
       // These two class types define separate styling
       messageElement += 'class="robotMessage">';
     }

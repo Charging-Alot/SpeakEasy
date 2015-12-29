@@ -65,7 +65,7 @@ angular.module('speakEasy', [
   // open the login window
   $rootScope.$on('$stateChangeStart', function (evt, next, current) {
     if ( next.name === "chat" && !Auth.isAuth() ) {
-      evt.preventDefault();
+      evt.preventDefault(); // this prevents state change
       Dialog.loginWindow();
     }
   });
