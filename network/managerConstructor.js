@@ -1,14 +1,18 @@
 var Manager = function (partialModel, sendFunction) {
-  this.makeNewModel(partialModel);  //model can be neuron or network
+  if(partialModel) {
+    this.makeNewModel(partialModel);  //model can be neuron or network
+  } else {
+    this.model = new Neuron();
+  }
   this.toPleb = new IoHandler(1, 0, this, sendFunction);
   this.toMother = new IoHandler(1, 2, this, sendFunction);
 }
 
 Manager.prototype.update = function(command, section, partialModel) {
   if(command === 'activate' || command === 'backPropagate') {
-    this.makeNewModel(partialNeuron);
+    this.makeNewModel(partialModel);
   } else {
-    this.model.update(command, section, partialModel);
+    this.model.update(partialModel);
   }
 }
 
@@ -31,16 +35,16 @@ Manager.prototype.finishCommand = function (command, section) {
 }
 
 Manager.prototype.forEachAsync = function (array, iterator, callback) {
-  var returnCounter = 0;
+  var i = 0;
   var iteratorCallback = function () {
-    ++returnCounter;
-    if(returnCounter === array.length) {
+    ++i;
+    if(i === array.length) {
       callback.call(this)
+    } else {
+      iterator.call(this, array[i], i, iteratorCallback)
     }
   }
-  for(var i = 0; i < array.length; ++i) {
-    iterator.call(this, array[i], i, iteratorCallback)
-  }
+  iterator.call(this, array[i], i, iteratorCallback)
 }
 
 Manager.prototype.activate = function (section) {
@@ -57,11 +61,10 @@ Manager.prototype.activate = function (section) {
       }
       this.finishCommand('activate', section);
     })
-    }
   }
 }
 
-Manager.activateNeuron = function (neuron, section, callback) {
+Manager.prototype.activateNeuron = function (neuron, section, callback) {
   neuron.initialState();
 
   this.queueCommandPleb('activationStep', section, neuron, function () {
@@ -75,7 +78,7 @@ Manager.activateNeuron = function (neuron, section, callback) {
   });
 
   this.toPleb.runAllOutputs(function () {
-    for(var i in this.gatedNodes) {
+    for(var i in this.model.gatedNodes) {
       this.queueCommandPleb('extendedElegibilityStep', i, neuron, function (command, section, partialNeuron) {
       });
     }
@@ -88,7 +91,7 @@ Manager.activateNeuron = function (neuron, section, callback) {
 Manager.prototype.backPropagate = function (section) {
   if(this.model.type === 'neuron') {
     this.backPropagateNeuron(this.model, section, function () {
-      finishCommand('backPropagate', section)
+      this.finishCommand('backPropagate', section)
     }.bind(this));
   } else {
     this.forEachAsync(this.model.layers[this.model.layers.length - 1], this.backPropagateNeuron, function () {
@@ -105,10 +108,10 @@ Manager.prototype.backPropagate = function (section) {
 }
 
 Manager.prototype.backPropagateNeuron = function (neuron, section, callback) {
-  if(this.isOutput) {
+  if(neuron.isOutput) {
     this.queueCommandPleb
     this.queueCommandPleb('learningStep', section, neuron, function () {
-      this.adjustBias();
+      this.model.adjustBias();
       callback();
     }.bind(this));
     this.toPleb.runAllOutputs();
@@ -119,7 +122,7 @@ Manager.prototype.backPropagateNeuron = function (neuron, section, callback) {
     this.queueCommandPleb('projectedErrorStep', section, neuron, function () {
       hasProjectedError = true
       this.queueCommandPleb('learningStep', section, neuron, function () {
-        this.adjustBias();
+        this.model.adjustBias();
         hasLearned = true;
         if(hasGatedError) {
           callback();
@@ -131,7 +134,7 @@ Manager.prototype.backPropagateNeuron = function (neuron, section, callback) {
       hasGatedError = true
     })
     this.toPleb.runAllOutputs(function () {
-      this.setErrorResponsibility();
+      this.model.setErrorResponsibility();
       if(hasLearned) {
         callback();
       }
@@ -198,34 +201,31 @@ Manager.prototype.queueCommandPleb = function (command, section, neuron, callbac
 }
 
 Manager.prototype.queueCommandMother = function (command, section, callback) {
-  if(this.model.type === neuron) {
+  if(this.model.type === 'neuron') {
     var value = new Neuron();
     if(command === 'activate') {
-      value.node = this.node;
+      value.node = this.model.node;
     } else if(command === 'backPropagate') {
-      value.node = this.node;
+      value.node = this.model.node;
       value.elegibilities = [];
       value.extendedElegibilities = {};
-      value.connections.inputs = this.connections.inputs;
+      value.connections.inputs = this.model.connections.inputs;
     }
   } else {
     value =  new Network(this.model);
-    if(command === 'activate') {
-      value
-    }
   }
   if (command === 'activate') {
-    value.node = this.node;
+    value.node = this.model.node;
     value.node.influences = {};
   } else if (command === 'backPropagate') {
-    value.node.id = this.node.id;
-    value.node.layerId = this.node.layerId
-    value.node.errorProjected = this.node.errorProjected
-    value.node.errorResponsibility = this.node.errorResponsibility
-    value.node.errorGated = this.node.errorGated
-    value.node.bias = this.node.bias;
-    value.connections.outputs = this.connections.outputs
-    value.connections.inputs = this.connections.inputs
+    value.node.id = this.model.node.id;
+    value.node.layerId = this.model.node.layerId
+    value.node.errorProjected = this.model.node.errorProjected
+    value.node.errorResponsibility = this.model.node.errorResponsibility
+    value.node.errorGated = this.model.node.errorGated
+    value.node.bias = this.model.node.bias;
+    value.connections.outputs = this.model.connections.outputs
+    value.connections.inputs = this.model.connections.inputs
 
   }
   if(callback && section) {

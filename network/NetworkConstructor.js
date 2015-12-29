@@ -1,5 +1,8 @@
 var Network = function (network, rate, maxGradient) {
   this.type = 'network';
+  this.initialized = false;
+  this.rate = rate;
+  this.maxGradient = rate;
   if(!network) {
     this.layers = [];
     this.nodes = [];
@@ -9,7 +12,7 @@ var Network = function (network, rate, maxGradient) {
     this.connections.outputs = [];
     this.connections.gated = [];
     this.gatedNodes = {};
-  else (network) {
+  } else {
     this.layers = [];
     this.nodes = network.nodes || [];
     this.connections = {};
@@ -23,7 +26,7 @@ var Network = function (network, rate, maxGradient) {
 }
 
 Network.prototype.update = function (layerId, neuronId, model) {
-  if(model.type === 'neuron') {
+  if(model.type !== 'network') {
     this.layers[layerId][neuronId].update(model);
   } else {
     for(var i = 0; i < model.layers.length; ++i) {
@@ -35,6 +38,7 @@ Network.prototype.update = function (layerId, neuronId, model) {
 }
 
 Network.prototype.initNeurons = function () {
+  var selfConnGateNode;
   for(var layer = 0; layer < this.nodes.length; ++layer) {
     this.layers.push([]);
     for(var node = 0; node < this.nodes[layer].nodes.length; ++node) {
@@ -42,10 +46,14 @@ Network.prototype.initNeurons = function () {
         this.layers[layer].push(new Neuron({node: this.nodes[layer].nodes[node]}));
         this.layers[layer][node].isOutput = (layer === this.nodes.length - 1)
       } else {
-        this.layers[layer].push(node: this.nodes[layer])
+        if(!this.nodes[layer].nodes[node].initialized) {
+          this.nodes[layer].nodes[node].initNeurons();
+        }
+        this.layers[layer].push(this.nodes[layer].nodes[node])
       }
     }
   }
+
   this.placeConnectionsInNeurons();
 
   var neuron;
@@ -60,7 +68,7 @@ Network.prototype.initNeurons = function () {
         }
       } else {
         neuron = this.layers[layer][node];
-        initializeElegibilitiesForNeuron(neuron);
+        this.initializeElegibilitiesForNeuron(neuron);
       }
     }
   }
@@ -69,6 +77,8 @@ Network.prototype.initNeurons = function () {
 }
 
 Network.prototype.initializeElegibilitiesForNeuron = function (neuron) {
+  var layer = neuron.node.layerId;
+  var node = neuron.node.id
   this.layers[layer][node].node.elegibilities = [];
   this.layers[layer][node].node.extendedElegibilities = {};
   for(var input = 0; input < neuron.connections.inputs.length; ++input) {
@@ -91,6 +101,21 @@ Network.prototype.placeConnectionsInNeurons = function () {
   var fromNetwork;
   var toNetwork;
   var gateNode;
+
+  //check for gated selfConnections
+  for(var layer = 0; layer < this.layers.length; ++layer) {
+    for(var node = 0; node < this.layers[layer].length; ++node) {
+      var selfConnedNode = this.nodes[layer].nodes[node]
+      var gateNode = selfConnedNode.selfConnection.gateNode
+      if(gateNode !== null) {
+        var gateNeuron = this.layers[gateNode.layerId][gateNode.id]
+        gateNeuron.connections.gated.push(selfConnedNode.selfConnection);
+        gateNeuron.gatedNodes[selfConnedNode.id] = selfConnedNode;
+      }
+    }
+  }
+
+  //other connections
   for(var toLayerId in this.connections.internal) {
     for(var fromLayerId in this.connections.internal[toLayerId]) {
       for(var i = 0; i < this.connections.internal[toLayerId][fromLayerId].length; ++i) {
@@ -170,17 +195,18 @@ Network.prototype.setId = function (layerId, id) {
 
 Node = function (layerId, id) {
   return {
-    subNetworkId: null;
-    subNetworkLayerId: null;
+    type: 'neuron',
+    subNetworkId: null,
+    subNetworkLayerId: null,
     trainable: true,
-    squash: 'sigmoid'
+    squash: 'sigmoid',
     id: id,
     layerId: layerId,
     state: 0,
     prevState: 0,
     activation: 0,
     derivative: 0,
-    selfConnection: {weight: 0, gain: 1, gateId: -1, gateLayer: -1},
+    selfConnection: {weight: 0, gain: 1, gateNodeId: -1, gateNodeLayer: -1, gateNode: null},
     elegibilities: [],
     extendedElegibilities: {},
     errorResponsibility: 0,
@@ -194,12 +220,12 @@ Network.prototype.joinLayers = function (fromLayer, toLayer, allToAll) {
   if(allToAll) {
     for(var i = 0; i < fromLayer.nodes.length; ++i) {
       for(var j = 0; j < toLayer.nodes.length; ++j) {
-        this.joinNodes(fromLayer.nodes[i], toLayer.nodes[j]);
+        this.joinNodes(fromLayer.nodes[i], toLayer.nodes[j], true);
       }
     }
   } else if(toLayer.nodes.length === fromLayer.nodes.length) {
-    for(var l = 0; l < fromLayer.nodes.length; ++l) {
-      this.joinNodes(fromLayer.nodes[l], toLayer.nodes[l]);
+    for(var k = 0; k < fromLayer.nodes.length; ++k) {
+      this.joinNodes(fromLayer.nodes[k], toLayer.nodes[k], true);
     }
   } else {
     console.error('layers cannot be joined that way!')
@@ -213,7 +239,7 @@ Network.prototype.joinNodes = function (fromNode, toNode, allToAll) {
     this.connections.internal[toLayerId] = {}
   }
   if(!this.connections.internal[toLayerId][fromLayerId]) {
-    this.connections.internal[toLayerId][fromLayerId] = {};
+    this.connections.internal[toLayerId][fromLayerId] = [];
   }
 
   if(fromNode.type === 'network' && toNode.type === 'network') {
@@ -228,12 +254,13 @@ Network.prototype.joinNodes = function (fromNode, toNode, allToAll) {
     }
   } else {
     if(fromNode.layerId === toNode.layerId && fromNode.id === toNode.id && fromNode.subNetworkId === toNode.subNetworkId && fromNode.subNetworkLayerId === toNode.subNetworkLayerId) {
-      var connection = this.Connection(toLayerId, fromLayerId, toNode.id, fromNode.id, connId)
+      var connection = Connection(null, toNode, fromNode)
       connection.weight = 1;
+      connection.trainable = false;
       toNode.selfConnection = connection;
     } else {
       var connId = this.connections.internal[toLayerId][fromLayerId].length
-      connection = this.Connection(fromNode, toNode, connId)
+      connection = Connection(connId, toNode, fromNode)
       this.connections.internal[toLayerId][fromLayerId].push(connection);
     }
   }
@@ -242,13 +269,23 @@ Network.prototype.joinNodes = function (fromNode, toNode, allToAll) {
 Network.prototype.gateLayerOneToOne = function (gatingLayer, fromLayerId, toLayerId) {
   //gates all inputs to toLayer from fromLayer, provided there are the same number of outputs in the gatingLayer 
   //as there are connections.
-  var connectionArr = this.connections.internal[toLayerId][fromLayerId];
-  if(connectionArr.length === gatingLayer.nodes.length) {
-    for(var k = 0; k < gatingLayer.nodes.length; ++k) {
-      this.gateConnection(connectionArr[k], gatingLayer.nodes[k]);
+  if(fromLayerId !== toLayerId) {
+    var connectionArr = this.connections.internal[toLayerId][fromLayerId];
+    if(connectionArr.length === gatingLayer.nodes.length) {
+      for(var k = 0; k < gatingLayer.nodes.length; ++k) {
+        this.gateConnection(connectionArr[k], gatingLayer.nodes[k]);
+      }
+    } else {
+      console.error('layers cannot be gated that way!')
     }
   } else {
-    console.alert('layers cannot be gated that way!')
+    if(gatingLayer.nodes.length === this.nodes[fromLayerId].nodes.length) {
+      for(var k = 0; k < gatingLayer.nodes.length; ++k) {
+        this.gateConnection(this.nodes[fromLayerId].nodes[k].selfConnection, gatingLayer.nodes[k]);
+      }
+    } else {
+      console.error('layers cannot be gated that way!')
+    }
   }
 }
 
@@ -257,12 +294,12 @@ Network.prototype.gateConnection = function (connection, gateNode) {
     connection.gateSubNetworkId = gateNode.subNetworkId;
     connection.gateSubNetworkLayerId = gateNode.subNetworkLayerId;
   }
-  connection.gateNodeId = gateNodeId;
-  connection.gateLayerId = gateLayerId;
+  connection.gateNodeId = gateNode.id;
+  connection.gateLayerId = gateNode.layerId;
   connection.gateNode = gateNode;
 }
 
-Network.prototype.Connection = function (toNode, fromNode) {
+var Connection = function (connId, toNode, fromNode) {
   return {
     trainable: true,
     id: connId,
@@ -279,8 +316,8 @@ Network.prototype.Connection = function (toNode, fromNode) {
     gateNode: null,
     gateNodeId: -1,
     gateLayerId: -1,
-    gateSubNetworkLayerId: null;
-    gateSubNetworkId: null;
+    gateSubNetworkLayerId: null,
+    gateSubNetworkId: null,
     // activation: 0,
     // gain: 1,
     weight: Math.random() * .2 - .1 // -1 /sqrt(n) and 1/sqrt(n)

@@ -96,8 +96,13 @@ Neuron.prototype.initialState = function () {
 }
 
 Neuron.prototype.squashState = function () {
-  this.node.activation = squash[this.node.squash].activation(this.node.state); //this.squashAct(this.node.state);
-  this.node.derivative = squash[this.node.squash].derivative(this.node.state); //this.squashDer(this.node.state);
+  if(!this.node.squash) {
+    this.node.activation = squash['sigmoid'].activation(this.node.state); //this.squashAct(this.node.state);
+    this.node.derivative = squash['sigmoid'].derivative(this.node.state); //this.squashDer(this.node.state);
+  } else {
+    this.node.activation = squash[this.node.squash].activation(this.node.state); //this.squashAct(this.node.state);
+    this.node.derivative = squash[this.node.squash].derivative(this.node.state); //this.squashDer(this.node.state);
+  }
 }
 
 Neuron.prototype.adjustBias = function () {
@@ -180,12 +185,12 @@ Neuron.prototype.elegibilityStep = function () {
 
 // Neuron.prototype.elegibilityStep.iteratesOver = 'inputs'
 
-Neuron.prototype.extendedElegibilityStep = function (section) { // should have key other than 0 for extendedEls
+Neuron.prototype.extendedElegibilityStep = function (gateNeuronId) { // should have key other than 0 for extendedEls
     for(var i = 0; i < this.node.elegibilities.length; ++i) {
-      this.node.extendedElegibilities[section][i] *= this.gatedNodes[section].selfConnection.weight
-        * (this.gatedNodes[section].selfConnection.gateNode ? this.gatedNodes[section].selfConnection.gateNode.activation : 1);
-      this.node.extendedElegibilities[section][i] += this.node.derivative * this.node.elegibilities[i] 
-        * this.node.influences[section];
+      this.node.extendedElegibilities[gateNeuronId][i] *= this.gatedNodes[gateNeuronId].selfConnection.weight
+        * (this.gatedNodes[gateNeuronId].selfConnection.gateNode ? this.gatedNodes[gateNeuronId].selfConnection.gateNode.activation : 1);
+      this.node.extendedElegibilities[gateNeuronId][i] += this.node.derivative * this.node.elegibilities[i] 
+        * this.node.influences[gateNeuronId];
     }
   /*
   node
@@ -243,13 +248,13 @@ Neuron.prototype.gatedErrorStep = function () {
 
 Neuron.prototype.learningStep = function () {
   var gradient;
-  for(var l = 0; l < this.connections.inputs.length; ++l) {
-    if(this.connections.inputs[i].trainable) {
-      gradient = this.node.errorProjected * this.node.elegibilities[l]
-      for(var m in this.gatedNodes) {
-        gradient += this.gatedNodes[m].errorResponsibility * this.node.extendedElegibilities[m][l]
+  for(var i = 0; i < this.connections.inputs.length; ++i) {
+    if(this.connections.inputs[i].trainable || this.connections.inputs[i].trainable === undefined) {
+      gradient = this.node.errorProjected * this.node.elegibilities[i]
+      for(var j in this.gatedNodes) {
+        gradient += this.gatedNodes[j].errorResponsibility * this.node.extendedElegibilities[j][i]
       }
-      this.connections.inputs[l].weight += this.rate * (gradient > 0 ? Math.min(gradient, this.maxGradient) : Math.min(gradient, -this.maxGradient));
+      this.connections.inputs[i].weight += this.rate * (gradient >= 0 ? Math.min(gradient, this.maxGradient) : Math.max(gradient, -this.maxGradient));
     }
   }
 }

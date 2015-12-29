@@ -11,7 +11,7 @@ Pleb.prototype.update = function (command, section, partialNeuron) {
 
 Pleb.prototype.run = function (command, section) {
   this[command](section);
-  this.queueCommandManager('influenceStep', section);
+  this.queueCommandManager(command, section);
   this.toManager.runAllOutputs();
   this.toManager.runAllInputs();
 }

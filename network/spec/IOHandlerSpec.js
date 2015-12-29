@@ -202,6 +202,9 @@ describe('IOHandler Upstream Connection', function () {
         this.value = value;
         // console.log('update', this.value)
       }
+      this.run = function (command, section) {
+        this[command](section);
+      }
       this.action3 = function () {
         // console.log('action3')
         this.value += 10;
