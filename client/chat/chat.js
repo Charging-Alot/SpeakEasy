@@ -40,8 +40,9 @@ angular.module('speakEasy.chat', [])
       $scope.renderMessage('robot', "Sorry, your message was too long! Try sending me something shorter next time.");
       return;
     }
-
-    $scope.renderMessage('user', $scope.message.text);
+    
+    var messageText = $scope.message.text;
+    $scope.renderMessage('user', messageText);
     chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
     var pendingGif = angular.element(document.querySelector('.pendingGif'));
     $scope.message = {};

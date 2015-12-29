@@ -244,6 +244,11 @@ md-card-image {
   margin-top: 1% !important;
 }
 
+.pendingGif {
+  height: 67px;
+  width: 48px;
+}
+
 /***************/
 
 /* ABOUT PAGE **********************/
