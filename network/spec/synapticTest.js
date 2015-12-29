@@ -306,3 +306,61 @@ console.log('var errors =', errors)
 console.log('var newBiases =', newBiases)
 console.log('var newWeights =', newWeights)
 
+console.log('SECOND ORDER BASIC');
+
+var neurons = [];
+
+for(var i = 0; i < 5; ++i) {
+  neurons.push(new Neuron)
+  neurons[i].bias = biases[i]
+}
+
+  var connections = []
+  connections.push(neurons[0].project(neurons[1], weights[0]))
+  connections.push(neurons[1].project(neurons[2], weights[1]))
+  connections.push(neurons[2].project(neurons[3], weights[2]))
+  connections.push(neurons[3].project(neurons[4], weights[3]))
+
+  var activations = [];
+  activations[0] = neurons[0].activate(1);
+  activations[1] = neurons[1].activate();
+  activations[2] = neurons[2].activate();
+  activations[3] = neurons[3].activate();
+  activations[4] = neurons[4].activate();
+
+  var errors = [];
+  var newWeights = [];
+  var newBiases = [];
+  var projErr = [];
+  var gateErr = [];
+  var elegibility = [];
+  var extended = [];
+
+  neurons[4].propagate(0.1, 1)
+  neurons[3].propagate(0.1)
+  neurons[2].propagate(0.1)
+  neurons[1].propagate(0.1)
+  neurons[0].propagate(0.1)
+
+  for(var i = 0; i < neurons.length; ++i) {
+    elegibility.push(neurons[i].trace.elegibility);
+    extended.push(neurons[i].trace.extended);
+    errors.push(neurons[i].error.responsibility);
+    projErr.push(neurons[i].error.projected);
+    gateErr.push(neurons[i].error.gated);
+    newBiases.push(neurons[i].bias);
+  }
+  for(var j = 0; j < connections.length; ++j) {
+    newWeights.push(connections[j].weight)
+  }
+console.log('var activations =', activations)
+console.log('var elegibility = ', elegibility)
+console.log('var extendedElegibility =', extended)
+console.log('var errors =', errors)
+// console.log('PROJECTED ERRORS', projErr)
+// console.log('GATED ERRORS', gateErr)
+console.log('var newBiases =', newBiases)
+console.log('var newWeights =', newWeights)
+
+
+

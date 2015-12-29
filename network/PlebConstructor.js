@@ -18,6 +18,8 @@ Pleb.prototype.run = function (command, section) {
 
 Pleb.prototype.queueCommandManager = function (command, section, callback) {
   var value = new Neuron();
+  value.node.id = this.node.id;
+  value.node.layerId = this.node.layerId;
   if(command === 'activationStep') {
     value.node.state = this.node.state;
     value.node.activation = this.node.activation;

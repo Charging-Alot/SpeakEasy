@@ -11,6 +11,9 @@ var Manager = function (partialModel, sendFunction) {
 Manager.prototype.update = function(command, section, partialModel) {
   if(command === 'activate' || command === 'backPropagate') {
     this.makeNewModel(partialModel);
+    if(this.model.type === 'network') {
+      this.model.initNeurons();
+    }
   } else {
     this.model.update(partialModel);
   }
@@ -43,7 +46,7 @@ Manager.prototype.forEachAsync = function (array, iterator, callback) {
     } else {
       iterator.call(this, array[i], i, iteratorCallback)
     }
-  }
+  }.bind(this)
   iterator.call(this, array[i], i, iteratorCallback)
 }
 
@@ -144,20 +147,20 @@ Manager.prototype.backPropagateNeuron = function (neuron, section, callback) {
 
 Manager.prototype.queueCommandPleb = function (command, section, neuron, callback) {
   var value = new Neuron();
-  if(this.model.type === 'network') {
-    if(neuron.layerId === 0) {
-      neuron.connections.inputs = this.model.connections.inputs
-    } else if(neuron.layerId === this.model.layers.length - 1) {
-      neuron.connections.outputs = this.model.connections.outputs;
-      neuron.connections.gated = this.model.connections.gated;
-    }
-  }
+  // if(this.model.type === 'network') {
+  //   if(neuron.layerId === 0) {
+  //     neuron.connections.inputs = this.model.connections.inputs
+  //   } else if(neuron.layerId === this.model.layers.length - 1) {
+  //     neuron.connections.outputs = this.model.connections.outputs;
+  //     neuron.connections.gated = this.model.connections.gated;
+  //   }
+  // }
+  value.node.id = neuron.node.id
+  value.node.layerId = neuron.node.layerId;
   if(command === 'activationStep') {
     value.connections.inputs = neuron.connections.inputs;
     value.node.state = neuron.node.state
   } else if(command === 'influenceStep') {
-    value.node.id = neuron.node.id;
-    value.node.layerId = neuron.node.layerId;
     value.gatedNodes = neuron.gatedNodes;
     value.connections.gated = neuron.connections.gated;
   } else if(command === 'elegibilityStep') {
@@ -210,24 +213,31 @@ Manager.prototype.queueCommandMother = function (command, section, callback) {
       value.elegibilities = [];
       value.extendedElegibilities = {};
       value.connections.inputs = this.model.connections.inputs;
+      value.errorProjected = this.model.errorProjected;
+      value.errorResponsibility = this.model.errorResponsibility;
+      value.errorGated = this.model.errorGated
+      value.node.bias = this.model.node.bias;
+      value.connections.inputs = this.model.connections.inputs
     }
   } else {
     value =  new Network(this.model);
   }
-  if (command === 'activate') {
-    value.node = this.model.node;
-    value.node.influences = {};
-  } else if (command === 'backPropagate') {
-    value.node.id = this.model.node.id;
-    value.node.layerId = this.model.node.layerId
-    value.node.errorProjected = this.model.node.errorProjected
-    value.node.errorResponsibility = this.model.node.errorResponsibility
-    value.node.errorGated = this.model.node.errorGated
-    value.node.bias = this.model.node.bias;
-    value.connections.outputs = this.model.connections.outputs
-    value.connections.inputs = this.model.connections.inputs
+  // if (command === 'activate') {
+  //   if(this.model === 'neuron') {
+  //     value.node = this.model.node;
+  //     value.node.influences = {};
+  //   }
+  // } else if (command === 'backPropagate') {
+  //   value.node.id = this.model.node.id;
+  //   value.node.layerId = this.model.node.layerId
+  //   value.node.errorProjected = this.model.node.errorProjected
+  //   value.node.errorResponsibility = this.model.node.errorResponsibility
+  //   value.node.errorGated = this.model.node.errorGated
+  //   value.node.bias = this.model.node.bias;
+  //   value.connections.outputs = this.model.connections.outputs
+  //   value.connections.inputs = this.model.connections.inputs
 
-  }
+  // }
   if(callback && section) {
     callback.bind(this, section);
   } else if(callback) {

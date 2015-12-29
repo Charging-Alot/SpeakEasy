@@ -1,3 +1,4 @@
+var debugMode = false;
 describe('Neuron Constructor', function () {
   it('when not provided input should create a neuron with the correct fields', function () {
     var n = new Neuron;
@@ -912,7 +913,7 @@ describe('manager Constructor', function () {
           state: 65,
           prevState: 66,
           activation: 67,
-          selfConnection: {weight: 68, gain: 69, gateId: 0, gateLayer: 1},
+          selfConnection: {weight: 68, gain: 69, gateNodeId: 0, gateLayerId: 1},
           elegibilities: [70, 71],
           extendedElegibilities: {
           }
@@ -923,7 +924,7 @@ describe('manager Constructor', function () {
           state: 72,
           prevState: 73,
           activation: 74,
-          selfConnection: {weight: 75, gain: 76, gateId: 0, gateLayer: 1},
+          selfConnection: {weight: 75, gain: 76, gateNodeId: 0, gateLayerId: 1},
           elegibilities: [75, 76],
           extendedElegibilities: {
           }
@@ -979,7 +980,7 @@ describe('Mother Constructor', function () {
     expect(n.activation).to.eql(0)
 
     expect(n.selfConnection.gateNodeId).to.eql(-1)
-    expect(n.selfConnection.gateNodeLayer).to.eql(-1)
+    expect(n.selfConnection.gateLayerId).to.eql(-1)
     expect(n.selfConnection.weight).to.eql(0)
     expect(n.selfConnection.gain).to.eql(1)
 
@@ -1316,7 +1317,7 @@ describe('MONSTER END TO END TEST!!!', function () {
     })
   });
 
-  it('should have correct activation and elegibilities for output nodes after activation (smallest test case)', function (done) {
+  it('should have correct activation and elegibilities after activation (smallest test case)', function (done) {
     //numbers compared to an identical network in synaptic but with gradient clipping added
     //the code for this can be found in synapticTest.js.
     var gotToCallback = false;
@@ -1338,7 +1339,7 @@ describe('MONSTER END TO END TEST!!!', function () {
     })
   });
 
-  it('should have correct activation and elegibilities for output nodes after activation (slightly larger case with gates)', function (done) {
+  it('should have correct activation and elegibilities after activation (slightly larger case with gates)', function (done) {
     var gotToCallback = false
     mother.model.appendNodeLayer(2);
     mother.model.appendNodeLayer(2);
@@ -1449,7 +1450,7 @@ describe('MONSTER END TO END TEST!!!', function () {
     // }, 1000)
   })
 
-  it('should have correct errors, weights and biases for input nodes after backPropagation (smallest test case)', function (done) {
+  it('should have correct errors, weights and biases after backPropagation (smallest test case)', function (done) {
     var gotToCallback = false;
     mother.model.appendNodeLayer(1);
     mother.model.appendNodeLayer(1);
@@ -1490,7 +1491,7 @@ describe('MONSTER END TO END TEST!!!', function () {
     });
   });
 
-  it('should have correct errors, weights and biases for input nodes after backPropagation (slightly larger case with gates)', function (done) {
+  it('should have correct errors, weights and biases after backPropagation (slightly larger case with gates)', function (done) {
     var gotToCallback = false
     mother.model.appendNodeLayer(2);
     mother.model.appendNodeLayer(2);
@@ -1602,7 +1603,7 @@ describe('MONSTER END TO END TEST!!!', function () {
     })
   });
 
-  it('should have correct activation and elegibilities for output nodes after activation (synchronous selfConnection test)', function () {
+  it('should have correct activation and elegibilities after activation (synchronous selfConnection test)', function () {
     var activations = [ 1, 0.4767604551285103, 0.525809587209915, 0.5084123796515109 ]
     var elegibility =  [ [],
       [ 1 ],
@@ -1644,7 +1645,8 @@ describe('MONSTER END TO END TEST!!!', function () {
     expect(mother.model.layers[2][0].node.extendedElegibilities).to.eql(extendedElegibility[3])
 
   })
-  it('should have correct activation and elegibilities for output nodes after activation (selfConnection test)', function (done) {
+
+  it('should have correct activation and elegibilities after activation (selfConnection test)', function (done) {
     var activations = [ 1, 0.4767604551285103, 0.525809587209915, 0.5084123796515109 ]
     var elegibility =  [ [],
       [ 1 ],
@@ -1701,7 +1703,7 @@ describe('MONSTER END TO END TEST!!!', function () {
     })
   });
 
-  it('should have correct errors, weights and biases for input nodes after backPropagation (selfConnection test)', function () {
+  it('should have correct errors, weights and biases after backPropagation (selfConnection test)', function (done) {
     var activations = [ 1, 0.4767604551285103, 0.525809587209915, 0.5084123796515109 ]
     var elegibility =  [ [],
       [ 1 ],
@@ -1742,7 +1744,6 @@ describe('MONSTER END TO END TEST!!!', function () {
       
       var i = 0
       // debugger
-      console.log(-1)
       expect(mother.model.layers[0][0].node.activation).to.eql(activations[0]);
       expect(mother.model.layers[1][0].node.activation).to.eql(activations[1]);
       expect(mother.model.layers[1][1].node.activation).to.eql(activations[2]);
@@ -1763,6 +1764,105 @@ describe('MONSTER END TO END TEST!!!', function () {
         done()
       })
     })
+  })
+})
+
+describe('SECOND ORDER MONSTER END TO END TEST!!!', function () {
+  var mother;
+  var weights = [ 
+    -0.0733711616601795,
+    0.03829572834074496,
+    0.05767388842068613,
+    -0.008777539199218157,
+    0.019310780474916106,
+    0.09771623467095197,
+    0.07201561317779123,
+    -0.006101550720632079 
+  ]
+  var biases = [ 
+    0.05782533055171371,
+    -0.019654044089838868,
+    0.06503446158021689,
+    0.010771379200741643,
+    0.05458700209856035,
+    -0.024711737316101795,
+    -0.04195384504273534,
+    0.08664298541843893 
+  ]
+
+  beforeEach(function() {
+    mother = new Mother(null, function (toLevel, taskObj) {
+      var manager
+      if(toLevel === 1) {
+        setTimeout(function () {
+          manager = new Manager(null, function (toLevel, taskObj) {
+            var pleb;
+            if(toLevel === 2) {
+              setTimeout(function () {
+                mother.toManager.addToIn(taskObj);
+              }, 0)
+            } else if (toLevel === 0) {
+              setTimeout(function () {
+                pleb = new Pleb(null, function (toLevel, taskObj) {
+                  if(toLevel === 1) {
+                    setTimeout(function () {
+                      manager.toPleb.addToIn(taskObj);
+                    }, 0)
+                  } else {
+                    expect('YOUR KUNGFU IS WEAK').to.eql(true);
+                    done()
+                  }
+                })
+                pleb.toManager.addToIn(taskObj);
+              }, 0)
+            } else {
+              expect('YOUR KUNGFU IS WEAK').to.eql(true);
+              done()
+            }     
+          })
+          manager.toMother.addToIn(taskObj)
+        }, 0)
+      } else {
+        expect('YOUR KUNGFU IS WEAK').to.eql(true);
+        done()
+      }
+    })
+  });
+  it('should have correct activation and elegibilities after activation with second Order networks (smallest test case)', function (done) {
+    var SimpleNetwork = function (network, rate, maxGradient) {
+      Network.call(this, network, rate, maxGradient);
+      this.appendNodeLayer(1);
+      this.appendNodeLayer(1);
+      this.appendNodeLayer(1);
+      this.joinLayers(this.nodes[0], this.nodes[1], true)
+      this.joinLayers(this.nodes[1], this.nodes[2], true)
+    }
+    SimpleNetwork.prototype = Object.create(Network.prototype);
+    SimpleNetwork.prototype.Constructor = SimpleNetwork;
+    mother.model.appendNodeLayer(1);
+    mother.model.appendNetworkLayer(SimpleNetwork, 1);
+    mother.model.appendNodeLayer(1);
+    mother.model.joinLayers(mother.model.nodes[0], mother.model.nodes[1], true);
+    mother.model.joinLayers(mother.model.nodes[1], mother.model.nodes[2], true);
+
+    mother.model.nodes[0].nodes[0].node.bias = biases[0];
+    mother.model.nodes[1].nodes[0].nodes[0].nodes[0].bias = biases[1];
+    mother.model.nodes[1].nodes[0].nodes[1].nodes[0].bias = biases[2];
+    mother.model.nodes[1].nodes[0].nodes[2].nodes[0].bias = biases[3];
+    mother.model.nodes[2].nodes[0].node.bias = biases[4];
+
+    mother.model.connections.internal[1][0][0].weight = weights[0];
+    mother.model.nodes[1].nodes[0].connections.internal[1][0].weight = weights[1];
+    mother.model.nodes[1].nodes[0].connections.internal[2][1].weight = weights[2];
+    mother.model.connections.internal[2][1][0].weight = weights[3];
+
+    mother.model.initNeurons();
+    debugMode = true;
+    mother.activate([1], function () {
+
+      done()
+    })
+    // done();
   })
 })
 

@@ -7,7 +7,7 @@ var Mother = function (network, sendFunction) {
 
 Mother.prototype.update = function (command, section, model) {
   model.gatedNodes = {};
-  this.model.update(model.node.layerId, model.node.id, model)
+  this.model.update(model)
 }
 
 Mother.prototype.activate = function (inputArr, callback) {
