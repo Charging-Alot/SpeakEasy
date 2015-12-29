@@ -41,13 +41,13 @@ angular.module('speakEasy.chat', [])
       return;
     }
     
-    var messageText = $scope.message.text;
-    $scope.renderMessage('user', messageText);
+    var messageHolder = $scope.message;
+    $scope.message = {};
+    $scope.renderMessage('user', messageHolder.text);
     chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
     var pendingGif = angular.element(document.querySelector('.pendingGif'));
-    $scope.message = {};
 
-    ChatFactory.serveMessage($scope.message)
+    ChatFactory.serveMessage(messageHolder)
       .then(function (data) {
         // this resets message to blank and also clears the message field
         console.log('Marvin data?', data)
