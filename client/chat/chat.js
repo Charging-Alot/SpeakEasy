@@ -53,8 +53,8 @@ angular.module('speakEasy.chat', [])
         console.log('Marvin data?', data)
         console.log('then function from ChatCtrl serveMsg call', data);
         console.log('pendingGif!', pendingGif)
-        console.log('pendingGif PARENT!', pendingGif.parentNode)
-        pendingGif[0].parentNode.removeChild(pendingGif);
+        console.log('pendingGif PARENT!', pendingGif[0].parentNode)
+        pendingGif[0].parentNode.removeChild(pendingGif[0]);
         $scope.renderMessage('robot', data.response);
       })
       .catch(function (error) {
