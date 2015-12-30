@@ -1,31 +1,5 @@
-//This webRTC library was HUGELY inspired/copied from Muaz Khans DataChannel.js
-//Thank you Muaz for everything you've done for the RTC community, you're a saint.
-
 (function () {
-  //GLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALS
-  function swap(arr) {
-    var swapped = [],
-      length = arr.length;
-    for (var i = 0; i < length; i++)
-      if (arr[i]) swapped.push(arr[i]);
-    return swapped;
-  }
-
-  function getRandomString() {
-    return (Math.random() * new Date().getTime()).toString(36).replace(/\./g, '-');
-  }
-
-  window.userid = getRandomString();
-  var isMobileDevice = navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
-  var isChrome = !!navigator.webkitGetUserMedia;
-  var isFirefox = !!navigator.mozGetUserMedia;
-  var chromeVersion = !!navigator.mozGetUserMedia ? 0 : parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
-  window.moz = !!navigator.mozGetUserMedia;
-  window.IsDataChannelSupported = !((moz && !navigator.mozGetUserMedia) || (!moz && !navigator.webkitGetUserMedia));
-  // GLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALSGLOBALS
-
-
-  window.SpeakEasyChannel = function (channel, extras) {
+  window.DataChannel = function (channel, extras) {
     if (channel) this.automatic = true;
     this.channel = channel || location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
 
@@ -36,18 +10,14 @@
 
     this.onmessage = function (message, userid) {
       console.debug(userid, 'sent message:', message);
-      SpeakEasy.onMessageInject(message, userid);
     };
 
     this.channels = {};
-
     this.onopen = function (userid) {
       console.debug(userid, 'is connected with you.');
-      SpeakEasy.onOpenInject(userid);
     };
 
     this.onclose = function (event) {
-      SpeakEasy.onClose(event);
       console.error('data channel closed:', event);
     };
 
@@ -64,6 +34,32 @@
 
       if (!self.openSignalingChannel) {
         if (typeof self.transmitRoomOnce == 'undefined') self.transmitRoomOnce = true;
+
+        // socket.io over node.js: https://github.com/muaz-khan/WebRTC-Experiment/blob/master/Signaling.md
+        self.openSignalingChannel = function (config) {
+          config = config || {};
+
+          channel = config.channel || self.channel || 'default-channel';
+          var socket = new window.Firebase('https://' + (self.firebase || 'chat') + '.firebaseIO.com/' + channel);
+          socket.channel = channel;
+
+          socket.on('child_added', function (data) {
+            config.onmessage(data.val());
+          });
+
+          socket.send = function (data) {
+            this.push(data);
+          };
+
+          if (!self.socket) self.socket = socket;
+          if (channel != self.channel || (self.isInitiator && channel == self.channel))
+            socket.onDisconnect().remove();
+
+          if (config.onopen) setTimeout(config.onopen, 1);
+
+          return socket;
+        };
+
         if (!window.Firebase) {
           var script = document.createElement('script');
           script.src = 'https://www.webrtc-experiment.com/firebase.js';
@@ -96,7 +92,6 @@
           self.join(tempRoom);
         },
         onopen: function (userid, _channel) {
-          // SpeakEasy.onOpenInject(userid);
           self.onopen(userid, _channel);
           self.channels[userid] = {
             channel: _channel,
@@ -135,7 +130,7 @@
       dataConnector = IsDataChannelSupported ?
         new DataConnector(self, self.config) :
         new SocketConnector(self.channel, self.config);
-
+      // fileReceiver = new FileReceiver(self);
       textReceiver = new TextReceiver(self);
 
       if (self.room) self.config.ondatachannel(self.room);
@@ -172,21 +167,36 @@
     };
 
     this.send = function (data, _channel) {
-      if (!data) throw 'Send was called but no message was provided.';
-      TextSender.send({
-        text: data,
-        channel: dataConnector,
-        _channel: _channel,
-        root: self
-      });
+      if (!data) throw 'No file, data or text message to share.';
+      if (typeof data.size != 'undefined' && typeof data.type != 'undefined') {
+        FileSender.send({
+          file: data,
+          channel: dataConnector,
+          onFileSent: function (file) {
+            self.onFileSent(file);
+          },
+          onFileProgress: function (packets, uuid) {
+            self.onFileProgress(packets, uuid);
+          },
+
+          _channel: _channel,
+          root: self
+        });
+      } else {
+        TextSender.send({
+          text: data,
+          channel: dataConnector,
+          _channel: _channel,
+          root: self
+        });
+      }
     };
+
     this.onleave = function (userid) {
       console.debug(userid, 'left!');
     };
 
     this.leave = this.eject = function (userid) {
-      this.channels[userid].channel.peer.close();
-      delete SpeakEasy.ManagerInfo.plebs[userid];
       dataConnector.leave(userid, self.autoCloseEntireSession);
     };
 
@@ -199,6 +209,7 @@
       }
 
       if (!isOpenNewSession || isNonFirebaseClient) self.connect();
+
       // for non-firebase clients
       if (isNonFirebaseClient)
         setTimeout(function () {
@@ -228,15 +239,11 @@
       } else self.openNewSession(false, true);
     }
   };
-  //  ____    _  _____  _    ____ ___  _   _ _   _ _____ ____ _____ ___  ____
-  // |  _ \  / \|_   _|/ \  / ___/ _ \| \ | | \ | | ____/ ___|_   _/ _ \|  _ \ 
-  // | | | |/ _ \ | | / _ \| |  | | | |  \| |  \| |  _|| |     | || | | | |_) |
-  // | |_| / ___ \| |/ ___ \ |__| |_| | |\  | |\  | |__| |___  | || |_| |  _ < 
-  // |____/_/   \_\_/_/   \_\____\___/|_| \_|_| \_|_____\____| |_| \___/|_| \_\
-  //
+
   function DataConnector(root, config) {
     var self = {};
     var that = this;
+
     self.userToken = root.userid = root.userid || uniqueToken();
     self.sockets = [];
     self.socketObjects = {};
@@ -282,6 +289,7 @@
         onmessage: function (event) {
           config.onmessage(event.data, _config.userid);
         },
+        userid: self.userToken,
         onclose: config.onclose,
         onerror: root.onerror,
         preferSCTP: root.preferSCTP
@@ -289,16 +297,17 @@
 
       function initPeer(offerSDP) {
         if (root.direction === 'one-to-one' && window.isFirstConnectionOpened) return;
-
         if (!offerSDP) peerConfig.onOfferSDP = sendsdp;
         else {
           peerConfig.offerSDP = offerSDP;
           peerConfig.onAnswerSDP = sendsdp;
         }
-        peer = RTCPeerConnection(peerConfig, _config);
+
+        peer = RTCPeerConnection(peerConfig);
       }
 
       function onChannelOpened(channel) {
+        channel.SpkEzId = _config.userid
         channel.peer = peer.peer;
         RTCDataChannels.push(channel);
 
@@ -317,21 +326,26 @@
       function sendsdp(sdp) {
         sdp = JSON.stringify(sdp);
         var part = parseInt(sdp.length / 3);
+
         var firstPart = sdp.slice(0, part),
           secondPart = sdp.slice(part, sdp.length - 1),
           thirdPart = '';
+
         if (sdp.length > part + part) {
           secondPart = sdp.slice(part, part + part);
           thirdPart = sdp.slice(part + part, sdp.length);
         }
+
         socket.send({
           userToken: self.userToken,
           firstPart: firstPart
         });
+
         socket.send({
           userToken: self.userToken,
           secondPart: secondPart
         });
+
         socket.send({
           userToken: self.userToken,
           thirdPart: thirdPart
@@ -368,14 +382,12 @@
 
           console.debug('ice candidate', response.candidate.candidate);
         }
-
         if (response.left) {
-          console.log("RESPONSE WITH LEFT", response)
-
           if (peer && peer.peer) {
             peer.peer.close();
             peer.peer = null;
           }
+
           if (response.closeEntireSession) leaveChannels();
           else if (socket) {
             socket.send({
@@ -384,6 +396,7 @@
             });
             socket = null;
           }
+
           root.onleave(response.userToken);
         }
 
@@ -392,7 +405,7 @@
             self.roomToken = response.roomToken;
             root.open(self.roomToken);
             self.sockets = swap(self.sockets);
-          }, 1000);
+          }, 600);
       }
 
       var invokedOnce = false;
@@ -474,9 +487,12 @@
       if (channel) {
         socket = self.socketObjects[channel];
         if (socket) {
+          console.log("IN LEAVE CHANNELS", alert, channel, socket)
           socket.send(alert);
+
           if (self.sockets[socket.index])
             delete self.sockets[socket.index];
+
           delete self.socketObjects[channel];
         }
       }
@@ -536,7 +552,6 @@
         })();
       },
       joinRoom: function (_config) {
-
         self.roomToken = _config.roomToken;
         isGetNewRoom = false;
 
@@ -569,6 +584,7 @@
           }
       },
       leave: function (userid, autoCloseEntireSession) {
+        console.log("IN LEAVE", arguments)
         if (autoCloseEntireSession) root.autoCloseEntireSession = true;
         leaveChannels(userid);
         if (!userid) {
@@ -578,13 +594,6 @@
       }
     };
   }
-
-  //  ____             _        _                                  _             
-  // / ___|  ___   ___| | _____| |_ ___ ___  _ __  _ __   ___  ___| |_ ___  _ __ 
-  // \___ \ / _ \ / __| |/ / _ \ __/ __/ _ \| '_ \| '_ \ / _ \/ __| __/ _ \| '__|
-  //  ___) | (_) | (__|   <  __/ || (_| (_) | | | | | | |  __/ (__| || (_) | |   
-  // |____/ \___/ \___|_|\_\___|\__\___\___/|_| |_|_| |_|\___|\___|\__\___/|_|   
-
 
   function SocketConnector(_channel, config) {
     var channel = config.openSocket({
@@ -603,14 +612,16 @@
     };
   }
 
+  function getRandomString() {
+    return (Math.random() * new Date().getTime()).toString(36).replace(/\./g, '-');
+  }
 
-  //  _____ _______  _______ ____  _____ _   _ ____  
-  // |_   _| ____\ \/ /_   _/ ___|| ____| \ | |  _ \ 
-  //   | | |  _|  \  /  | | \___ \|  _| |  \| | | | |
-  //   | | | |___ /  \  | |  ___) | |___| |\  | |_| |
-  //   |_| |_____/_/\_\ |_| |____/|_____|_| \_|____/ 
+  window.userid = getRandomString();
 
-
+  var isMobileDevice = navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
+  var isChrome = !!navigator.webkitGetUserMedia;
+  var isFirefox = !!navigator.mozGetUserMedia;
+  var chromeVersion = !!navigator.mozGetUserMedia ? 0 : parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
 
   var TextSender = {
     send: function (config) {
@@ -667,20 +678,13 @@
     }
   };
 
-  //  _____ _______  _______ ____  _____ ____ ___ _______     _______ 
-  // |_   _| ____\ \/ /_   _|  _ \| ____/ ___|_ _| ____\ \   / / ____|
-  //   | | |  _|  \  /  | | | |_) |  _|| |    | ||  _|  \ \ / /|  _|  
-  //   | | | |___ /  \  | | |  _ <| |__| |___ | || |___  \ V / | |___ 
-  //   |_| |_____/_/\_\ |_| |_| \_\_____\____|___|_____|  \_/  |_____|
-
-
+  // _______________
+  // TextReceiver.js
 
   function TextReceiver() {
     var content = {};
 
     function receive(data, onmessage, userid) {
-      // SpeakEasy.onMessageInject(data, userid);
-
       // uuid is used to uniquely identify sending instance
       var uuid = data.uuid;
       if (!content[uuid]) content[uuid] = [];
@@ -705,16 +709,19 @@
     };
   }
 
+  function swap(arr) {
+    var swapped = [],
+      length = arr.length;
+    for (var i = 0; i < length; i++)
+      if (arr[i]) swapped.push(arr[i]);
+    return swapped;
+  }
 
+  window.moz = !!navigator.mozGetUserMedia;
+  window.IsDataChannelSupported = !((moz && !navigator.mozGetUserMedia) || (!moz && !navigator.webkitGetUserMedia));
 
-  //  ____                 ____                            _   _             
-  // |  _ \ ___  ___ _ __ / ___|___  _ __  _ __   ___  ___| |_(_) ___  _ __  
-  // | |_) / _ \/ _ \ '__| |   / _ \| '_ \| '_ \ / _ \/ __| __| |/ _ \| '_ \ 
-  // |  __/  __/  __/ |  | |__| (_) | | | | | | |  __/ (__| |_| | (_) | | | |
-  // |_|   \___|\___|_|   \____\___/|_| |_|_| |_|\___|\___|\__|_|\___/|_| |_|
+  function RTCPeerConnection(options) {
 
-
-  function RTCPeerConnection(options, config) {
     var w = window,
       PeerConnection = w.mozRTCPeerConnection || w.webkitRTCPeerConnection,
       SessionDescription = w.mozRTCSessionDescription || w.RTCSessionDescription,
@@ -726,18 +733,22 @@
       iceServers.push({
         url: 'stun:23.21.150.121'
       });
+
       iceServers.push({
         url: 'stun:stun.services.mozilla.com'
       });
     }
+
     if (isChrome) {
       iceServers.push({
         url: 'stun:stun.l.google.com:19302'
       });
+
       iceServers.push({
         url: 'stun:stun.anyfirewall.com:3478'
       });
     }
+
     if (isChrome && chromeVersion < 28) {
       iceServers.push({
         url: 'turn:homeo@turn.bistri.com:80?transport=udp',
@@ -768,49 +779,50 @@
         credential: 'webrtc',
         username: 'webrtc'
       });
-      //=============================================== These might cause us problems...
-      iceServers.push({
-        url: 'turn:numb.viagenie.ca',
-        credential: 'muazkh',
-        username: 'webrtc@live.com'
-      });
-      iceServers.push({
-        url: 'turn:192.158.29.39:3478?transport=udp',
-        credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-        username: '28224511:1379330808'
-      });
-      iceServers.push({
-        url: 'turn:192.158.29.39:3478?transport=tcp',
-        credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-        username: '28224511:1379330808'
-      });
-      var SpeakEasyStunServers = [ //Some free servers that may or may not work
-        'stun:stun01.sipphone.com',
-        'stun:stun.ekiga.net',
-        'stun:stun.fwdnet.net',
-        'stun:stun.ideasip.com',
-        'stun:stun.iptel.org',
-        'stun:stun.rixtelecom.se',
-        'stun:stun.schlund.de',
-        'stun:stun.l.google.com:19302',
-        'stun:stun1.l.google.com:19302',
-        'stun:stun2.l.google.com:19302',
-        'stun:stun3.l.google.com:19302',
-        'stun:stun4.l.google.com:19302',
-        'stun:stunserver.org',
-        'stun:stun.softjoys.com',
-        'stun:stun.voiparound.com',
-        'stun:stun.voipbuster.com',
-        'stun:stun.voipstunt.com',
-        'stun:stun.voxgratia.org',
-        'stun:stun.xten.com'
-      ]
-      SpeakEasyStunServers.forEach(function (server) {
-        iceServers.push({
-          url: server
-        });
-      });
     }
+    iceServers.push({
+      url: 'turn:numb.viagenie.ca',
+      credential: 'muazkh',
+      username: 'webrtc@live.com'
+    });
+    iceServers.push({
+      url: 'turn:192.158.29.39:3478?transport=udp',
+      credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+      username: '28224511:1379330808'
+    });
+    iceServers.push({
+      url: 'turn:192.158.29.39:3478?transport=tcp',
+      credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+      username: '28224511:1379330808'
+    });
+    [ //hopefully do something.
+      'stun:stun01.sipphone.com',
+      'stun:stun.ekiga.net',
+      'stun:stun.fwdnet.net',
+      'stun:stun.ideasip.com',
+      'stun:stun.iptel.org',
+      'stun:stun.rixtelecom.se',
+      'stun:stun.schlund.de',
+      'stun:stun.l.google.com:19302',
+      'stun:stun1.l.google.com:19302',
+      'stun:stun2.l.google.com:19302',
+      'stun:stun3.l.google.com:19302',
+      'stun:stun4.l.google.com:19302',
+      'stun:stunserver.org',
+      'stun:stun.softjoys.com',
+      'stun:stun.voiparound.com',
+      'stun:stun.voipbuster.com',
+      'stun:stun.voipstunt.com',
+      'stun:stun.voxgratia.org',
+      'stun:stun.xten.com'
+    ].forEach(function (url) {
+      iceServers.push({
+        url: url
+      })
+    });
+
+
+    if (options.iceServers) iceServers = options.iceServers;
 
     iceServers = {
       iceServers: iceServers
@@ -832,6 +844,12 @@
     }
 
     var peerConnection = new PeerConnection(iceServers, optional);
+
+    peerConnection.oniceconnectionstatechange = function (event) {
+      if (peerConnection.iceConnectionState == 'disconnected') {
+        options.onclose(event, this);
+      }
+    }
 
     openOffererChannel();
     peerConnection.onicecandidate = onicecandidate;
@@ -863,6 +881,7 @@
 
     function createOffer() {
       if (!options.onOfferSDP) return;
+
       peerConnection.createOffer(function (sessionDescription) {
         sessionDescription.sdp = setBandwidth(sessionDescription.sdp);
         peerConnection.setLocalDescription(sessionDescription);
@@ -922,6 +941,7 @@
       // protocol: 'text/chat', preset: true, stream: 16
       // maxRetransmits:0 && ordered:false
       var dataChannelDict = {};
+
       if (!moz && !options.preferSCTP) {
         dataChannelDict.reliable = false; // Deprecated!
       }
@@ -967,12 +987,14 @@
         sdp = new SessionDescription(sdp);
         peerConnection.setRemoteDescription(sdp, onSdpSuccess, onSdpError);
       },
+
       addICE: function (candidate) {
         peerConnection.addIceCandidate(new IceCandidate({
           sdpMLineIndex: candidate.sdpMLineIndex,
           candidate: candidate.candidate
         }));
       },
+
       peer: peerConnection,
       channel: channel,
       sendData: function (message) {

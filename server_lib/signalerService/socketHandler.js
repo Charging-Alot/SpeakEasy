@@ -1,7 +1,7 @@
 // require('reliable-signaler')(httpServer);
 
 var sysLog = require('sysLog');
-var ManagerListCon = require("managerList");
+var AdminListCon = require("adminList");
 
 exports.easySignaler = easySignaler;
 
@@ -12,50 +12,50 @@ function easySignaler(app) {
     origins: '*:*'
   });
 
-  var ManagerList = new ManagerListCon();
+  var AdminList = new AdminListCon();
 
   io.on('connection', function (socket) {
     var currentUser = socket;
     /*
-     * Removes manager from the ManagerList
+     * Removes admin from the AdminList
      *
      * @param {string}  - The unique identifier for the new user
      */
     socket.on('disconnect', function () {
       sysLog("Socket " + socket.id + " disconnect");
-      if (ManagerList.storage[socket.id]) {
-        ManagerList.removeManager(socket.id); //could still fire when a pleb disconnects before establishing manager connection
+      if (AdminList.storage[socket.id]) {
+        AdminList.removeAdmin(socket.id); //could still fire when a player disconnects before establishing admin connection
       }
     });
     /*
-     * Takes a user id and determines if the new user should either be a "Manager" or a manager's child ("Pleb").
-     * If all current managers are at max capacity (Determined by the constructor's ManagerSize param, default is 3), it sets the new user up as a new Manager
+     * Takes a user id and determines if the new user should either be a "admin" or a admin's child ("player").
+     * If all current admins are at max capacity (Determined by the constructor's adminSize param, default is 3), it sets the new user up as a new Admin
      *
      * @param {string} userId - The unique identifier for the new user
      */
     socket.on('establish_role', function () {
-      ManagerList.introduce(socket);
+      AdminList.introduce(socket);
     });
     /*
-     * Complete communication 'triangle' ensuring that manager and given pleb have indeed established a connection allowing for a pleb socket to be disconnected
+     * Complete communication 'triangle' ensuring that admin and given player have indeed established a connection allowing for a player socket to be disconnected
      *
-     * @param {string} managerSocketId - The unique identifier managers socket in the ManagerList
+     * @param {string} adminSocketId - The unique identifier admins socket in the AdminList
      */
-    socket.on('plebrecieved', function (plebSocketId) { //having two of these might be overkill
-      ManagerList.plebRecieved(socket, plebSocketId)
+    socket.on('playerrecieved', function (data) { //having two of these might be overkill
+      AdminList.playerRecieved(socket, data)
     });
     /*
-     * Signals to the mother that a pleb was lost and it can be removed from the pool of plebs of that manager 
+     * Signals to the mother that a player was lost and it can be removed from the pool of players of that admin 
      *
-     * @param {string} pleb_id - The unique identifier of the pleb in the manager's pleb collection
+     * @param {string} player_id - The unique identifier of the player in the admin's player collection
      */
-    socket.on('pleblost', function (pleb_id) {
-      ManagerList.removePleb(socket.id, pleb_id);
-      //remove pleb id from manager's pleb list to open for new additions
+    socket.on('playerlost', function (player_id) {
+      AdminList.removePlayer(socket.id, player_id);
+      //remove player id from admin's player list to open for new additions
     });
 
-    socket.on('message', function (message) {
-      socket.broadcast.emit('message', message);
+    socket.on('setup', function (message) {
+      socket.broadcast.emit('setup', message);
     });
   });
 }

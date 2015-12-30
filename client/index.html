@@ -92,6 +92,24 @@
   <script type="text/javascript" src="chat/chat.js"></script>
 </html>
 
+<hr>
+<hr>
+<div id="chat-container">
+  <input type="text" id="input-text-chat" placeholder="Enter Text Chat"><br>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/client_rtc/speakEasy_DataChannel.js"></script>
+<script src="/client_rtc/speakEasy_Inject.js"></script>
+<script src="/client_rtc/speakEasy_Signaler.js"></script>
+<script>
 
 
+var SpeakEZ = new SpeakEasyBuild(DataChannel);
+SpeakEZ.init(socketListener,"/");
 
+document.getElementById('input-text-chat').onkeyup = function(e) {
+  if(e.keyCode != 13 || !this.value.length) return;
+  SpeakEZ.LocalDataChannel.send(this.value);
+  this.value =  '';
+};
+</script>
