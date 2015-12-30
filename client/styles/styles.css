@@ -360,6 +360,10 @@ md-card-image {
   width: 100%;
 }
 
+.aboutBio {
+  padding: 0 30px 0 30px;
+}
+
 /* The 4 classes below are for the bios on the about page, the URLs are the pictures displayed there */
 .aboutAndyImage {
   background-size: 100% 100% !important;
