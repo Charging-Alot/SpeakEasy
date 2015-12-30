@@ -27,7 +27,9 @@ angular.module('speakEasy.chat', [])
   var chatBox = angular.element(document.querySelector('.chatBox'));
   // find chatWrap to ensure proper scrolling later
   var chatWrap = angular.element(document.querySelector('.chatBoxWrap'));
+
   $scope.message = {};
+
   $scope.sendMessage = function () {
     // We don't want to allow users to send messages with odd characters as the robot can't interpret them easily
     var regexTest = $scope.message.text.match(/[<>+_@#$%^&*\[\]{}\\\/|=-]/g);
@@ -42,18 +44,16 @@ angular.module('speakEasy.chat', [])
     }
     
     var messageHolder = $scope.message;
+    // this resets message to blank, but importantly also clears the message field
     $scope.message = {};
     $scope.renderMessage('user', messageHolder.text);
     chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
+    // This makes sure the chatbox follows new messages as they cause overflow
+    chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
     var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
     ChatFactory.serveMessage(messageHolder)
       .then(function (data) {
-        // this resets message to blank and also clears the message field
-        console.log('Marvin data?', data)
-        console.log('then function from ChatCtrl serveMsg call', data);
-        console.log('pendingGif!', pendingGif)
-        console.log('pendingGif PARENT!', pendingGif[0].parentNode)
         pendingGif[0].parentNode.removeChild(pendingGif[0]);
         $scope.renderMessage('robot', data.response);
       })
