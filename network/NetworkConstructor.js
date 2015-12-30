@@ -373,6 +373,7 @@ Network.prototype.setLastLayerError = function (targetArr) {
 }
 
 if(module) {
+  var Neuron = require('./neuronConstructor.js')
   module.exports = Network
 }
 

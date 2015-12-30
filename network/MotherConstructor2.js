@@ -1,12 +1,16 @@
-require('./NetworkConstructor.js');
-require('./neuronConstructor.js');
-require('./IoHandler.js');
+var Network = require('./NetworkConstructor.js');
+var Neuron = require('./neuronConstructor.js');
+var IoHandler = require('./IoHandler.js');
 
 var Mother = function (network, sendFunction) {
   this.rate = 0.1;
   this.maxGradient = 5;
   this.model = network || new Network(null, this.rate, this.maxGradient)
   this.toManager = new IoHandler(2, 1, this, sendFunction);
+}
+
+Mother.prototype.input = function (object) {
+  this.toManager.addToIn(object)
 }
 
 Mother.prototype.update = function (command, section, model) {

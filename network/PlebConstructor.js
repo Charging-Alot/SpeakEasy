@@ -9,6 +9,10 @@ Pleb.prototype.update = function (command, section, partialNeuron) {
   Neuron.call(this, partialNeuron);
 }
 
+Pleb.prototype.input = function (object) {
+  this.toManager.addToIn(object)
+}
+
 Pleb.prototype.run = function (command, section) {
   this[command](section);
   this.queueCommandManager(command, section);
@@ -46,5 +50,6 @@ Pleb.prototype.queueCommandManager = function (command, section, callback) {
 }
 
 if(module) {
+  var Neuron = require('./neuronConstructor.js')
   module.exports = Pleb
 }

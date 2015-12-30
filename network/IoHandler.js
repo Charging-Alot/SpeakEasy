@@ -117,5 +117,6 @@ IoHandler.prototype.runAllInputs = function () {
 }
 
 if(module) {
+  var Queue = require('./Queue.js')
   module.exports = IoHandler
 }

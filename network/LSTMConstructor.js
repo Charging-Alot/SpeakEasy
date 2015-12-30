@@ -137,9 +137,10 @@ var LSTM = function (derp, rate, maxGradient) {
   this.initNeurons();
 }
 
-LSTM.prototype = Object.create(Network.prototype);
-LSTM.prototype.constructor = LSTM;
-
 if(module) {
+  var Network = require('./NetworkConstructor')
   module.exports = LSTM
 }
+
+LSTM.prototype = Object.create(Network.prototype);
+LSTM.prototype.constructor = LSTM;

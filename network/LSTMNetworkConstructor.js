@@ -14,9 +14,11 @@ var LSTMNetwork = function (arrayOfLayerSizes, rate, maxGradient) {
   this.initNeurons();
 }
 
+if(module) {
+  var Network = require('./NetworkConstructor')
+  var LSTM = require('./LSTMConstructor')
+  module.exports = LSTMNetwork;
+}
+
 LSTMNetwork.prototype = Object.create(Network.prototype);
 LSTMNetwork.prototype.constructor = LSTMNetwork;
-
-if(module) {
-  module.exports = LSTMNetwork
-}
