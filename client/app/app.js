@@ -1,6 +1,7 @@
 angular.module('speakEasy', [
   'ngMaterial',
   'ui.router',
+  'chart.js', // required for angular-chart.js
   'speakEasy.home', //should need as a separate module
   'speakEasy.services',
   'speakEasy.chat',
