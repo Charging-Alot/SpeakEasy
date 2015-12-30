@@ -44,6 +44,7 @@ angular.module('speakEasy.chat', [])
     }
     $scope.renderMessage('user', "what do you think about music ?")
     $scope.renderMessage('robot', "I think it's a good thing .")
+    $scope.renderMessage('user', "how about movies ?")
     
     var messageHolder = $scope.message;
     // this resets message to blank, but importantly also clears the message field
