@@ -20,7 +20,7 @@ function socketListener(SpeakEasy) {
   initSocket();
 
   function initSocket() { //all the handlers!
-    console.log("Init socket")
+    console.log("Socket initialized...")
     SpeakEasy.socket = io.connect('http://localhost:1337/', {
       'force new connection': true,
       'reconnect': false
@@ -40,7 +40,7 @@ function socketListener(SpeakEasy) {
 
     SpeakEasy.socket.on('connect', function () { //speaks with mother to ask for what the current role should be
       SpeakEasy.socket.emit("establish_role");
-      console.log("Socket Conn with mother established", SpeakEasy.socket);
+      console.log("Socket connection with server established, requesting role");
     });
 
     SpeakEasy.socket.on('disconnect', function () {
@@ -54,7 +54,6 @@ function socketListener(SpeakEasy) {
     });
 
     SpeakEasy.socket.on('adminsetup', function (data) {
-      console.log("ADMIN SETUP SIGNAL RECIEVED", data);
       SpeakEasy.LocalDataChannel.openSignalingChannel({
         channel: data.adminId
       })
@@ -62,8 +61,6 @@ function socketListener(SpeakEasy) {
     });
 
     SpeakEasy.socket.on('playersetup', function (data) {
-      // if (SpeakEasy.AdminInfo || SpeakEasy)
-      console.log("PLAYER SETUP SIGNAL RECIEVED", data);
       SpeakEasy.playerSetup(data);
     });
 
@@ -76,9 +73,9 @@ function socketListener(SpeakEasy) {
 
     SpeakEasy.socket.on('playereject', function (data) {
       if (SpeakEasy.AdminInfo) {
-        console.log("Player Eject called for:", data)
-        SpeakEasy.ejectPlayer(data.playerRtc);
+        return SpeakEasy.ejectPlayer(data.playerRtc);
       };
+      console.error("Received player eject but user not an admin...")
     });
   }
 
@@ -91,7 +88,7 @@ function socketListener(SpeakEasy) {
 
   function onLineOffLineHandler() {
     if (!navigator.onLine) {
-      return alert('Internet channel seems disconnected or having issues.');
+      return alert('Internet channel seems disconnected or having issues. Consider refreshing the page.');
     }
     if (SpeakEasy.socket.isHavingError) {
       SpeakEasy.resetState();

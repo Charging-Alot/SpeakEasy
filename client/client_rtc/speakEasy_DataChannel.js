@@ -297,7 +297,6 @@
 
       function initPeer(offerSDP) {
         if (root.direction === 'one-to-one' && window.isFirstConnectionOpened) return;
-
         if (!offerSDP) peerConfig.onOfferSDP = sendsdp;
         else {
           peerConfig.offerSDP = offerSDP;
