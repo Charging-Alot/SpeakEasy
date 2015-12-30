@@ -48,7 +48,7 @@ angular.module('speakEasy.chat', [])
     var messageHolder = $scope.message;
     // this resets message to blank, but importantly also clears the message field
     $scope.message = {};
-    $scope.renderMessage('user', messageHolder.text);
+    //$scope.renderMessage('user', messageHolder.text);
     chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
     // This makes sure the chatbox follows the pending gif as it causes overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
