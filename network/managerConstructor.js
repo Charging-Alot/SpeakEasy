@@ -249,3 +249,7 @@ Manager.prototype.queueCommandMother = function (command, section, callback) {
   }
   this.toMother.addToOut(command, section, value, callback);
 }
+
+if(module) {
+  module.exports = Manager
+}

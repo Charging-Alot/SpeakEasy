@@ -44,3 +44,7 @@ Pleb.prototype.queueCommandManager = function (command, section, callback) {
   }
   this.toManager.addToOut(command, section, value, callback);
 }
+
+if(module) {
+  module.exports = Pleb
+}

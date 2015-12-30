@@ -115,3 +115,7 @@ IoHandler.prototype.runAllInputs = function () {
     this.runInput(this.input.dequeue());
   }
 }
+
+if(module) {
+  module.exports = IoHandler
+}

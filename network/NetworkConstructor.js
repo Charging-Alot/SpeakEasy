@@ -371,3 +371,8 @@ Network.prototype.setLastLayerError = function (targetArr) {
     this.layers[lastIndex][i].node.errorGated = 0
   }
 }
+
+if(module) {
+  module.exports = Network
+}
+

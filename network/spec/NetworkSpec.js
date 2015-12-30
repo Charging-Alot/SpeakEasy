@@ -2841,9 +2841,52 @@ describe('TINY LSTM TEST', function () {
 })
 
 describe('MONSTER LSTM NETWORK TEST', function () {
-  it('', function () {
+  beforeEach(function() {
+    mother = new Mother(null, function (toLevel, taskObj) {
+      var manager
+      if(toLevel === 1) {
+        setTimeout(function () {
+          manager = new Manager(null, function (toLevel, taskObj) {
+            var pleb;
+            if(toLevel === 2) {
+              setTimeout(function () {
+                mother.toManager.addToIn(taskObj);
+              }, 0)
+            } else if (toLevel === 0) {
+              setTimeout(function () {
+                pleb = new Pleb(null, function (toLevel, taskObj) {
+                  if(toLevel === 1) {
+                    setTimeout(function () {
+                      manager.toPleb.addToIn(taskObj);
+                    }, 0)
+                  } else {
+                    expect('YOUR KUNGFU IS WEAK').to.eql(true);
+                    done()
+                  }
+                })
+                pleb.toManager.addToIn(taskObj);
+              }, 0)
+            } else {
+              expect('YOUR KUNGFU IS WEAK').to.eql(true);
+              done()
+            }     
+          })
+          manager.toMother.addToIn(taskObj)
+        }, 0)
+      } else {
+        expect('YOUR KUNGFU IS WEAK').to.eql(true);
+        done()
+      }
+    })
+  });
+  it('herp a derp a derp', function (done) {
     mother.model = new LSTMNetwork([4, 2, 2, 4])
-
+    mother.activate([1,0,0,0], function () {
+      mother.backPropagate([0,1,0,1], function () {
+        debugger
+        done()
+      })
+    })
   })
 })
 

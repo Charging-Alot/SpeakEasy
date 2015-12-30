@@ -290,3 +290,7 @@ var squash = {
     }
   },
 }
+
+if(module) {
+  module.exports = Neuron;
+}
