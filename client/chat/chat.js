@@ -42,27 +42,24 @@ angular.module('speakEasy.chat', [])
       $scope.message = {};
       return;
     }
-    $scope.renderMessage('user', "what do you think about music ?")
-    $scope.renderMessage('robot', "I think it's a good thing .")
-    $scope.renderMessage('user', "how about movies ?")
     
     var messageHolder = $scope.message;
     // this resets message to blank, but importantly also clears the message field
     $scope.message = {};
-    //$scope.renderMessage('user', messageHolder.text);
+    $scope.renderMessage('user', messageHolder.text);
     chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
     // This makes sure the chatbox follows the pending gif as it causes overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
     var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
-    // ChatFactory.serveMessage(messageHolder)
-    //   .then(function (data) {
-    //     pendingGif[0].parentNode.removeChild(pendingGif[0]);
-    //     $scope.renderMessage('robot', data.response);
-    //   })
-    //   .catch(function (error) {
-    //     console.error(error);
-    //   });
+    ChatFactory.serveMessage(messageHolder)
+      .then(function (data) {
+        pendingGif[0].parentNode.removeChild(pendingGif[0]);
+        $scope.renderMessage('robot', data.response);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
 
   }
 
