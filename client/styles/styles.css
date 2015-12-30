@@ -247,6 +247,7 @@ md-card-image {
 .pendingGif {
   height: 70px;
   width: 60px;
+  padding-bottom: 10px;
 }
 
 /***************/

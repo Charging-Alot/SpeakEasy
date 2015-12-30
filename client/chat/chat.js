@@ -35,11 +35,13 @@ angular.module('speakEasy.chat', [])
     var regexTest = $scope.message.text.match(/[<>+_@#$%^&*\[\]{}\\\/|=-]/g);
     if ( regexTest && regexTest.length ) {
       $scope.renderMessage('robot', "Sorry, you used some characters I don't understand! Try to stick to simple punctuation.");
+      $scope.message = {};
       return;
     }
 
     if ( $scope.message.text.length > 140 ) {
       $scope.renderMessage('robot', "Sorry, your message was too long! Try sending me something shorter next time.");
+      $scope.message = {};
       return;
     }
     
