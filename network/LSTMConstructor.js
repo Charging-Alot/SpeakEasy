@@ -75,15 +75,11 @@ var LSTMOneInput = function () {
 LSTMOneInput.prototype = Object.create(Network.prototype);
 LSTMOneInput.prototype.constructor = LSTMOneInput;
 
-var LSTM = function () {
+var LSTM = function (derp, rate, maxGradient) {
   //this is a tensorflow style lstm.
-  Network.call(this);
+  Network.call(this, derp, rate, maxGradient);
   //input layer
   this.appendNodeLayer(4);
-  this.nodes[0].nodes[0].bias = biases[0]; // forget gate
-  this.nodes[0].nodes[1].bias = biases[1]; // remember gate
-  this.nodes[0].nodes[2].bias = biases[2]; // output gate
-  this.nodes[0].nodes[3].bias = biases[3]; //input
   this.nodes[0].nodes[3].squash = 'hyperbolicTangent';
   this.appendNodeLayer(1); //memory cell
   this.nodes[1].nodes[0].bias = 0;
@@ -116,30 +112,30 @@ var LSTM = function () {
 
   //input to memory cell
   this.joinNodes(this.nodes[0].nodes[3], this.nodes[1].nodes[0], false);
-  this.connections[1][0][0].weight = 1;
-  this.connections[1][0][0].trainable = false;
+  this.connections.internal[1][0][0].weight = 1;
+  this.connections.internal[1][0][0].trainable = false;
 
   //join memory cell to itself.
-  this.joinLayers(this.nodes[1], this.nodes[1], false);
-  this.connections[1][1][0].weight = 1;
-  this.connections[1][1][0].trainable = false;
+  this.joinNodes(this.nodes[1].nodes[0], this.nodes[1].nodes[0], false);
+  this.nodes[1].nodes[0].selfConnection.weight = 1;
+  this.nodes[1].nodes[0].selfConnection.trainable = false;
 
   //join memory cell to second output layer
-  this.joinLayers(this.nodes[1], this.nodes[2], false);
-  this.connections[2][1][0].weight = 1;
-  this.connections[2][1][0].trainable = false;
+  this.joinNodes(this.nodes[1].nodes[0], this.nodes[2].nodes[0], false);
+  this.connections.internal[2][1][0].weight = 1;
+  this.connections.internal[2][1][0].trainable = false;
 
   //gate memory cell self connection (forget gate)
-  this.gateConnection(this.connections[1][1], this.nodes[0].nodes[0]);// either this or connection from 6 to
+  this.gateConnection(this.nodes[1].nodes[0].selfConnection, this.nodes[0].nodes[0]);// either this or connection from 6 to
 
   //gate input to memory cell (remember gate)
-  this.gateConnection(this.connections[1][0], this.nodes[0].nodes[1]);
+  this.gateConnection(this.connections.internal[1][0][0], this.nodes[0].nodes[1]);
 
   //gate memory cell to output (output gate)
-  this.gateLayerOneToOne(this.connections[2][1], this.nodes[0].nodes[2]);
+  this.gateConnection(this.connections.internal[2][1][0], this.nodes[0].nodes[2]);
 
   this.initNeurons();
 }
 
-LSTMOneInput.prototype = Object.create(Network.prototype);
-LSTMOneInput.prototype.constructor = LSTMOneInput;
+LSTM.prototype = Object.create(Network.prototype);
+LSTM.prototype.constructor = LSTM;

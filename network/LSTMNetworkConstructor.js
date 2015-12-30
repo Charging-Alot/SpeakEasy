@@ -1,4 +1,4 @@
-var LSTMNetwork = function (arrayOfLayerSizes, arrayOfBiasArrays, arrayOfWeightTensors) {
+var LSTMNetwork = function (arrayOfLayerSizes) {
   Network.call(this);
   this.appendNodeLayer(arrayOfLayerSizes[0])
   for(var i = 1; i < arrayOfLayerSizes.length - 1; ++i) {
@@ -11,7 +11,7 @@ var LSTMNetwork = function (arrayOfLayerSizes, arrayOfBiasArrays, arrayOfWeightT
     this.joinLayers(this.layers[j], this.layers[j+1], true);
   }
 
-  this.initNeuron
+  this.initNeurons();
 }
 
 LSTMNetwork.prototype = Object.create(Network.prototype);

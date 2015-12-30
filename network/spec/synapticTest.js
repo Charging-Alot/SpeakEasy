@@ -177,7 +177,7 @@ console.log('eligibilities 1', layers[1].list[0].trace.elegibility)
 
 
 // bigger backpropagation
-console.log('MONSTER BACKPROP');
+console.log('\nMONSTER BACKPROP\n');
 neurons = []
 
 for(var i = 0; i < 8; ++i) {
@@ -244,7 +244,7 @@ console.log('var errors =', errors)
 console.log('var newBiases =', newBiases)
 console.log('var newWeights =', newWeights)
 
-console.log('SELF CONNECTION TEST');
+console.log('\nSELF CONNECTION TEST\n');
 
 var neurons = [];
 
@@ -306,7 +306,7 @@ console.log('var errors =', errors)
 console.log('var newBiases =', newBiases)
 console.log('var newWeights =', newWeights)
 
-console.log('SECOND ORDER BASIC');
+console.log('\nSECOND ORDER BASIC\n');
 
 var neurons = [];
 
@@ -324,6 +324,7 @@ for(var i = 0; i < 5; ++i) {
   var activations = [];
   activations[0] = neurons[0].activate(1);
   activations[1] = neurons[1].activate();
+  console.log(neurons[1].activation)
   activations[2] = neurons[2].activate();
   activations[3] = neurons[3].activate();
   activations[4] = neurons[4].activate();

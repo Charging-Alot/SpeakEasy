@@ -1,6 +1,7 @@
 var Neuron = function (partialNeuron) {
   this.type = 'neuron';
   if(partialNeuron !== undefined && partialNeuron !== null) {
+    this.trainable = partialNeuron.trainable
     this.isOutput = partialNeuron.isOutput;
     this.rate = partialNeuron.rate;
     this.maxGradient = partialNeuron.maxGradient;
@@ -57,7 +58,9 @@ Neuron.prototype.update = function (partialNeuron) {
           this.connections[connType][connection] = {};
         }
         for(var property in partialNeuron.connections[connType][connection]) {
-          this.connections[connType][connection][property] = partialNeuron.connections[connType][connection][property];
+          if(property !== 'toNode' && property !== 'fromNode' && property !== 'gateNode') {
+            this.connections[connType][connection][property] = partialNeuron.connections[connType][connection][property];
+          }
         }
       }
     }
@@ -76,8 +79,8 @@ Neuron.prototype.activateSync = function () {
   }
 }
 
-Neuron.prototype.backPropagteSync = function () {
-  if(this.isOutput) {
+Neuron.prototype.backPropagateSync = function () {
+  if(this.isOutput && this.node.subNetworkId === -1) {
     this.learningStep();
     this.adjustBias();
   } else {
@@ -211,7 +214,7 @@ Neuron.prototype.projectedErrorStep = function () {
   this.node.errorProjected = 0;
   for (var i = 0; i < this.connections.outputs.length; ++i) {
     this.node.errorProjected += this.connections.outputs[i].toNode.errorResponsibility * //this is from the to neuron
-      (this.connections.outputs[i].gateNode ? this.connections.outputs[i].gateNode.activation : 1) * this.connections.outputs[i].weight
+      (this.connections.outputs[i].gateNode !== null ? this.connections.outputs[i].gateNode.activation : 1) * this.connections.outputs[i].weight
   }
   this.node.errorProjected *= this.node.derivative;
   /*
@@ -249,7 +252,7 @@ Neuron.prototype.gatedErrorStep = function () {
 Neuron.prototype.learningStep = function () {
   var gradient;
   for(var i = 0; i < this.connections.inputs.length; ++i) {
-    if(this.connections.inputs[i].trainable || this.connections.inputs[i].trainable === undefined) {
+    if(this.connections.inputs[i].trainable) {
       gradient = this.node.errorProjected * this.node.elegibilities[i]
       for(var j in this.gatedNodes) {
         gradient += this.gatedNodes[j].errorResponsibility * this.node.extendedElegibilities[j][i]
@@ -274,7 +277,7 @@ var squash = {
     'activation': function (x) {
       return (Math.exp(2*x)  - 1) / (Math.exp(2*x) + 1)
     },
-    'derivative': function (dx) {
+    'derivative': function (x) {
       return 4*Math.exp(2*x) / ((Math.exp(2*x) + 1)^2)
     }
   },

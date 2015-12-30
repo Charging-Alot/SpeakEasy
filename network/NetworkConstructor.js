@@ -13,6 +13,8 @@ var Network = function (network, rate, maxGradient) {
     this.connections.gated = [];
     this.gatedNodes = {};
   } else {
+    this.id = network.id;
+    this.layerId = network.layerId;
     this.layers = [];
     this.nodes = network.nodes || [];
     this.connections = {};
@@ -26,8 +28,23 @@ var Network = function (network, rate, maxGradient) {
 }
 
 Network.prototype.update = function (model) {
+  // if(this.nodes[1] && this.nodes[1].nodes[0] && this.nodes[1].nodes[0].type === 'network') {
+  //   debugger
+  // }
+  this.rate = model.rate
+  this.maxGradient = model.maxGradient
   if(model.type !== 'network') {
-    this.layers[model.node.layerId][model.node.id].update(model);
+    if(model.node.subNetworkId !== -1) {
+      this.layers[model.node.subNetworkLayerId][model.node.subNetworkId].update(model)
+    } else {
+      this.layers[model.node.layerId][model.node.id].update(model);
+    }
+    // if(model.node.subNetworkId === -1 || (model.node.subNetworkId !== this.id && model.node.subNetworkLayerId !== this.layerId)) {
+    //   this.layers[model.node.layerId][model.node.id].update(model);
+    // } else {
+    //   // this.layers[model.node.subNetworkLayerId][model.node.subNetworkId].layers[model.node.layerId][model.node.id].update(model)
+    //   this.layers[model.node.layerId][model.node.id].update(model)
+    // }
   } else {
     for(var i = 0; i < model.layers.length; ++i) {
       for(var j = 0; j < model.layers[i].length; ++j) {
@@ -64,7 +81,7 @@ Network.prototype.initNeurons = function () {
         network = this.layers[layer][node];
         for(var input = 0; input < network.layers[0].length; ++input) {
           neuron = network.layers[0][input]
-          this.initializeElegibilitiesForNeuron(neuron);
+          network.initializeElegibilitiesForNeuron(neuron);
         }
       } else {
         neuron = this.layers[layer][node];
@@ -236,8 +253,17 @@ Network.prototype.joinLayers = function (fromLayer, toLayer, allToAll) {
 }
 
 Network.prototype.joinNodes = function (fromNode, toNode, allToAll) {
-  var fromLayerId = fromNode.layerId;
-  var toLayerId = toNode.layerId;
+  if(toNode.subNetworkLayerId === -1) {
+    var toLayerId = toNode.layerId;
+  } else {
+    toLayerId = toNode.subNetworkLayerId
+  }
+  if(fromNode.subNetworkLayerId === -1) {
+    var fromLayerId = fromNode.layerId;
+  } else {
+    fromLayerId = fromNode.subNetworkLayerId
+  }
+
   if(!this.connections.internal[toLayerId]) {
     this.connections.internal[toLayerId] = {}
   }
@@ -262,7 +288,7 @@ Network.prototype.joinNodes = function (fromNode, toNode, allToAll) {
       connection.trainable = false;
       toNode.selfConnection = connection;
     } else {
-      var connId = this.connections.internal[toLayerId][fromLayerId].length
+      connId = this.connections.internal[toLayerId][fromLayerId].length
       connection = Connection(connId, toNode, fromNode)
       this.connections.internal[toLayerId][fromLayerId].push(connection);
     }
@@ -335,7 +361,7 @@ Network.prototype.activateFirstLayer = function (inputArr) {
   }
 }
 
-Network.prototype.SetLastLayerError = function (targetArr) {
+Network.prototype.setLastLayerError = function (targetArr) {
   var error;
   var lastIndex = this.layers.length - 1
   for(var i = 0; i < this.layers[lastIndex].length; ++i) {

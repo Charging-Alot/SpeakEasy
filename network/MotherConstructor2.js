@@ -6,8 +6,8 @@ var Mother = function (network, sendFunction) {
 }
 
 Mother.prototype.update = function (command, section, model) {
-  model.gatedNodes = {};
-  this.model.update(model)
+  // model.gatedNodes = {};
+  this.model.update(model);
 }
 
 Mother.prototype.activate = function (inputArr, callback) {
@@ -49,10 +49,10 @@ Mother.prototype.queueCommandManager = function (command, section, neuron, callb
 
 Mother.prototype.backPropagate = function (targetArr, callback) {
   if(this.model.initialized) {
-    this.model.SetLastLayerError(targetArr);
+    this.model.setLastLayerError(targetArr);
     var layerCounter = this.model.layers.length - 1;
     var backPropagationCallback = function () {
-      layerCounter--
+      layerCounter--;
       if(layerCounter >= 0) {
         this.backPropagateLayer(layerCounter, backPropagationCallback);
       } else {
