@@ -42,6 +42,8 @@ angular.module('speakEasy.chat', [])
       $scope.message = {};
       return;
     }
+    $scope.renderMessage('user', "what do you think about music ?")
+    $scope.renderMessage('robot', "I think it's a good thing .")
     
     var messageHolder = $scope.message;
     // this resets message to blank, but importantly also clears the message field
@@ -52,14 +54,14 @@ angular.module('speakEasy.chat', [])
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
     var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
-    ChatFactory.serveMessage(messageHolder)
-      .then(function (data) {
-        pendingGif[0].parentNode.removeChild(pendingGif[0]);
-        $scope.renderMessage('robot', data.response);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    // ChatFactory.serveMessage(messageHolder)
+    //   .then(function (data) {
+    //     pendingGif[0].parentNode.removeChild(pendingGif[0]);
+    //     $scope.renderMessage('robot', data.response);
+    //   })
+    //   .catch(function (error) {
+    //     console.error(error);
+    //   });
 
   }
 
