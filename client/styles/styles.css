@@ -23,6 +23,11 @@ md-content.md-default-theme, md-whiteframe {
   background-color: white;
 }
 
+/* sets md-content background color */
+md-content.md-default-theme {
+  background-color: white;
+}
+
 /* sets md-dialog background color */
 md-dialog.md-default-theme, md-dialog {
   background-color: white;
@@ -144,21 +149,56 @@ md-card-image {
 
 
 /* The 3 classes below are for landing page, the URLs are the pictures that are displayed there */
-.landingLeftImage { /* This is for the leftmost */
-  /*background-size: cover;*/
+.landingLeftImage { /* This is for the leftmost card */
+  background-size: 100% 100% !important;
   background: 
     linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0),
       rgba(0, 0, 0, 0.6)
     ),
-    url(https://s-media-cache-ak0.pinimg.com/236x/c8/4a/3e/c84a3ec1066dfeb938a32b503aafa0b7.jpg) no-repeat;
+    url(../assets/img/chatpic.png) no-repeat;
     /* no fade
     linear-gradient(
       rgba(0, 0, 0, 0.25),
       rgba(0, 0, 0, 0.25)
     ), */
 }
+
+.landingMidImage { /* This is for the middle card */
+  background-size: 100% 100% !important;
+  background: 
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url(http://www.hec.edu/var/corporate/storage/images/knowledge/technologies-et-operations/technologies-et-systemes-d-information/reseaux-de-communication-comment-l-information-se-transmet-elle/398509-6-eng-GB/Communication-Networks-How-is-Information-Transmitted_knowledge_standard.jpg
+      ) no-repeat;
+    /* no fade
+    linear-gradient(
+      rgba(0, 0, 0, 0.25),
+      rgba(0, 0, 0, 0.25)
+    ), */
+}
+
+.landingRightImage { /* This is for the rightmost card */
+  background-size: 100% 100% !important;
+  background: 
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url(http://images.freeimages.com/images/previews/60e/bar-graph-1165986.jpg
+      ) no-repeat;
+    /* no fade
+    linear-gradient(
+      rgba(0, 0, 0, 0.25),
+      rgba(0, 0, 0, 0.25)
+    ), */
+}
+
 
 /***************/
 
@@ -265,6 +305,10 @@ md-card-image {
   color: #2196F3 !important;
 }
 
+.aboutDialog {
+  background: white !important;
+}
+
 .testCard {
   height: 400px;
   width: 0%;
@@ -309,6 +353,11 @@ md-card-image {
 .cardDInfo {
   width: 5%;
   display: none;
+}
+
+.aboutPortrait {
+  height: 100%;
+  width: 100%;
 }
 
 /* The 4 classes below are for the bios on the about page, the URLs are the pictures displayed there */

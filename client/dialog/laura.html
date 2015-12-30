@@ -1,0 +1,51 @@
+<md-dialog ng-controller="DialogCtrl" flex="50" ng-cloak>
+    <md-content class="aboutDialog" layout="row" layout-wrap layout-align="center start">
+      <md-content flex="50">
+        <img class="aboutPortrait" src="http://pre07.deviantart.net/5b03/th/pre/f/2013/246/5/5/cyclops_by_davidrapozaart-d6kya2b.jpg">
+      </md-content>
+      <md-content class="aboutDialog" flex="50">
+        <md-toolbar class="aboutBoxHeader">
+          <div class="md-toolbar-tools">
+            <h2>Laura Gelston</h2>
+            <span flex></span>
+            <md-button class="md-primary md-icon-button" ng-click="closeDialog()">
+              <md-icon>highlight_off</md-icon>
+              <md-tooltip md-direction="bottom">
+                Close
+              </md-tooltip>
+            </md-button>
+          </div>
+        </md-toolbar>
+        <md-dialog-content flex layout-padding layout-margin layout-fill>
+          <p class="downloadContent">
+            Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.
+          </p> 
+          <p class="downloadContent">
+            You'll be able to turn this off at any time with the click of a button within the Extension's menu.
+          </p>
+          <p class="downloadContent">
+            Here's more stuff to fill in the page. And just a little bit more to see.
+          </p>
+          <!-- <md-divider></md-divider> -->
+          <div layout="row" layout-align="center center">
+            <a href="https://github.com/gelsto" target="_blank">
+              <md-button aria-label="Github" class="md-fab md-raised md-mini">
+                <i class="zmdi zmdi-github-box zmdi-hc-lg speedDialIcon"></i>
+                <md-tooltip md-direction="bottom">
+                  GitHub
+                </md-tooltip>
+              </md-button>
+            </a>
+            <a href="http://www.reddit.com/submit?url=http%3A%2F%2Fspeakez.tk%2F%23%2Flanding&title=SpeakEasy%20Machine%20Learning" target="_blank">
+              <md-button aria-label="LinkedIn" class="md-fab md-raised md-mini">
+                <i class="zmdi zmdi-linkedin-box zmdi-hc-lg speedDialIcon"></i>
+                <md-tooltip md-direction="bottom">
+                  LinkedIn
+                </md-tooltip>
+              </md-button>
+            </a>
+          </div>
+        </md-dialog-content>
+      </md-content>
+    </md-content>
+</md-dialog>
