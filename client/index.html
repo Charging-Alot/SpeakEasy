@@ -48,26 +48,32 @@
 </script>
 <!-- ***   ***   ***   ***   ***   ***   ***   *** -->
 
-<md-content ng-cloak ng-controller="toolBarCtrl">
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <md-button aria-label="label" class="md-icon-button md-accent" ng-click="goToLanding()">
-        <md-icon>home</md-icon>
-      </md-button>
-      <button class="toolButton mainButton" ng-click="goToInfo()">About</button>
-      <button class="toolButton mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
-      <button class="toolButton mainButton" ng-click="goToDownload()">Download</button>
-      <button class="toolButton mainButton" ng-click="goToMetrics()">Data</button>
-      <div flex></div>
-      <button class="toolButton loginButton" ng-click="goToLogin($event)">Login</button>
-      <button class="toolButton logoutButton" ng-click="signout()">Logout</button>
-    </div>
-  </md-toolbar>
-</md-content>
+  <md-content ng-cloak ng-controller="toolBarCtrl">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <md-button aria-label="label" class="md-icon-button md-accent" ng-click="goToLanding()">
+          <md-icon>home</md-icon>
+        </md-button>
+        <button class="toolButton mainButton" ng-click="goToInfo()">About</button>
+        <button class="toolButton mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
+        <button class="toolButton mainButton" ng-click="goToDownload()">Download</button>
+        <button class="toolButton mainButton" ng-click="goToMetrics()">Data</button>
+        <div flex></div>
+        <button class="toolButton loginButton" ng-click="goToLogin($event)">Login</button>
+        <button class="toolButton logoutButton" ng-click="signout()">Logout</button>
+      </div>
+    </md-toolbar>
+  </md-content>
 
-<div ui-view>
-  <!-- stuff goes here (our app) -->
-</div>
+  <div ui-view>
+    <!-- stuff goes here (our app) -->
+  </div>
+
+  <footer>
+      <div layout="row" layout-align="center center">
+          <h2>My Awesome Footer</h2>
+      </div>
+  </footer>
 </body>
   <!-- Angular Material Stuff -->
   <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>

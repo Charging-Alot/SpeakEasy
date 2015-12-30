@@ -11,8 +11,6 @@ angular.module('speakEasy.chat', [])
         data: message
       })
       .then(function (resp) {
-        console.log('response from marvin?', resp)
-        console.log('response in ChatFact.serveMsg', resp.data)
         return resp.data;
       });
   }
@@ -50,18 +48,18 @@ angular.module('speakEasy.chat', [])
     $scope.message = {};
     $scope.renderMessage('user', messageHolder.text);
     chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
-    // This makes sure the chatbox follows new messages as they cause overflow
+    // This makes sure the chatbox follows the pending gif as it causes overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
     var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
-    ChatFactory.serveMessage(messageHolder)
-      .then(function (data) {
-        pendingGif[0].parentNode.removeChild(pendingGif[0]);
-        $scope.renderMessage('robot', data.response);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    // ChatFactory.serveMessage(messageHolder)
+    //   .then(function (data) {
+    //     pendingGif[0].parentNode.removeChild(pendingGif[0]);
+    //     $scope.renderMessage('robot', data.response);
+    //   })
+    //   .catch(function (error) {
+    //     console.error(error);
+    //   });
 
   }
 
