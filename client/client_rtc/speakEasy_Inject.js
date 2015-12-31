@@ -226,7 +226,7 @@
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   AdminInfo.prototype.message = function (playerId, msg) {
-
+    this.parent.LocalDataChannel.channels[playerId].send(msg);
   };
   /* 
    * Configurable Storage entry data
