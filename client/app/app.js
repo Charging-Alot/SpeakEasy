@@ -43,7 +43,9 @@ angular.module('speakEasy', [
 
   var background = $mdThemingProvider
     .extendPalette('blue', {
-      'A100': '#E3F2FD'
+      // 'A100': '#FFFFFF'
+      'A100': '#EAF1F5'
+        // 'A100': '#E3F2FD'
     }); // prev: '#CFD8DC'
 
   $mdThemingProvider.definePalette('background', background);
@@ -65,14 +67,14 @@ angular.module('speakEasy', [
   // if the user is authorized.  If they're not, we prevent the state change and 
   // open the login window
   $rootScope.$on('$stateChangeStart', function (evt, next, current) {
-    if ( next.name === "chat" && !Auth.isAuth() ) {
+    if (next.name === "chat" && !Auth.isAuth()) {
       evt.preventDefault(); // this prevents state change
       Dialog.loginWindow();
     }
   });
 
   // If the user has our token, we render the logout button instead of the login button
-  if ( Auth.isAuth() ) {
+  if (Auth.isAuth()) {
     Auth.loginSwap();
   }
 

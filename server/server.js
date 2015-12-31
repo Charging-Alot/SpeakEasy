@@ -11,7 +11,6 @@ var config = {
 	port: 1337
 }
 
-
 middleware(expressInvoked, express); //sams middleware
 
 server.listen(config.port, function () {

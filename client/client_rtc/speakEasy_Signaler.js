@@ -1,91 +1,12 @@
-// <script src="/reliable-signaler/signaler.js"></script>
-
-function initSpeakEasySignaler(SpeakEasy) {
-  var onMessageCallbacks = {};
-  if (!SpeakEasy.LocalDataChannel) throw '"SpeakEasy.LocalDataChannel" argument is required.';
-
-  initSocket();
-
-  function initSocket() { //all the handlers!
-    console.log("Init socket")
-    SpeakEasy.resetState();
-    SpeakEasy.socket = io.connect('http://localhost:1337/', {
-      'force new connection': true,
-      reconnect: false
-    });
-
-    SpeakEasy.socket.on('error', function () {
-      socket.isHavingError = true;
-      initSocket();
-    });
-
-    SpeakEasy.socket.on('connect', function () {
-      SpeakEasy.socket.emit("establish_role");
-      console.log("Socket Conn with mother established");
-    });
-
-    SpeakEasy.socket.on('disconnect', function () {
-      if (SpeakEasy.PlebInfo.plebStatus === true) {
-        return console.log("Pleb status established with manager and socket disconnected");
-      }
-      SpeakEasy.socket.isHavingError = true;
-      console.log("Socket disconnected for unexpected reason, trying re-init socket")
-      initSocket(); //if not pleb, means was manager or hadn't been established yet.  Reconnect
-    });
-
-    SpeakEasy.socket.on('managersetup', function (data) {
-      console.log("MANAGER SETUP", data);
-
-      SpeakEasy.LocalDataChannel.userid = data.managerId;
-      SpeakEasy.LocalDataChannel.transmitRoomOnce = true;
-      SpeakEasy.LocalDataChannel.open(data.managerId);
-
-
-      SpeakEasy.ManagerInfo.Model = new Manager(null, SpeakEasy.ManagerInfo.message.bind(SpeakEasy.ManagerInfo))
-        // SpeakEasy.ManagerInfo.Model = new Manager(null, SpeakEasy.ManagerInfo.message)
-      SpeakEasy.ManagerInfo.managerStatus = true;
-      SpeakEasy.ManagerInfo.managerId = data.managerId;
-    });
-
-    SpeakEasy.socket.on('plebsetup', function (data) {
-      console.log("PLEB SETUP", data);
-      SpeakEasy.LocalDataChannel.connect(data.managerId);
-      SpeakEasy.LocalDataChannel.join({
-        id: data.managerId,
-        owner: data.managerId
-      });
-      SpeakEasy.PlebInfo.Model = new Manager(null, SpeakEasy.PlebInfo.respond.bind(SpeakEasy.PlebInfo));
-      // SpeakEasy.PlebInfo.Model = new Manager(null, SpeakEasy.PlebInfo.respond);
-      SpeakEasy.PlebInfo.plebStatus = true;
-      SpeakEasy.PlebInfo.oldPlebSocketId = data.plebId;
-    });
-
-    SpeakEasy.socket.on('plebeject', function (data) {
-
-      if (SpeakEasy.ManagerInfo.managerStatus) {
-        console.log("EJECT IS FIRING")
-        var plebrtcid = SpeakEasy.ManagerInfo.plebRtcIds[data];
-        //so ghettoo
-        SpeakEasy.LocalDataChannel.channels[plebrtcid].channel.peer.close(plebrtcid);
-        delete SpeakEasy.ManagerInfo.plebs[data];
-      };
-    });
-
-    SpeakEasy.socket.on('message', function (data) {
-      if (onMessageCallbacks[data.channel]) {
-        onMessageCallbacks[data.channel](data.message);
-      };
-    });
-
-  }
-
+function socketListener(SpeakEasy) {
+  if (!SpeakEasy.LocalDataChannel) throw '"SpeakEasy.LocalDataChannel" argument is required, its possible you did not init()';
   SpeakEasy.LocalDataChannel.openSignalingChannel = function (config) {
     var channel = config.channel || this.channel || 'default-channel';
     onMessageCallbacks[channel] = config.onmessage;
     if (config.onopen) setTimeout(config.onopen, 1);
     return {
       send: function (message) {
-        SpeakEasy.socket.emit('message', {
+        SpeakEasy.socket.emit('setup', {
           sender: channel.userid,
           channel: channel,
           message: message
@@ -94,7 +15,72 @@ function initSpeakEasySignaler(SpeakEasy) {
       channel: channel
     };
   };
-  //============================================================================== Connection error handling!!!!!
+
+  var onMessageCallbacks = {};
+  initSocket();
+
+  function initSocket() { //all the handlers!
+    console.log("Socket initialized...")
+    SpeakEasy.socket = io.connect('http://localhost:1337/', {
+      'force new connection': true,
+      'reconnect': false
+    });
+
+    SpeakEasy.socket.on('error', function () {
+      socket.isHavingError = true;
+      SpeakEasy.resetState();
+      initSocket();
+    });
+
+    SpeakEasy.socket.on('setup', function (data) {
+      if (onMessageCallbacks[data.channel]) {
+        onMessageCallbacks[data.channel](data.message);
+      };
+    });
+
+    SpeakEasy.socket.on('connect', function () { //speaks with mother to ask for what the current role should be
+      SpeakEasy.socket.emit("establish_role");
+      console.log("Socket connection with server established, requesting role");
+    });
+
+    SpeakEasy.socket.on('disconnect', function () {
+      if (SpeakEasy.PlayerInfo) {
+        return console.log("Player status established with admin & socket disconnected");
+      }
+      console.log("Socket disconnected for unexpected reason, attempting reconnect")
+      SpeakEasy.socket.isHavingError = true;
+      SpeakEasy.resetState();
+      initSocket(); //if not player, means was admin or hadn't been established yet, attempt reconnect
+    });
+
+    SpeakEasy.socket.on('adminsetup', function (data) {
+      SpeakEasy.LocalDataChannel.openSignalingChannel({
+        channel: data.adminId
+      })
+      SpeakEasy.adminSetup(data);
+    });
+
+    SpeakEasy.socket.on('playersetup', function (data) {
+      SpeakEasy.playerSetup(data);
+    });
+
+    SpeakEasy.socket.on('playerconfirmed', function (data) {
+      if (SpeakEasy.AdminInfo) {
+        return SpeakEasy.confirmPlayer(data);
+      };
+      console.error("Received playerconfirmation but not established as admin");
+    });
+
+    SpeakEasy.socket.on('playereject', function (data) {
+      if (SpeakEasy.AdminInfo) {
+        return SpeakEasy.ejectPlayer(data.playerRtc);
+      };
+      console.error("Received player eject but user not an admin...")
+    });
+  }
+
+  //======================================== Connection error handling!!!!!
+
   function listenEventHandler(eventName, eventHandler) {
     window.removeEventListener(eventName, eventHandler);
     window.addEventListener(eventName, eventHandler, false);
@@ -102,10 +88,10 @@ function initSpeakEasySignaler(SpeakEasy) {
 
   function onLineOffLineHandler() {
     if (!navigator.onLine) {
-      return console.warn('Internet channel seems disconnected or having issues.');
+      return alert('Internet channel seems disconnected or having issues. Consider refreshing the page.');
     }
-
     if (SpeakEasy.socket.isHavingError) {
+      SpeakEasy.resetState();
       initSocket();
     }
   }
@@ -114,5 +100,5 @@ function initSpeakEasySignaler(SpeakEasy) {
   listenEventHandler('online', onLineOffLineHandler);
   listenEventHandler('offline', onLineOffLineHandler);
 
-  //============================================================================== Connection error handling!!!!!
+  //===================================== Connection error handling!!!!!
 }

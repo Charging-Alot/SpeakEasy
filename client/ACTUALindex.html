@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html ng-app="speakEasy">
+<head>
+	<title>
+		Speak Easy | Machine Learning
+	</title>
+  <!-- icon font for Material -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Lora font for coolness CURRENTLY *UN*USED -->
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <!-- Lato font for coolness CURRENTLY **USED** -->
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,400italic,700' rel='stylesheet' type='text/css'>
+  <!-- our CSS file -->
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
+	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
+</head>
+<body>
+  
+<!-- *** The below script is for Facebook SDK *** -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '932650913454857',
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+<!-- ***   ***   ***   ***   ***   ***   ***   *** -->
+
+<md-content ng-cloak ng-controller="toolBarCtrl">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button aria-label="label" class="md-icon-button md-accent" ng-click="goToLanding()">
+        <md-icon>home</md-icon>
+      </md-button>
+      <button class="mainButton" ng-click="goToInfo()">About</button>
+      <button class="mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
+      <button class="mainButton" ng-click="goToDownload()">Download</button>
+      <button class="mainButton" ng-click="goToMetrics()">Data</button>
+      <div flex></div>
+      <button class="secondaryButton" ng-click="goToLogin($event)">Login</button>
+    </div>
+  </md-toolbar>
+</md-content>
+
+<div ui-view>
+  <!-- stuff goes here (our app) -->
+</div>
+</body>
+  <!-- Angular Material Stuff -->
+  <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-aria/angular-aria.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <!-- Our App Stuff -->
+  <script type="text/javascript" src="app/app.js"></script>
+  <script type="text/javascript" src="home/home.js"></script>
+  <script type="text/javascript" src="landing/landing.js"></script>
+  <script type="text/javascript" src="toolbar/toolBar.js"></script>
+  <script type="text/javascript" src="dialog/dialog.js"></script>
+  <script type="text/javascript" src="about/about.js"></script>
+  <script type="text/javascript" src="services/services.js"></script>
+  <script type="text/javascript" src="chat/chat.js"></script>
+</html>
+
+
+
+
