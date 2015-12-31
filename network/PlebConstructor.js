@@ -1,3 +1,8 @@
+if(module) {
+  var Neuron = require('./neuronConstructor.js').Neuron
+  var IoHandler = require('./IoHandler.js').IoHandler;
+}
+
 var Pleb = function (partialNeuron, sendFunction) {
   Neuron.call(this, partialNeuron);
   this.toManager = new IoHandler(0, 1, this, sendFunction)
@@ -50,6 +55,5 @@ Pleb.prototype.queueCommandManager = function (command, section, callback) {
 }
 
 if(module) {
-  var Neuron = require('./neuronConstructor.js')
-  module.exports = Pleb
+  exports.Pleb = Pleb
 }

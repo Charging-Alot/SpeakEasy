@@ -1,24 +1,25 @@
-var LSTMNetwork = function (arrayOfLayerSizes, rate, maxGradient) {
-  Network.call(this, null, rate, maxGradient);
-  this.appendNodeLayer(arrayOfLayerSizes[0])
+if(module) {
+  var Network = require('./NetworkConstructor.js').Network
+  var LSTM = require('./LSTMConstructor.js').LSTM
+}
+
+var MakeLSTMNetwork = function (arrayOfLayerSizes, rate, maxGradient) {
+  var lstmNetwork = new Network(null, rate, maxGradient)
+  lstmNetwork.appendNodeLayer(arrayOfLayerSizes[0])
   for(var i = 1; i < arrayOfLayerSizes.length - 1; ++i) {
-    this.appendNetworkLayer(LSTM, arrayOfLayerSizes[i])
+    lstmNetwork.appendNetworkLayer(LSTM, arrayOfLayerSizes[i])
   }
-  this.appendNodeLayer(arrayOfLayerSizes[arrayOfLayerSizes.length - 1]);
+  lstmNetwork.appendNodeLayer(arrayOfLayerSizes[arrayOfLayerSizes.length - 1]);
 
   for(var j = 0; j < arrayOfLayerSizes.length - 2; ++j) {
-    this.joinLayers(this.nodes[j], this.nodes[j], true); //recurrent connections for layers
-    this.joinLayers(this.nodes[j], this.nodes[j+1], true);
+    lstmNetwork.joinLayers(lstmNetwork.nodes[j], lstmNetwork.nodes[j], true); //recurrent connections for layers
+    lstmNetwork.joinLayers(lstmNetwork.nodes[j], lstmNetwork.nodes[j+1], true);
   }
 
-  this.initNeurons();
+  lstmNetwork.initNeurons();
+  return lstmNetwork;
 }
 
 if(module) {
-  var Network = require('./NetworkConstructor')
-  var LSTM = require('./LSTMConstructor')
-  module.exports = LSTMNetwork;
+  exports.MakeLSTMNetwork = MakeLSTMNetwork;
 }
-
-LSTMNetwork.prototype = Object.create(Network.prototype);
-LSTMNetwork.prototype.constructor = LSTMNetwork;

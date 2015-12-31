@@ -1,6 +1,8 @@
-var Network = require('./NetworkConstructor.js');
-var Neuron = require('./neuronConstructor.js');
-var IoHandler = require('./IoHandler.js');
+if(module) {
+  var Network = require('./NetworkConstructor.js').Network;
+  var Neuron = require('./neuronConstructor.js').Neuron;
+  var IoHandler = require('./IoHandler.js').IoHandler;
+}
 
 var Mother = function (network, sendFunction) {
   this.rate = 0.1;
@@ -81,7 +83,7 @@ Mother.prototype.backPropagateLayer = function (layerId, callback) {
 }
 
 if(module) {
-  module.exports = Mother
+  exports.Mother = Mother
 }
 
 

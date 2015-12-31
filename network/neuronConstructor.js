@@ -292,5 +292,5 @@ var squash = {
 }
 
 if(module) {
-  module.exports = Neuron;
+  module.exports.Neuron = Neuron;
 }

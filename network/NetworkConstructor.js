@@ -1,3 +1,7 @@
+if(module) {
+  var Neuron = require('./NeuronConstructor.js').Neuron
+}
+
 var Network = function (network, rate, maxGradient) {
   this.type = 'network';
   this.initialized = false;
@@ -373,7 +377,6 @@ Network.prototype.setLastLayerError = function (targetArr) {
 }
 
 if(module) {
-  var Neuron = require('./neuronConstructor.js')
-  module.exports = Network
+  exports.Network = Network
 }
 

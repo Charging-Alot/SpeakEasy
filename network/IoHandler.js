@@ -1,3 +1,7 @@
+if(module) {
+  var Queue = require('./Queue.js').Queue
+}
+
 var IoHandler = function (level, toLevel, contoller, sendFunction) {
   this.input = new Queue();
   this.output = new Queue();
@@ -117,6 +121,5 @@ IoHandler.prototype.runAllInputs = function () {
 }
 
 if(module) {
-  var Queue = require('./Queue.js')
-  module.exports = IoHandler
+  exports.IoHandler = IoHandler
 }

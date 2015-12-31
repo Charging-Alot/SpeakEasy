@@ -33,5 +33,5 @@ Queue.prototype.dequeue = function () {
 }
 
 if(module) {
-  module.exports = Queue
+  exports.Queue = Queue
 }
