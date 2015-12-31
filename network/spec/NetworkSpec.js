@@ -2880,7 +2880,7 @@ describe('MONSTER LSTM NETWORK TEST', function () {
     })
   });
   it('herp a derp a derp', function (done) {
-    mother.model = new LSTMNetwork([4, 2, 2, 4])
+    mother.model = MakeLSTMNetwork([4, 2, 2, 4])
     mother.activate([1,0,0,0], function () {
       mother.backPropagate([0,1,0,1], function () {
         debugger
