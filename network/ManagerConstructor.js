@@ -1,3 +1,8 @@
+if(module) {
+  var Network = require('./NetworkConstructor.js').Network;
+  var Neuron = require('./neuronConstructor.js').Neuron;
+  var IoHandler = require('./IoHandler.js').IoHandler;
+}
 var Manager = function (partialModel, sendFunction) {
   if(partialModel) {
     this.makeNewModel(partialModel);  //model can be neuron or network
@@ -259,8 +264,5 @@ Manager.prototype.queueCommandMother = function (command, section, callback) {
 }
 
 if(module) {
-  var Network = require('./NetworkConstructor.js');
-  var Neuron = require('./neuronConstructor.js');
-  var IoHandler = require('./IoHandler.js');
-  module.exports = Manager
+  module.exports.Manager = Manager
 }
