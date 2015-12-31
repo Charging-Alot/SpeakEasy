@@ -1,14 +1,18 @@
-var IoHandler = function (level, toLevel, model, sendFunction) {
+if(module) {
+  var Queue = require('./Queue.js').Queue
+}
+
+var IoHandler = function (level, toLevel, contoller, sendFunction) {
   this.input = new Queue();
   this.output = new Queue();
-  this.model = model
+  this.contoller = contoller
   this.send = sendFunction
   this.level = level;
   this.toLevel = toLevel;
   this.waiting = {};
   this.waiting.names = {};
   this.waiting.callbacks = {};
-  this.blockInput = false;
+  // this.blockInput = false;
 }
 
 IoHandler.prototype.addToOut = function (command, section, value, callback) {
@@ -93,9 +97,9 @@ IoHandler.prototype.addToIn = function (taskObj) {
 }
 
 IoHandler.prototype.runInput = function (taskObj) {
-  this.model.update(taskObj.command, taskObj.section, taskObj.value);
+  this.contoller.update(taskObj.command, taskObj.section, taskObj.value);
   if(this.level < this.toLevel && taskObj.command !== 'update') {
-    this.model[taskObj.command](taskObj.section);
+    this.contoller.run(taskObj.command, taskObj.section);
   } else if(this.level > this.toLevel) {
     if(this.waiting.names[taskObj.command]) {
       if(taskObj.section === null) {
@@ -114,4 +118,8 @@ IoHandler.prototype.runAllInputs = function () {
     // this.input.dequeue();
     this.runInput(this.input.dequeue());
   }
+}
+
+if(module) {
+  exports.IoHandler = IoHandler
 }

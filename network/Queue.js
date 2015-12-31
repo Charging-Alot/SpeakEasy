@@ -31,3 +31,7 @@ Queue.prototype.dequeue = function () {
     return null;
   }
 }
+
+if(module) {
+  exports.Queue = Queue
+}
