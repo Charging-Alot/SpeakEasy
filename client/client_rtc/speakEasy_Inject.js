@@ -66,6 +66,7 @@
     }
     if (this.AdminInfo) { //if player response to instruction
       return console.log("PLAYER RESPONSE MESSAGE: ", data);
+      //on recieve message from pleb, toggle busy state to false.
     } else if (this.PlayerInfo) {
       return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
     }
@@ -150,6 +151,7 @@
     this.LocalDataChannel.userid = this.AdminInfo.adminId;
     this.LocalDataChannel.transmitRoomOnce = true;
     this.LocalDataChannel.open(this.AdminInfo.adminId);
+
   };
   /* 
    * Configurable Storage entry data
@@ -176,6 +178,9 @@
     this.parent = parent;
     this.adminId = data.adminId;
     this.players = {};
+    this.controller = new Manager(null, this.message.bind(this));
+    this.messageQueue = new Queue();
+
   }
 
   function PlayerInfo(data, parent) {
@@ -185,6 +190,7 @@
       this.parent = parent;
     } else {
       this.rtcid = data.playerRtc;
+      this.busy = false;
     }
   }
   /* 
@@ -202,16 +208,25 @@
    * @param {object} socket - The Socket of the admin
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
-  AdminInfo.prototype.message = function (msg, playerId, toLevelId) {
-    if (!toLevelId) {
-      //this.players[playerId].occupied = true;
-      //SpeakEasy.LocalDataChannel.channels[playerId].send(msg); //SO GHETTOOOO
-      //send to next avail player
-    } else if (toLevelId === 1) {
-      throw Error("Somehow this admin thought it was a player...")
-    } else {
-      //send to mother
+  AdminInfo.prototype.instruct = function (levelId, msg) {
+    var players = this.players;
+    for (var player in players) {
+      if (!(players[player].busy)) {
+        players[player].busy = true;
+        return this.message(player, message)
+      }
     }
+    return this.messageQueue.enqueue(msg);
+  }
+
+  /* 
+   * Configurable Storage entry data
+   * 
+   * @param {object} socket - The Socket of the admin
+   * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
+   */
+  AdminInfo.prototype.message = function (playerId, msg) {
+
   };
   /* 
    * Configurable Storage entry data

@@ -99,6 +99,24 @@
   <script type="text/javascript" src="about/about.js"></script>
   <script type="text/javascript" src="services/services.js"></script>
   <script type="text/javascript" src="chat/chat.js"></script>
+  <!-- 
+   _   _                              ____  _          __  __ 
+  | \ | | ___ _   _ _ __ ___  _ __   / ___|| |_ _   _ / _|/ _|
+  |  \| |/ _ \ | | | '__/ _ \| '_ \  \___ \| __| | | | |_| |_ 
+  | |\  |  __/ |_| | | | (_) | | | |  ___) | |_| |_| |  _|  _|
+  |_| \_|\___|\__,_|_|  \___/|_| |_| |____/ \__|\__,_|_| |_|  
+                                                              
+ -->
+  <script type="text/javascript">
+    //andrews way of handling node stuff in the browser
+    var module = false;
+  </script>
+  <script src="/network/Queue.js"></script>
+  <script src="/network/IoHandler.js"></script>
+  <script src="/network/NeuronConstructor.js"></script>
+  <script src="/network/NetworkConstructor.js"></script>
+  <script src="/network/ManagerConstructor.js"></script>
+  <script src="/network/PlebConstructor.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/client_rtc/speakEasy_DataChannel.js"></script>
   <script src="/client_rtc/speakEasy_Inject.js"></script>
@@ -107,13 +125,36 @@
   <script>
   var SpeakEZ = new SpeakEasyBuild(DataChannel);
   SpeakEZ.init(socketListener,"/");
-
   // document.getElementById('input-text-chat').onkeyup = function(e) {
   //   if(e.keyCode != 13 || !this.value.length) return;
   //   SpeakEZ.LocalDataChannel.send(this.value);
   //   this.value =  '';
   // };
+
+
+  // 1. Once job established, instantiate pleb or manager.
+  //    - new Pleb(null,fxnToSendMessagesToManager(1,msg))
+  //    - new Manager(null,fxnToSendToPlebOrMother([0 if pleb,2 if mother],msg))
+  // 
+  // 2. On pleb recieve message
+  //    - execute Pleb.input({rtcMsg});
+  //
+  // 3. On manager recieve message
+  //    - execute Manager.input({rtcMsg});
+  //
+  // 4. On mother recieve message from manager
+  //    - execute Mother.input({socketMsg});
+  //  
+  // 5. something about seq2seq..?
+  //
   </script>
   
+
+
+
+
+      
+
+
 </html>
 
