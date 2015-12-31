@@ -133,19 +133,21 @@
 
 
   // 1. Once job established, instantiate pleb or manager.
-  //    - new Pleb(null,fxnToSendMessagesToManager(1,msg))
-  //    - new Manager(null,fxnToSendToPlebOrMother([0 if pleb,2 if mother],msg))
+  //    X - new Manager(null,fxnToSendToPlebOrMother([0 if pleb,2 if mother],msg))
+  //    X - new Pleb(null,fxnToSendMessagesToManager(1,msg))
   // 
   // 2. On pleb recieve message
-  //    - execute Pleb.input({rtcMsg});
+  //    X - execute Pleb.input({rtcMsg});
   //
   // 3. On manager recieve message
-  //    - execute Manager.input({rtcMsg});
+  //    X - execute Manager.input({rtcMsg});
   //
   // 4. On mother recieve message from manager
   //    - execute Mother.input({socketMsg});
-  //  
-  // 5. something about seq2seq..?
+  //
+  // 5. Mother send payload to manager ({socket})
+  //
+  // 6. something about seq2seq..?
   //
   </script>
   

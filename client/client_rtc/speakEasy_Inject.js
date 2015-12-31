@@ -65,10 +65,16 @@
       return this.initiatePlayer(data, rtcId)
     }
     if (this.AdminInfo) { //if player response to instruction
-      return console.log("PLAYER RESPONSE MESSAGE: ", data);
-      //on recieve message from pleb, toggle busy state to false.
+      this.AdminInfo.controller.input(data);
+      if (this.AdminInfo.commandQueue.length) {
+        var newMsg = this.AdminInfo.commandQueue.dequeue();
+        return this.AdminInfo.message(rtcId, newMsg);
+      }
+      this.AdminInfo.players[rtcId].busy = false;
+      // return console.log("PLAYER RESPONSE MESSAGE: ", data, rtcId);
     } else if (this.PlayerInfo) {
-      return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
+      this.PlayerInfo.controller.input(data);
+      // return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
     }
     console.error("Somehow user recieved message without having established a role.");
   };
@@ -178,8 +184,8 @@
     this.parent = parent;
     this.adminId = data.adminId;
     this.players = {};
-    this.controller = new Manager(null, this.message.bind(this));
-    this.messageQueue = new Queue();
+    this.controller = new Manager(null, this.instruct.bind(this));
+    this.commandQueue = new Queue();
 
   }
 
@@ -188,8 +194,9 @@
     if (parent) {
       this.adminId = data.adminId;
       this.parent = parent;
+      this.controller = new Pleb(null, this.respond.bind(this));
     } else {
-      this.rtcid = data.playerRtc;
+      this.rtcId = data.playerRtc;
       this.busy = false;
     }
   }
@@ -209,16 +216,31 @@
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   AdminInfo.prototype.instruct = function (levelId, msg) {
-    var players = this.players;
-    for (var player in players) {
-      if (!(players[player].busy)) {
-        players[player].busy = true;
-        return this.message(player, message)
+    if (levelId === 0) {
+      var players = this.players;
+      for (var player in players) {
+        if (!(players[player].busy)) {
+          players[player].busy = true;
+          return this.message(player, message);
+        }
       }
+      return this.commandQueue.enqueue(msg);
+    } else if (levelId === 2) {
+      return this.parent.socket.emit("updatedModel", msg);
     }
-    return this.messageQueue.enqueue(msg);
+    console.log("Error in instruct - LevelId was not satisfied appropriately");
   }
 
+  /* 
+   * Configurable Storage entry data
+   * 
+   * @param {object} socket - The Socket of the admin
+   * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
+   */
+  AdminInfo.prototype.checkQdQ = function (playerId) {
+    var newCommand = this.comma
+    this.parent.LocalDataChannel.channels[playerId].send(msg);
+  };
   /* 
    * Configurable Storage entry data
    * 
@@ -234,6 +256,15 @@
    * @param {object} socket - The Socket of the admin
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
-  PlayerInfo.prototype.respond = function (msg) {
+  PlayerInfo.prototype.respond = function (toLevel, msg) {
+    this.adminMessage(msg);
+  };
+  /* 
+   * Configurable Storage entry data
+   * 
+   * @param {object} socket - The Socket of the admin
+   * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
+   */
+  PlayerInfo.prototype.adminMessage = function (msg) {
     this.parent.LocalDataChannel.send(msg);
   };

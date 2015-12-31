@@ -1,7 +1,8 @@
 // require('reliable-signaler')(httpServer);
 
 var sysLog = require('sysLog');
-var AdminListCon = require("adminList");
+var AdminListCon = require('adminList');
+
 
 exports.easySignaler = easySignaler;
 
@@ -13,6 +14,13 @@ function easySignaler(app) {
   });
 
   var AdminList = new AdminListCon();
+  AdminList.seq2seq.trainCallResponse([
+    [1, 1, 1]
+  ], [
+    [1, 1, 1]
+  ], function () {
+    console.log("HOLY SHIT IT WORKS?")
+  });
 
   io.on('connection', function (socket) {
     var currentUser = socket;
@@ -53,6 +61,11 @@ function easySignaler(app) {
       AdminList.removePlayer(socket.id, player_id);
       //remove player id from admin's player list to open for new additions
     });
+
+    socket.on('updatedModel', function (data) {
+      AdminList.updatedModel(socket, data)
+    });
+
 
     socket.on('setup', function (message) {
       socket.broadcast.emit('setup', message);

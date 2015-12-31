@@ -1,15 +1,28 @@
 var sysLog = require("sysLog");
+var seq2seqCons = require('../../client/network/Seq2SeqConstructor.js').Seq2SeqServer;
+var Queue = require('../../client/network/Queue.js').Queue;
+
+
 
 module.exports = function AdminList(adminSize) {
+  this.commandQ = new Queue();
   this.adminSize = adminSize || 3;
   this.length = 0;
-  this.storage = {}; //stores admin socke.id and number of connections each admin currently has.
+  this.storage = {}; //stores admin socket.id and number of connections each admin currently has.
+  this.seq2seq = new seq2seqCons([3, 3, 3], adminInstruct.bind(this));
 
-  /* 
-   * Configurable player data
-   *  
-   * @return {object} object - Client side player configuration data object
-   */
+  this.checkQandDq = function (socket) { //one more ghetoo fxn
+      if (commandQ.length) {
+        this.storage[socket.id].busy = true;
+        var newCommand = this.commandQ.dequeue();
+        socket.emit("receiveInstruction", newCommand);
+      }
+    }
+    /*
+     * Configurable player data
+     *  
+     * @return {object} object - Client side player configuration data object
+     */
   function playerData(playerId, manId) {
     return {
       PlayerSocketId: playerId,
@@ -29,6 +42,7 @@ module.exports = function AdminList(adminSize) {
    */
   this.newAdminEntry = function (socket) {
       var newManEntry = {
+        busy: false,
         socket: socket,
         players: [],
         pending: []
@@ -51,6 +65,7 @@ module.exports = function AdminList(adminSize) {
       // if (socket.id in this.storage) throw new Error("SocketId already in use by other admin");
       if (!this.length) { //if nobody is currently a admin, meaning no users are connected
         this.newAdminEntry(socket); // returns {socket:socket, players:[]};
+        this.checkQandDq(socket);
         return this;
       }
       for (var adminId in this.storage) {
@@ -62,6 +77,7 @@ module.exports = function AdminList(adminSize) {
         }
       }
       this.newAdminEntry(socket);
+      this.checkQandDq(socket);
       return this;
     }
     /* 
@@ -109,23 +125,40 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.playerRecieved = function (manSocket, data) {
-      var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
-        if (pendingObj.socket.id === data.PlayerSocketId) return true;
-        return false;
-      });
-      if (pendingIdx !== -1) {
-        this.storage[manSocket.id].players.push(data.PlayerSocketId);
-        this.storage[manSocket.id].pending[pendingIdx].socket.disconnect();
-        this.storage[manSocket.id].pending.splice(pendingIdx, 1);
-        return manSocket.emit("playerconfirmed", data);
-      }
-      manSocket.emit('playereject', data);
+    var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
+      if (pendingObj.socket.id === data.PlayerSocketId) return true;
+      return false;
+    });
+    if (pendingIdx !== -1) {
+      this.storage[manSocket.id].players.push(data.PlayerSocketId);
+      this.storage[manSocket.id].pending[pendingIdx].socket.disconnect();
+      this.storage[manSocket.id].pending.splice(pendingIdx, 1);
+      return manSocket.emit("playerconfirmed", data);
     }
-    // 
-    // 
-    // 
-    // 
+    manSocket.emit('playereject', data);
+  }
 
+  function adminInstruct(levelId, data) { // this is really ghetto.
+    // this.adminInstruct = function (levelId, data) {
+    var storage = this.storage;
+    for (var adminId in storage) {
+      if (!(storage[adminId].busy)) {
+        storage[adminId].busy = true;
+        return storage[adminId].socket.emit("receiveInstruction", data);
+      }
+    }
+    return this.commandQ.enqueue(data);
+  }
+
+  this.updatedModel = function (socket, data) {
+    this.seq2seq.input(data);
+    this.checkQandDq
+    if (this.commandQ.length) {
+      var newData = this.commandQ.dequeue();
+      return socket.emit("receiveInstruction", newData)
+    }
+    this.storage[socket.id].busy = false;
+  }
 
   this.clearPending = function (max) { //need to test
     var max = max || 3;
