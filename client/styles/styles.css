@@ -221,7 +221,7 @@ md-card-image {
 
 .chatBoxWrap {
   top: 64px; /*16%;*/
-  bottom: 77px q;
+  bottom: 77px;
   height: 83%;
   width: 100%;
   position: absolute;
@@ -279,6 +279,23 @@ md-card-image {
   height: 70px;
   width: 60px;
   padding-bottom: 10px;
+}
+
+.chatGraphs {
+  text-align: center;
+  top: 16%;
+  height: 75%;
+  width: 70%;
+  position: absolute;
+  padding: 15px 0px 0px 0px;
+  margin: 11px 0 0 0;
+}
+
+.chatGraphWrap {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px 0px 0px 0px;
+  width: 60%;
 }
 
 /***************/
