@@ -5,6 +5,9 @@ body {
   font-family: 'Lato', sans-serif !important;
 }
 
+.chart-container{
+  width:100%;
+}
 
 /* * * * * Major Material Class Overrides * * * * */
 
@@ -45,27 +48,13 @@ md-card-image {
   margin-top: 2% !important;
 }
 
-.viewContentBox {
-  margin-top: -8% !important;
-  margin: -68px 0 0 0;
-  background-size: cover;
-  display: block;
-  filter: blur(2px);
-  -webkit-filter: blur(2px);
-  height: 550px;
-  left: 0;
-  position: relative;
-  right: 0;
-  z-index: 1;
-}
-
 .loginDivider {
   border-color: #E1E1E1;
   border-top: 0px;
 }
 
 .landingPageBackground {
-  background-image: url('../assets/img/blackneuron.gif');
+  /*background-image: url('../assets/img/blackneuron.gif');*/
   filter: blur(2px);
   -webkit-filter: blur(2px);
   background-position: bottom 0px right 0px;
@@ -100,7 +89,7 @@ md-card-image {
   top: 30%;
   left: 30%;
   margin-left: -50px; /* margin is -0.5 * dimension */
-  margin-top: -25px;
+  margin-top: -8%;
   z-index: 2;
 }
 
