@@ -1,6 +1,6 @@
 <div ng-cloak class="chatMain">
-  <md-content layout="row" layout-padding layout-wrap layout-fill class="chatMain">
-    <div flex="10"></div>
+  <md-content layout="row" layout-padding layout-wrap layout-fill>
+    <div flex="5"></div>
     <md-whiteframe flex="80" class="md-whiteframe-5dp chatFrame">
       <md-toolbar class="whiteframeHeader chatBoxHeader">
         <div class="md-toolbar-tools">
@@ -64,9 +64,21 @@
         </md-button>
       </div>
     </md-whiteframe>
-    <canvas id="line" class="chart chart-line" chart-data="data"
-    chart-labels="labels" chart-legend="true" chart-series="series">
-    </canvas>
-    <div flex="10"></div>
+    <div flex="55"></div>
+    <md-card flex="35" class="chatGraphs" layout-align="center" layout="column">
+      <h4>Cool Chart</h4>
+      <div class="chatGraphWrap">
+        <canvas id="line" class="chart chart-line" chart-data="data"
+        chart-labels="labels" chart-legend="true" chart-series="series">
+        </canvas>
+      </div>
+      <h4>Awesome Chart</h4>
+      <div class="chatGraphWrap">
+        <canvas id="line" class="chart chart-line" chart-data="data"
+        chart-labels="labels" chart-legend="true" chart-series="series">
+        </canvas>
+      </div>
+    </md-card>
+    <!-- <div flex="10"></div> -->
   </md-content>
 </div>
