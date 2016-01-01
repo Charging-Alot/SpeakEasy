@@ -12,12 +12,17 @@ var Mother = function (network, sendFunction) {
 }
 
 Mother.prototype.input = function (object) {
+  object = JSON.parse(object)
   this.toManager.addToIn(object)
 }
 
 Mother.prototype.update = function (command, section, model) {
   // model.gatedNodes = {};
-  this.model.update(model);
+  if (model.type === 'network') {
+    this.model.layers[model.layerId][model.id].update(model)
+  } else {
+    this.model.update(model);
+  }
 }
 
 Mother.prototype.activate = function (inputArr, callback) {
@@ -26,6 +31,7 @@ Mother.prototype.activate = function (inputArr, callback) {
     var layerCounter = 1;
     var activationCallback = function () {
       // debugger
+      console.log('\n\nderpherp\n\n')
       layerCounter++
       if (layerCounter < this.model.layers.length) {
         this.activateLayer(layerCounter, activationCallback);

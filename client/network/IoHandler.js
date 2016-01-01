@@ -1,4 +1,4 @@
-if(module) {
+if (module) {
   var Queue = require('./Queue.js').Queue
 }
 
@@ -17,52 +17,52 @@ var IoHandler = function (level, toLevel, contoller, sendFunction) {
 
 IoHandler.prototype.addToOut = function (command, section, value, callback) {
   this.output.enqueue({
-    'command': command, 
+    'command': command,
     'section': section,
-    'value': value, 
+    'value': value,
     'callback': callback
   });
 }
 
-IoHandler.prototype.runOutput = function(taskObj, callback) {
+IoHandler.prototype.runOutput = function (taskObj, callback) {
   //callback argument is used to wrap the callback in taskObj instead of storing just
   //the one in taskObj.  must take a callback as it's first argument.
   //Mostly used for counting responses in runAllOutputs.
   //if there are response callbacks, set them to the waiting objects
-  if(callback) {
+  if (callback) {
     this.waiting.names[taskObj.command] = true;
     this.waiting.callbacks[taskObj.command] = callback.bind(this, taskObj.callback);
-  } else if(taskObj.callback) {
+  } else if (taskObj.callback) {
     this.waiting.names[taskObj.command] = true;
     this.waiting.callbacks[taskObj.command] = taskObj.callback;
   }
 
-  this.send(this.toLevel, {
-      command: taskObj.command,
-      section: taskObj.section,
-      value: taskObj.value
-  });
+  this.send(this.toLevel, JSON.stringify({
+    command: taskObj.command,
+    section: taskObj.section,
+    value: taskObj.value
+  }));
 }
 
 IoHandler.prototype.runAllOutputs = function (callback) {
   var numFinished = 0;
   var len = this.output.length;
 
-  if(!this.output.length) {
+  if (!this.output.length) {
     callback();
     return;
   }
 
-  while(this.output.length) {
+  while (this.output.length) {
     var taskObj = this.output.dequeue();
-    if(callback) {
+    if (callback) {
       this.runOutput(taskObj, function (taskCallback, command, section, value) {
-        if(taskCallback) {
+        if (taskCallback) {
           taskCallback(command, section, value);
         }
         ++numFinished;
-        if(numFinished === len) {
-          if(taskObj.section !== null) {
+        if (numFinished === len) {
+          if (taskObj.section !== null) {
             this.waiting.names[taskObj.command] = false;
           }
           callback();
@@ -75,8 +75,8 @@ IoHandler.prototype.runAllOutputs = function (callback) {
 }
 
 IoHandler.prototype.addToIn = function (taskObj) {
-  if(this.level < this.toLevel) {
-    this.runInput(taskObj)
+  if (this.level < this.toLevel) {
+    this.runInput(taskObj);
     // if(!blockInput) {
     //   if(true) {
     //   this.blockInput = true
@@ -88,7 +88,7 @@ IoHandler.prototype.addToIn = function (taskObj) {
     //   this.input.enqueue(taskObj);
     // }
   } else {
-    if(this.waiting.names[taskObj.command]) {
+    if (this.waiting.names[taskObj.command]) {
       this.runInput(taskObj);
     } else {
       this.input.enqueue(taskObj);
@@ -97,12 +97,15 @@ IoHandler.prototype.addToIn = function (taskObj) {
 }
 
 IoHandler.prototype.runInput = function (taskObj) {
+  // if (typeof taskObj === 'string') {
+  //   taskObj = JSON.parse(taskObj)
+  // }
   this.contoller.update(taskObj.command, taskObj.section, taskObj.value);
-  if(this.level < this.toLevel && taskObj.command !== 'update') {
+  if (this.level < this.toLevel && taskObj.command !== 'update') {
     this.contoller.run(taskObj.command, taskObj.section);
-  } else if(this.level > this.toLevel) {
-    if(this.waiting.names[taskObj.command]) {
-      if(taskObj.section === null) {
+  } else if (this.level > this.toLevel) {
+    if (this.waiting.names[taskObj.command]) {
+      if (taskObj.section === null) {
         //if section is being used then this variable is reset in the callback
         this.waiting.names[taskObj.command] = false;
       }
@@ -112,7 +115,7 @@ IoHandler.prototype.runInput = function (taskObj) {
 }
 
 IoHandler.prototype.runAllInputs = function () {
-  while(this.input.length) {
+  while (this.input.length) {
     // var taskObj = this.input.first();
     // this.runInput(taskObj);
     // this.input.dequeue();
@@ -120,6 +123,6 @@ IoHandler.prototype.runAllInputs = function () {
   }
 }
 
-if(module) {
+if (module) {
   exports.IoHandler = IoHandler
 }

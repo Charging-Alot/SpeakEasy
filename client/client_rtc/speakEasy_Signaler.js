@@ -80,7 +80,8 @@ function socketListener(SpeakEasy) {
 
     SpeakEasy.socket.on("receiveInstruction", function (data) {
       if (SpeakEasy.AdminInfo) {
-        SpeakEasy.AdminInfo.controller.input(data);
+        console.log("IN RECEUIVE INSTRUCTION AND THIS IS DATA", data)
+        return SpeakEasy.AdminInfo.controller.input(data);
       };
       console.log("Somehow a player received instruction that is was not supposed to receive...")
     });

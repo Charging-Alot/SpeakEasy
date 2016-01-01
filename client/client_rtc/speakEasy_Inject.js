@@ -71,12 +71,12 @@
         return this.AdminInfo.message(rtcId, newMsg);
       }
       this.AdminInfo.players[rtcId].busy = false;
-      // return console.log("PLAYER RESPONSE MESSAGE: ", data, rtcId);
+      return console.log("PLAYER RESPONSE MESSAGE: ", data, rtcId);
     } else if (this.PlayerInfo) {
       this.PlayerInfo.controller.input(data);
-      // return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
+      return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
     }
-    console.error("Somehow user recieved message without having established a role.");
+    console.error("Somehow user received message without having established a role.");
   };
   /* 
    * Configurable Storage entry data
@@ -144,6 +144,7 @@
   SpeakEasyBuild.prototype.confirmPlayer = function (data) {
     console.log("Player confirmed", data);
     this.AdminInfo.players[data.playerRtc] = new PlayerInfo(data);
+    this.AdminInfo.checkQdQ(data.playerRtc);
   };
   /* 
    * Configurable Storage entry data
@@ -157,6 +158,7 @@
     this.LocalDataChannel.userid = this.AdminInfo.adminId;
     this.LocalDataChannel.transmitRoomOnce = true;
     this.LocalDataChannel.open(this.AdminInfo.adminId);
+    this.socket.emit("ADMINREADY");
 
   };
   /* 
@@ -216,13 +218,15 @@
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   AdminInfo.prototype.instruct = function (levelId, msg) {
+    console.log("INSTRUCT IS GETTING CALLED")
     if (levelId === 0) {
       var players = this.players;
       for (var player in players) {
         if (!(players[player].busy)) {
           players[player].busy = true;
-          return this.message(player, message);
+          return this.message(player, msg);
         }
+        console.log("END OF FOR LOOP IN INSTRUCT, about to enqueueueueueueue")
       }
       return this.commandQueue.enqueue(msg);
     } else if (levelId === 2) {
@@ -238,8 +242,12 @@
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   AdminInfo.prototype.checkQdQ = function (playerId) {
-    var newCommand = this.comma
-    this.parent.LocalDataChannel.channels[playerId].send(msg);
+    console.log("IN CHECKQDQ THIS IS THE COMMAND Q LENGTHJ", this.commandQueue.length)
+    if (this.commandQueue.length) {
+      var newCommand = this.commandQueue.dequeue();
+      this.players[playerId].busy = true;
+      this.parent.LocalDataChannel.channels[playerId].send(newCommand);
+    }
   };
   /* 
    * Configurable Storage entry data

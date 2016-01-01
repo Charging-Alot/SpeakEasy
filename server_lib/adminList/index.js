@@ -5,17 +5,19 @@ var Queue = require('../../client/network/Queue.js').Queue;
 
 
 module.exports = function AdminList(adminSize) {
-  this.commandQ = new Queue();
+  this.commandQueue = new Queue();
   this.adminSize = adminSize || 3;
   this.length = 0;
   this.storage = {}; //stores admin socket.id and number of connections each admin currently has.
   this.seq2seq = new seq2seqCons([3, 3, 3], adminInstruct.bind(this));
 
   this.checkQandDq = function (socket) { //one more ghetoo fxn
-      if (commandQ.length) {
+      console.log("checkQandDq is firing!!!!!!!!!!!poooo")
+      if (this.commandQueue.length) {
         this.storage[socket.id].busy = true;
-        var newCommand = this.commandQ.dequeue();
+        var newCommand = this.commandQueue.dequeue();
         socket.emit("receiveInstruction", newCommand);
+        // socket.emit("receiveInstruction", "newCommand");
       }
     }
     /*
@@ -41,8 +43,9 @@ module.exports = function AdminList(adminSize) {
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   this.newAdminEntry = function (socket) {
+      console.log("newAdminEntry is firing!!!!!!!!!!!poooo")
       var newManEntry = {
-        busy: false,
+        busy: true,
         socket: socket,
         players: [],
         pending: []
@@ -62,10 +65,11 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.introduce = function (socket) {
-      // if (socket.id in this.storage) throw new Error("SocketId already in use by other admin");
+      console.log("INTRODUCE IS FIRINGINGINGIGNIN!!!!poooo")
+        // if (socket.id in this.storage) throw new Error("SocketId already in use by other admin");
       if (!this.length) { //if nobody is currently a admin, meaning no users are connected
         this.newAdminEntry(socket); // returns {socket:socket, players:[]};
-        this.checkQandDq(socket);
+        // this.checkQandDq(socket);
         return this;
       }
       for (var adminId in this.storage) {
@@ -77,7 +81,7 @@ module.exports = function AdminList(adminSize) {
         }
       }
       this.newAdminEntry(socket);
-      this.checkQandDq(socket);
+      // this.checkQandDq(socket);
       return this;
     }
     /* 
@@ -88,6 +92,7 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.removePlayer = function (adminId, playerId) {
+      console.log("removePlayer is firing!!!!!!!!!!!poooo")
       var storage = this.storage;
       var admin = storage[adminId];
       var playerIndex = admin.players.indexOf(playerId);
@@ -105,6 +110,7 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.removeAdmin = function (adminId) {
+      console.log("removeAdmin is firing!!!!!!!!!!!poooo")
       if (!adminId) {
         sysLog("No manger id provided in `removeadmin`");
         return this;
@@ -125,6 +131,7 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.playerRecieved = function (manSocket, data) {
+    console.log("playerRecieved is firing!!!!!!!!!!!poooo")
     var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
       if (pendingObj.socket.id === data.PlayerSocketId) return true;
       return false;
@@ -147,20 +154,21 @@ module.exports = function AdminList(adminSize) {
         return storage[adminId].socket.emit("receiveInstruction", data);
       }
     }
-    return this.commandQ.enqueue(data);
+    return this.commandQueue.enqueue(data);
   }
 
   this.updatedModel = function (socket, data) {
+    console.log("updatedModel is firing!!!!!!!!!!!poooo")
     this.seq2seq.input(data);
-    this.checkQandDq
-    if (this.commandQ.length) {
-      var newData = this.commandQ.dequeue();
-      return socket.emit("receiveInstruction", newData)
+    if (this.commandQueue.length) {
+      var newData = this.commandQueue.dequeue();
+      return socket.emit("receiveInstruction", newData);
     }
     this.storage[socket.id].busy = false;
   }
 
   this.clearPending = function (max) { //need to test
+    console.log("clearPending is firing!!!!!!!!!!!poooo")
     var max = max || 3;
     var curTime = new Date().getTime();
     for (var admin in this.storage) {
