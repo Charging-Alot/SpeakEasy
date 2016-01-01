@@ -44,8 +44,8 @@ angular.module('speakEasy', [
   var background = $mdThemingProvider
     .extendPalette('blue', {
       // 'A100': '#FFFFFF'
-      'A100': '#EAF1F5'
-        // 'A100': '#E3F2FD'
+      'A100': '#E3F2FD'
+        // 'A100': '#EAF1F5' // original chart color
     }); // prev: '#CFD8DC'
 
   $mdThemingProvider.definePalette('background', background);
@@ -68,14 +68,21 @@ angular.module('speakEasy', [
   // open the login window
   $rootScope.$on('$stateChangeStart', function (evt, next, current) {
     if (next.name === "chat" && !Auth.isAuth()) {
-      evt.preventDefault(); // this prevents state change
+      evt.preventDefault(); // this prevents state change, protecting the chat page
       Dialog.loginWindow();
     }
   });
 
+  // Snaps to the top of the page when a view changes, so the user isn't randomly halfway down
+  // the page after clicking a new link
+  $rootScope.$on('$stateChangeSuccess', function (evt, next, current) {
+    window.scrollTo(0, 0);
+  });
+
   // If the user has our token, we render the logout button instead of the login button
   if (Auth.isAuth()) {
-    Auth.loginSwap();
+    // swaps out loginButton for logoutButton
+    Auth.elementSwap('.logoutButton', '.loginButton');
   }
 
 });

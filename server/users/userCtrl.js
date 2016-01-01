@@ -3,7 +3,7 @@ var jwt = require('jwt-simple');
 
 function RespObj(status, data) {
   this.status = status;
-  this.data = data;
+  this.message = data;
 }
 
 module.exports = {
@@ -17,11 +17,17 @@ module.exports = {
       email: email
     });
     query.findOne(function (err, user) {
-      if (err) throw (err);
-      if (user.comparePasswords(password)) {
-        res.status(200).send(new RespObj(true, email));
+      console.log('findingerror!', err, user)
+      if (err || !user) {
+        console.log('throwing signin error!!')
+        res.status(200).send(new RespObj(false, "User was not found, please signup below!"));
+        //throw (err);
       } else {
-        res.status(200).send(new RespObj(false, "Email or password was faulty."));
+        if (user.comparePasswords(password)) {
+          res.status(200).send(new RespObj(true, email));
+        } else {
+          res.status(200).send(new RespObj(false, "Sorry, that password was incorrect."));
+        }
       }
 
     });

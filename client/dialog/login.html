@@ -11,7 +11,7 @@
       </md-button>
     </div>
   </md-toolbar>
-  <h2>{{ dialogMessage }}</h2>
+  <p class="dialogErrorMessage">{{ dialogMessage }}</p>
   <form name="userLogin" ng-submit="login()">
     <md-dialog-content>
       <div class="md-dialog-content">
@@ -31,7 +31,7 @@
             </md-tooltip>
           </md-button>
         </div>
-        <hr class="loginDivider">
+        <md-divider></md-divider>
         <div layout="row" layout-align="center center">
           <md-button class="md-warn" ng-click="goToSignup()">Not a user?</md-button>
           <md-tooltip md-direction="bottom">

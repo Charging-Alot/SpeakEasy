@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html ng-app="speakEasy">
 <head>
-	<title>
-		Speak Easy | Machine Learning
-	</title>
+  <title>
+    Speak Easy | Machine Learning
+  </title>
 
   <!-- Open Graph tags for sharing on social -->
   <meta property="og:url"           content="http://localhost:1337/#/landing" />
@@ -20,13 +20,12 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- social media icons font | see: http://zavoloklom.github.io/material-design-iconic-font/index.html for info -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
-  <!-- Lora font for coolness CURRENTLY *UN*USED -->
-  <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-  <!-- Lato font for coolness CURRENTLY **USED** -->
+
+  <!-- Lato font -->
   <link href='https://fonts.googleapis.com/css?family=Lato:400,400italic,700' rel='stylesheet' type='text/css'>
   <!-- our CSS file -->
   <link rel="stylesheet" type="text/css" href="styles/styles.css">
-	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
 </head>
 <body>
   
@@ -58,7 +57,6 @@
         </md-button>
         <button class="toolButton mainButton" ng-click="goToInfo()">About</button>
         <button class="toolButton mainButton" ng-click="goToChat()">SpeakEasy Chat</button>
-        <button class="toolButton mainButton" ng-click="goToDownload()">Download</button>
         <button class="toolButton mainButton" ng-click="goToMetrics()">Data</button>
         <div flex></div>
         <button class="toolButton loginButton" ng-click="goToLogin($event)">Login</button>
@@ -74,6 +72,15 @@
   <footer>
       <div layout="row" layout-align="center center">
           <h2>My Awesome Footer</h2>
+          <a href="https://github.com/Charging-Alot/SpeakEasy" target="_blank" style="text-decoration: none;">
+            <md-button aria-label="GitHub" class="md-raised md-button md-ink-ripple" style="text-decoration: none;text-transform:none;">
+            GitHub
+              <i class="zmdi zmdi-github zmdi-hc-lg speedDialIcon"></i>
+              <md-tooltip md-direction="top">
+                Check us out on GitHub!
+              </md-tooltip>
+            </md-button>
+          </a>
       </div>
   </footer>
 </body>
@@ -85,10 +92,9 @@
   <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 
   <!-- chart.js dependency for angular-chart -->
-  <!-- // <script type="text/javascript" src="chart/chart.js"></script> -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
-  <!-- Angular Chart Library see: http://jtblin.github.io/angular-chart.js/ -->
+  <!-- Angular Chart Library | see: http://jtblin.github.io/angular-chart.js/ -->
   <script type="text/javascript" src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
   <!-- Our App Stuff -->
   <script type="text/javascript" src="app/app.js"></script>

@@ -1,85 +1,126 @@
 angular.module('speakEasy.about', [])
 
-.controller('AboutCtrl', ['$scope','$mdDialog', '$mdMedia', '$state', 'Dialog', function ($scope, $mdDialog, $mdMedia, $state, Dialog) {
-  
-  $scope.andyInfo = function (ev) {
-    Dialog.andyWindow(ev, $scope);
+.controller('AboutCtrl', ['$scope', '$mdDialog', '$mdMedia', '$state', 'Auth', function ($scope, $mdDialog, $mdMedia, $state, Auth) {
+
+  // There's a big wall of text on the about page, but most of it is hidden. $scope.aboutMore is
+  // triggered by a "more text" link. It swaps out the link and swaps in all the extra text.
+  $scope.aboutMore = function () {
+    Auth.elementSwap('.aboutExtra', '.aboutMore');
   }
 
-  $scope.willInfo = function (ev) {
-    Dialog.willWindow(ev, $scope);
+  // This hides all the extra text and puts the "more text" link back
+  $scope.aboutLess = function () {
+    Auth.elementSwap('.aboutMore', '.aboutExtra');
   }
 
-  $scope.lauraInfo = function (ev) {
-    Dialog.lauraWindow(ev, $scope);
+  // These are links to other parts of the site mentioned in the big wall of text
+  $scope.goToChat = function () {
+    $state.go('chat');
   }
 
-  $scope.samInfo = function (ev) {
-    Dialog.samWindow(ev, $scope);
-  }
+  // Context will be defined later with a team member object in the info object that will
+  // determine changes to $scope variables rendered in our personal bio window
+  var context;
 
-
-// STUFF BELOW HERE IS THE ATTEMPT AT ANIMATION
-// IT'S NOT BEING USED RIGHT NOW
-
-  // The relationships object creates the connections between the clicked profile and the
-  // info page that will shift in, and the card that will shift out
-  var relationships = {
-    // Card A (the ng339 value is the JSON.stringify return of $event.currentTarget after a click)
-    '{"ng339":26}': {
-      'info': document.querySelector('.cardAInfo'),
-      'neighbor': document.querySelector('.cardB')
+  // Each member of the team has an object in info with our name, pic, links etc.  This info is used to set
+  // $scope variables by on-click functions defined below and is used to render portrait.html dynamically
+  var info = {
+    andy: {
+      name: 'Andrew Vickory',
+      portrait: "../assets/img/andyheadshot.jpg",
+      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
+      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
+      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      gitHubLink: 'https://github.com/AVickory',
+      linkedInLink: 'https://www.linkedin.com/in/andrewvickory'
     },
-    // Card B
-    '{"ng339":31}': {
-      'info': document.querySelector('.cardBInfo'),
-      'neighbor': document.querySelector('.cardC')
+    will: {
+      name: 'Will Dembinski',
+      portrait: "../assets/img/willheadshot.jpg",
+      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
+      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
+      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      gitHubLink: 'https://github.com/willdembinski',
+      linkedInLink: 'https://www.linkedin.com/in/willdembinski'
     },
-    // Card C
-    '{"ng339":36}': {
-      'info': document.querySelector('.cardCInfo'),
-      'neighbor': document.querySelector('.cardB')
+    laura: {
+      name: 'Laura Gelston',
+      portrait: "../assets/img/lauraheadshot.jpg",
+      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
+      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
+      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      gitHubLink: 'https://github.com/gelsto',
+      linkedInLink: 'https://www.linkedin.com/in/laura-gelston-2782852b'
     },
-    // Card D
-    '{"ng339":41}': {
-      'info': document.querySelector('.cardDInfo'),
-      'neighbor': document.querySelector('.cardC')
+    sam: {
+      name: 'Sam Crawford',
+      portrait: "../assets/img/samheadshot.jpg",
+      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
+      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
+      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      gitHubLink: 'https://github.com/RS-Crawford',
+      linkedInLink: 'https://www.linkedin.com/in/robertscrawford'
     }
   }
 
-  var expander = angular.element(document.querySelector('.testCard'));
-  console.log(expander)
-  $scope.animate = function ($event) {
-    console.log('ANIMATIONNN!');
-    console.log('ev', $event.currentTarget)
-    var element = $event.currentTarget;
-    // Here we get the 'ng339' value, which is a key in the relationships object
-    var stringified = JSON.stringify(element);
-    console.log(JSON.stringify(element))
-    // Here we establish the context of our click via the relationships object
-    var context = relationships[stringified];
-    console.log('context', context)
-    console.log('context k/v', context.info, context.neighbor);
-    //element.style.width = '0%'
-    var numUp = 0;
-    var numDown = 25;
-    var fn = function () {
-      numUp += 1;
-      numDown -= 1;
-      context.info.style.width = '' + numUp + '%';
-      context.neighbor.style.width = String(numDown) + '%';
-      if ( context.info.style.width === '5%' )  {
-        context.info.style.display = 'block';
-      }
-      if ( context.info.style.width === '25%' ) {
-        return;
-      }
-      if ( context.neighbor.style.width === '5%' ) {
-        context.neighbor.style.display = 'none';
-      }
-      a();
-    };
-    var a = function() {setTimeout(fn, 100)}
-    a();
+  //These ___Info calls set context based on what was clicked and pass that info to portraitWindow
+  $scope.andyInfo = function (ev) {
+    context = info.andy;
+    $scope.portraitWindow(ev, context);
   }
+
+  $scope.willInfo = function (ev) {
+    context = info.will;
+    $scope.portraitWindow(ev, context);
+  }
+
+  $scope.lauraInfo = function (ev) {
+    context = info.laura;
+    $scope.portraitWindow(ev, context);
+  }
+
+  $scope.samInfo = function (ev) {
+    context = info.sam;
+    $scope.portraitWindow(ev, context);
+  }
+
+  // For portraitWindow we receive context from ___Info, use it to define our necessary $scope variables for
+  // portrait.html, and then open a dynamically generated dialog window using portrait.html
+  $scope.portraitWindow = function (ev, context) {
+
+    $scope.name = context.name;
+    $scope.portrait = context.portrait;
+    $scope.p1 = context.p1;
+    $scope.p2 = context.p2;
+    $scope.p3 = context.p3;
+    $scope.gitHubLink = context.gitHubLink;
+    $scope.linkedInLink = context.linkedInLink;
+
+    $mdDialog.show({
+        templateUrl: 'portrait/portrait.html',
+        parent: angular.element(document.body),
+        scope: $scope,
+        preserveScope: true,
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: $mdMedia('sm') && $scope.customFullscreen
+      })
+      .then(function () {
+        console.log('DIALOGUE SUCCESS STATUS')
+      }, function () {
+        $scope.status = 'You cancelled the dialog.';
+        console.log('DIALOGUE FAIL STATUS', $scope.status)
+      });
+  }
+
+  // Gives window closing functionality to the top-right X button in portrait.html
+  $scope.closeWindow = function () {
+    $mdDialog.cancel();
+  }
+
+  $scope.hideWindow = function () {
+    console.log('dialog submit called')
+    $mdDialog.hide();
+  }
+
 }]);
