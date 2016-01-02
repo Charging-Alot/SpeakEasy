@@ -53,11 +53,16 @@ angular.module('speakEasy.chat', [])
     chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
     // This makes sure the chatbox follows the pending gif as it causes overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
-    // We grab the gif we just appended in order to remove it when necessary
-    var pendingGif = angular.element(document.querySelector('.pendingGif'));
+    var pendingGifs = [];
+    // We push the gif we just appended to pendingGifs in order to remove it when necessary
+    // pendingGifs will work like a queue so that multiple messages sent quickly will all get
+    // their gifs removed correctly
+    pendingGifs.push(angular.element(document.querySelector('.pendingGif')));
+    //var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
     ChatFactory.serveMessage(messageHolder)
       .then(function (data) {
+        var pendingGif = pendingGifs.shift();
         pendingGif[0].parentNode.removeChild(pendingGif[0]);
         $scope.renderMessage('robot', data.response);
       })
