@@ -1,7 +1,44 @@
 if (module) {
   var Neuron = require('./NeuronConstructor.js').Neuron
 }
-
+/*
+ * Network constructor.  Takes all or part of a Network object, And builds any structures that were not all ready in the object and returns an object.
+ * Should be called with the new keyword.
+ *
+ * @param {partialNetwork} object - An object containing some or all parts of a single network.  Structured as follows:
+ * {
+ *   id: int
+ *   layerId: int
+ *   type: string
+ *   initialized: boolean
+ *   rate: float
+ *   maxGradient: float
+ *   connections: object 
+ *     {
+ *       inputs: array
+ *         [
+ *           Connection objects (see factory in Network Constructor)
+ *         ]
+ *       outputs: array
+ *         [
+ *           Connection objects
+ *         ]
+ *       gated: array
+ *         [
+ *           Connection objects
+ *         ]
+ *       internal: array
+ *         [
+ *           Connection objects
+ *         ]
+ *     }
+ *   gatedNodes: object
+ *     {
+ *       Node object
+ *     }
+ * }
+ * @return network object
+ */
 var Network = function (network, rate, maxGradient) {
   this.type = 'network';
   this.initialized = false;
@@ -31,10 +68,12 @@ var Network = function (network, rate, maxGradient) {
   }
 }
 
+/*
+ * Updates the subnetwork or neuron corresponding to the input model's id and layerId within the network.
+ *
+ * @param {model} object - must be have the structure of either a network or a neuron with the correct type property
+ */
 Network.prototype.update = function (model) {
-  // if(this.nodes[1] && this.nodes[1].nodes[0] && this.nodes[1].nodes[0].type === 'network') {
-  //   debugger
-  // }
   console.log('MOOOOOOOOOO', model)
   console.log('DOOOOOOOOOD', this)
   this.rate = model.rate
@@ -60,6 +99,11 @@ Network.prototype.update = function (model) {
   }
 }
 
+/*
+ * Initializes the neurons in a network.  This network's nodes and connections arrays must already have been created and filled in.
+ * No nodes or connections should be added after this has been called and no work should be done by this network until after this function has been called.
+ * Sets the initialized property to true.
+ */
 Network.prototype.initNeurons = function () {
   var selfConnGateNode;
   for (var layer = 0; layer < this.nodes.length; ++layer) {
@@ -101,6 +145,11 @@ Network.prototype.initNeurons = function () {
   this.initialized = true;
 }
 
+/*
+ * Takes a neuron with node and connections already established and initializes all of it's elegibilities and extended elegibilities to 0.
+ *
+ * @param {neuron} Object - the neuron whose elegibilities should be initialized
+ */
 Network.prototype.initializeElegibilitiesForNeuron = function (neuron) {
   var layer = neuron.node.layerId;
   var node = neuron.node.id
@@ -117,6 +166,11 @@ Network.prototype.initializeElegibilitiesForNeuron = function (neuron) {
   }
 }
 
+/*
+ * Iterates over the network's internal connection array and places the Connection objects into the neurons that they connect to, originate from or are gated by.
+ * Also places the nodes that the connection goes to, comes from and is gated by into the connection.
+ * In the case that one of these nodes is a network, places the connection object in the appropriate input or output of that network.
+ */
 Network.prototype.placeConnectionsInNeurons = function () {
   var connection;
   var fromNode;
@@ -185,10 +239,22 @@ Network.prototype.placeConnectionsInNeurons = function () {
   }
 }
 
+/*
+ * Initializes a new layer of nodes of the specified size and puts it at the end of the current network.
+ *
+ * @param {numberOfNodes} number - the desired size of the layer being appended
+ */
 Network.prototype.appendNodeLayer = function (numberOfNodes) {
   this.nodes.push(this.createAllNodesInLayer(this.nodes.length, numberOfNodes))
 }
 
+/*
+ * Creates an object with a property, layerId, set to the specified number and another property, nodes, which is an array of nodes of the specified length.
+ *
+ * @param {layerId} number - the layerId of this layer in the network
+ * @param {numberOfNodes} number - the desired size of the layer to be returned
+ * @ @return array of nodes
+ */
 Network.prototype.createAllNodesInLayer = function (layerId, numberOfNodes) {
   var nodeLayer = {
     id: layerId,
@@ -200,10 +266,24 @@ Network.prototype.createAllNodesInLayer = function (layerId, numberOfNodes) {
   return nodeLayer;
 }
 
+/*
+ * Initializes a new layer of networks using the specified pseudoclassical constructor of the specified size and puts it at the end of the end of the current network.
+ *
+ * @param {networkConstructor} function - pseudoclassical network constructor
+ * @param {numberOfNodes} number - the desired size of the layer being appended
+ */
 Network.prototype.appendNetworkLayer = function (networkConstructor, numberOfNodes) {
   this.nodes.push(this.createAllNetworksInLayer(networkConstructor, this.nodes.length, numberOfNodes))
 }
 
+/*
+ * Creates an object with a property, layerId, set to the specified number and another property, nodes, which is an array of networks of the specified length created using the specified pseudoclassical constructor.
+ *
+ * @param {networkConstructor} function - pseudoclassical network constructor
+ * @param {layerId} number - the layerId of this layer in the network
+ * @param {numberOfNodes} number - the desired size of the layer to be returned
+ * @ @return array of nodes
+ */
 Network.prototype.createAllNetworksInLayer = function (networkConstructor, layerId, numberOfNodes) {
   var networkLayer = {
     id: layerId,
@@ -216,6 +296,13 @@ Network.prototype.createAllNetworksInLayer = function (networkConstructor, layer
   return networkLayer;
 }
 
+/*
+ * Sets the specified layerId and id as this network's id and layerId.
+ * Also sets the specified layerId and id as each internal node's subNetworkId and subNetworkLayerId.
+ *
+ * @param {layerId} number - the layerId of this network in the context of it's parent network
+ * @param {id} number - the id of this network in it's layer in the context of it's parent network
+ */
 Network.prototype.setId = function (layerId, id) {
   this.layerId = layerId;
   this.id = id;
@@ -227,6 +314,13 @@ Network.prototype.setId = function (layerId, id) {
   }
 }
 
+/*
+ * returns a node with default properties and randomized bias.
+ * 
+ * @param {layerId} number - the id of the layer this neuron is in
+ * @param {id} number - the id if this neuron within it's layer
+ * @return object
+ */
 var Node = function (layerId, id) {
   return {
     type: 'neuron',
@@ -255,7 +349,14 @@ var Node = function (layerId, id) {
     bias: Math.random() * 0.2 - 0.1
   }
 }
-
+/*
+ * Takes two layers and creates connections between their children nodes within this network's internal connections array. 
+ * If allToAll is true then each node in the first layer will be connected to every node in the second layer.
+ * Otherwise it will connect each node in the first layer only to the node in the second layer with the same id.
+ *
+ * @param {fromLayer} array of node objects or network objects - the layer from which the connections will originate
+ * @param {toLayer} array of node objects or network objects - the layer at which the connections terminate
+ */
 Network.prototype.joinLayers = function (fromLayer, toLayer, allToAll) {
   if (allToAll) {
     for (var i = 0; i < fromLayer.nodes.length; ++i) {
@@ -271,7 +372,14 @@ Network.prototype.joinLayers = function (fromLayer, toLayer, allToAll) {
     console.error('layers cannot be joined that way!')
   }
 }
-
+/*
+ * Creates one or more connection objects linking the toNode and fromNode. 
+ * If only one of the nodes is a network, then the other node will be joined to all, either inputs or outputs, depending on which node is a network.
+ * If both nodes are networks then joinLayers will be called on the output layer of the fromNode and the input layer of the toNode, using the allToAll variable in this function call.
+ *
+ * @param {fromNode} a node object or network object - the node from which the connection/s will originate
+ * @param {fromNode} a node object or network object - the node at which the connection/s will terminate
+ */
 Network.prototype.joinNodes = function (fromNode, toNode, allToAll) {
   if (toNode.subNetworkLayerId === -1) {
     var toLayerId = toNode.layerId;
@@ -315,9 +423,15 @@ Network.prototype.joinNodes = function (fromNode, toNode, allToAll) {
   }
 }
 
+/*
+ * Creates a gating relationship between nodes in the gating layer and exactly one of the connections which span the layers whose ids are specified.
+ * There must be the same number of nodes in the gating layer as connections going from the fromLayer to the toLayer.
+ *
+ * @param {gatingLayer} array of node objects or network objects - the layer of nodes which will gate the specified connections
+ * @param {fromLayerId} number - the id of the layer that the gated connections originate from
+ * @param {toLayerId} number - the id of the layer that the gated connections go to
+ */
 Network.prototype.gateLayerOneToOne = function (gatingLayer, fromLayerId, toLayerId) {
-  //gates all inputs to toLayer from fromLayer, provided there are the same number of outputs in the gatingLayer 
-  //as there are connections.
   if (fromLayerId !== toLayerId) {
     var connectionArr = this.connections.internal[toLayerId][fromLayerId];
     if (connectionArr.length === gatingLayer.nodes.length) {
@@ -338,6 +452,12 @@ Network.prototype.gateLayerOneToOne = function (gatingLayer, fromLayerId, toLaye
   }
 }
 
+/*
+ * Creates a gating relationship between the gateNode and the connection.
+ *
+ * @param {connection} connection object - connection to be gated
+ * @param {gateNode} node object - gating node
+ */
 Network.prototype.gateConnection = function (connection, gateNode) {
   if (gateNode.type === 'network') {
     connection.gateSubNetworkId = gateNode.subNetworkId;
@@ -348,6 +468,14 @@ Network.prototype.gateConnection = function (connection, gateNode) {
   connection.gateNode = gateNode;
 }
 
+/*
+ * Creates a connection between the specified nodes with the indicated id.
+ *
+ * @param {connId} number - the id of this connection
+ * @param {toNode} node object - terminating node
+ * @param {fromNode} node object - originating node
+ * @return connection object
+ */
 var Connection = function (connId, toNode, fromNode) {
 
   var response = {
@@ -380,6 +508,11 @@ var Connection = function (connId, toNode, fromNode) {
   return response;
 }
 
+/*
+ * Iterates over the input array and sets the activation for each input node in the network.
+ *
+ * @param {inputArr} array of numbers - array of inputs to the network
+ */
 Network.prototype.activateFirstLayer = function (inputArr) {
   for (var i = 0; i < this.layers[0].length; ++i) {
     this.layers[0][i].node.activation = inputArr[i];
@@ -388,6 +521,12 @@ Network.prototype.activateFirstLayer = function (inputArr) {
   }
 }
 
+/*
+ * Iterates over an array of expected outputs and initializes their projected error, gated error and error responsibility for backPropagation.
+ * Simple error calculation is used, a more sophisticated loss calculation may be implemented in the future.
+ * 
+ * @param {targetArr} array of numbers - array of expected outputs from the network
+ */
 Network.prototype.setLastLayerError = function (targetArr) {
   var error;
   var lastIndex = this.layers.length - 1
