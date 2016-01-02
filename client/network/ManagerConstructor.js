@@ -3,6 +3,14 @@ if (module) {
   var Neuron = require('./neuronConstructor.js').Neuron;
   var IoHandler = require('./IoHandler.js').IoHandler;
 }
+
+/*
+ * Manager constructor.  
+ * Creates a middle tier (1) controller which is intended to delegate all steps of activation or backpropagation for a recieved neuron or subnetwork and then return it upstream.
+ * 
+ * @param {partialModel} object - All or part of neuron or subnetwork which will be used to instantiate this controller's model
+ * @param {sendFunction} function - A function which takes a number indicating the level the message is meant to go to, followed by a string containing the message to be sent
+ */
 var Manager = function (partialModel, sendFunction) {
   if (partialModel) {
     this.makeNewModel(partialModel); //model can be neuron or network
@@ -12,7 +20,14 @@ var Manager = function (partialModel, sendFunction) {
   this.toPleb = new IoHandler(1, 0, this, sendFunction);
   this.toMother = new IoHandler(1, 2, this, sendFunction);
 }
-
+/*
+ * If the command comes from downstream (is not either 'activation' or 'backpropagation') then the controller selectively updates it's current model.
+ * If the command comes from upstream then the controller replaces it's entire model.
+ *
+ * @param {command} string - String containing the command to be run or the command being returned
+ * @param {section} number - Indicates of the section of the command being completed
+ * @param {partialModel} network object or neuron object - Object to use in replacing or updating model
+ */
 Manager.prototype.update = function (command, section, partialModel) {
   // if (object.value.type === 'network') {
   //    object.value = new Network(object.value, object.value.rate, object.value.maxGradient)
@@ -37,9 +52,13 @@ Manager.prototype.update = function (command, section, partialModel) {
     }
   }
 }
-
-Manager.prototype.input = function (object) {
-  object = JSON.parse(object)
+/*
+ * Takes a json string, parses it and then adds it to the appropriate input queue.
+ *
+ * @param {jsonString} - String containing a taskObj
+ */
+Manager.prototype.input = function (jsonString) {
+  var object = JSON.parse(jsonString)
   console.log("\nIN MANAGER INPUT AND THIS IS FIRING\n", object)
   if (object.command === 'activate' || object.command == 'backPropagate') {
     // if (object.value.type === 'network') {
@@ -57,6 +76,11 @@ Manager.prototype.input = function (object) {
   }
 }
 
+/*
+ * Overwrites the current model with the partial model passed in
+ *
+ * @param {partialModel} object - An object with the structure of a neuron or network, specifying the characteristics of the new model
+ */
 Manager.prototype.makeNewModel = function (partialModel) {
   if (partialModel.type === 'network') {
     this.model = new Network(partialModel || null);
@@ -70,17 +94,36 @@ Manager.prototype.makeNewModel = function (partialModel) {
   }
 }
 
+/*
+ * Runs the function specified by the command, passing in the section.
+ *
+ * @param {command} string - A string of the name of the function to be run.
+ * @param {section} number - The section of the command just recieved.
+ */
 Manager.prototype.run = function (command, section) {
   console.log("P{P{P{P{P{P{P{P{P{P{P{", command)
   this[command](section);
 }
 
+/*
+ * Sends a response command to mother and then checks it's input queue.
+ *
+ * @param {command} string - A string corresponding to the command that was just run
+ * @param {section} number - A number corresponding to the section of this command completed
+ */
 Manager.prototype.finishCommand = function (command, section) {
   this.queueCommandMother(command, section);
   this.toMother.runAllOutputs();
   this.toMother.runAllInputs();
 }
 
+/*
+ * Runs the iterator on each element of the array as a callback to itself, and runs the passed in callback after the iterator has been run on all elements of the array.
+ *
+ * @param {array} array - The array to be iterated over
+ * @param {iterator} function - The function to be called on every element of the array
+ * @param {callback} function - The function to be called when the function has finished running  
+ */
 Manager.prototype.forEachAsync = function (array, iterator, callback) {
   var i = 0;
   var iteratorCallback = function () {
@@ -94,6 +137,11 @@ Manager.prototype.forEachAsync = function (array, iterator, callback) {
   iterator.call(this, array[i], i, iteratorCallback)
 }
 
+/*
+ * Delegates all steps for activating the current model.
+ *
+ * @param {section} number - Number indicating the id of the current model relative to it's parent in the upstream model
+ */
 Manager.prototype.activate = function (section) {
   if (this.model.type === 'neuron') {
     this.activateNeuron(this.model, section, function () {
@@ -111,6 +159,13 @@ Manager.prototype.activate = function (section) {
   }
 }
 
+/*
+ * Delegates all steps for activating the specified neuron.
+ *
+ * @param {neuron} neuron object - Neuron to be activated
+ * @param {section} number - Number indicating the id of the current model relative to it's parent in the upstream model
+ * @param {callback} function - The function to be called when activation of this neuron is complete
+ */
 Manager.prototype.activateNeuron = function (neuron, section, callback) {
   neuron.initialState();
 
@@ -132,6 +187,11 @@ Manager.prototype.activateNeuron = function (neuron, section, callback) {
   }.bind(this));
 }
 
+/*
+ * Delegates all steps for backPropagating through the current model.
+ *
+ * @param {section} number - Number indicating the id of the current model relative to it's parent in the upstream model
+ */
 Manager.prototype.backPropagate = function (section) {
   if (this.model.type === 'neuron') {
     this.backPropagateNeuron(this.model, section, function () {
@@ -153,6 +213,13 @@ Manager.prototype.backPropagate = function (section) {
   }
 }
 
+/*
+ * Delegates all steps for backPropagating through the specified neuron.
+ *
+ * @param {neuron} neuron object - Neuron to backpropagate
+ * @param {section} number - Number indicating the id of the current model relative to it's parent in the upstream model
+ * @param {callback} function - The function to be called when backpropagation of this neuron is complete
+ */
 Manager.prototype.backPropagateNeuron = function (neuron, section, callback) {
   neuron.rate = this.model.rate
   neuron.maxGradient = this.model.maxGradient
@@ -187,6 +254,15 @@ Manager.prototype.backPropagateNeuron = function (neuron, section, callback) {
   }
 }
 
+/*
+ * Creates an object with the appropriate values for the command and section passed in and adds it to the downstream output queue.  
+ * Binds the callback to the controller as context.
+ *
+ * @param {command} string - String containing the function for the downstream controller to call
+ * @param {section} number - Number indicating the section of this command
+ * @param {neuron} neuron object - The neuron on which the command should operate
+ * @param {callback} function - Function to be called on response from downstream controller
+ */
 Manager.prototype.queueCommandPleb = function (command, section, neuron, callback) {
   var value = new Neuron();
   // if(this.model.type === 'network') {
@@ -242,10 +318,17 @@ Manager.prototype.queueCommandPleb = function (command, section, neuron, callbac
   } else if (callback) {
     callback.bind(this)
   }
-  // this.toPleb.addToOut(command, section, value, callback);
   this.toPleb.addToOut(command, section, neuron, callback);
 }
 
+/*
+ * Creates an object with the appropriate values for the command and section passed in and adds it to the upstream output queue.  
+ * Binds the callback to the controller as context.
+ *
+ * @param {command} string - String containing the function that prompted this command being sent
+ * @param {section} number - Number indicating the section of this command
+ * @param {callback} function - Function to be called on response from controller up one tier from this one
+ */
 Manager.prototype.queueCommandMother = function (command, section, callback) {
   if (this.model.type === 'neuron') {
     var value = new Neuron();
