@@ -1,10 +1,19 @@
 if(module) {
   var Network = require('./NetworkConstructor.js').Network
 }
-
-var LSTM = function (derp, rate, maxGradient) {
+/*
+ * Creates a single LSTM node which is intended for use in an LSTM network.  
+ * Note that this is a subnetwork and not a neuron.
+ * Should be called with the new keyword.
+ *
+ * @param {network} null - A place holder variable to maintain the pattern of the network constructor
+ * @param {rate} number - The learning rate for this node
+ * @param {maxGradient} number - The max gradient to be used for gradient clipping
+ * @return network object
+ */
+var LSTM = function (network, rate, maxGradient) {
   //this is a tensorflow style lstm.
-  Network.call(this, derp, rate, maxGradient);
+  Network.call(this, null, rate, maxGradient);
   //input layer
   this.appendNodeLayer(4);
   this.nodes[0].nodes[3].squash = 'hyperbolicTangent';

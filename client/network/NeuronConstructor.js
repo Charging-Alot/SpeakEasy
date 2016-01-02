@@ -1,3 +1,38 @@
+/*
+ * Neuron constructor.  
+ * Takes all or part of a Neuron object, including it's node and relevant connections
+ * And builds any structures that were not all ready in the object.
+ * Should be called with the new keyword
+ * 
+ * @param {partialNeuron} object - An object containing some or all parts of a single neuron.  Structured as follows:
+ * {
+ *   trainable: boolean
+ *   isOutput: boolean
+ *   rate: float
+ *   maxGradient: float
+ *   node: Node object (see factory in Network Constructor)
+ *   connections: object 
+ *     {
+ *       inputs: array
+ *         [
+ *           Connection objects (see factory in Network Constructor)
+ *         ]
+ *       outputs: array
+ *         [
+ *           Connection objects
+ *         ]
+ *       gated: array
+ *         [
+ *           Connection objects
+ *         ]
+ *     }
+ *   gatedNodes: object
+ *     {
+ *       Node object
+ *     }
+ * }
+ * @return neuron object
+ */
 var Neuron = function (partialNeuron) {
   this.type = 'neuron';
   if (partialNeuron !== undefined && partialNeuron !== null) {
@@ -28,6 +63,11 @@ var Neuron = function (partialNeuron) {
   }
 };
 
+/*
+ * Updates an existing Neuron, changing only primitively valued properties to those in the partial neuron
+ * 
+ * @param {partialNeuron} object - An object containing some or all parts of a single neuron.
+ */
 Neuron.prototype.update = function (partialNeuron) {
   //properties of this node
   if (partialNeuron.node) {
@@ -68,6 +108,11 @@ Neuron.prototype.update = function (partialNeuron) {
 }
 
 //synchronous backprop and activation
+
+/*
+ * activates the neuron based on it's current state, setting the state, derivative, activation and elegibilities of the neuron's node.
+ * Neuron must contain a complete node and have at least one input connection.
+ */
 Neuron.prototype.activateSync = function () {
   this.initialState();
   this.activationStep();
@@ -79,6 +124,9 @@ Neuron.prototype.activateSync = function () {
   }
 }
 
+/*
+ * backpropagates error in the neuron's output nodes through the neuron, setting the bias and error of the neuron's node and the weights of all of the neuron's input connections.
+ */
 Neuron.prototype.backPropagateSync = function () {
   if (this.isOutput && this.node.subNetworkId === -1) {
     this.learningStep();
@@ -93,11 +141,19 @@ Neuron.prototype.backPropagateSync = function () {
 }
 
 //constant time steps
+
+/*
+ * Sets the neuron's state before inputs are accounted for.
+ */
 Neuron.prototype.initialState = function () {
   this.node.prevState = this.node.state;
   this.node.state = this.node.bias + this.node.prevState * (this.node.selfConnection.gateNode ? this.node.selfConnection.gateNode.activation : 1) * this.node.selfConnection.weight;
 }
 
+/*
+ * Sets the neuron's activation and derivative properties by calling the neuron's squashing function on it's current state.
+ * if a squashing function is not specifically set in the neuron's node, it defaults to the sigmoid function.
+ */
 Neuron.prototype.squashState = function () {
   if (!this.node.squash) {
     this.node.activation = squash['sigmoid'].activation(this.node.state); //this.squashAct(this.node.state);
@@ -108,17 +164,35 @@ Neuron.prototype.squashState = function () {
   }
 }
 
+
+/*
+ * Sets the neuron's bias based on the learning rate associated with the neuron and it's current errorResponsibility
+ */
 Neuron.prototype.adjustBias = function () {
   if (this.node.trainable) {
     this.node.bias += this.rate * this.node.errorResponsibility;
   }
 }
 
+/*
+ * Sets the neuron's node error responsibility based on it's current gated and projected error
+ */
 Neuron.prototype.setErrorResponsibility = function () {
   this.node.errorResponsibility = this.node.errorGated + this.node.errorProjected;
 }
 
 //iterative steps
+
+/*
+ * Sets the state of the neuron's node based on the state of it's inputs.  
+ * Requires the following properties to exist on the neuron:
+ * node
+ *   state
+ * connections.inputs
+ *   weight
+ *   gain (gate node activation)
+ *   activation
+ */
 Neuron.prototype.activationStep = function () {
     for (var i = 0; i < this.connections.inputs.length; ++i) {
       if (this.connections.inputs[i].gateNode) {
@@ -128,24 +202,36 @@ Neuron.prototype.activationStep = function () {
       }
     }
 
-    /*
-    node
-      state
-      activation
-      derivative
-    connections.inputs
-      weight
-      gain
-      activation
-    */
   }
-  // Neuron.prototype.activationStep.iteratesOver = 'inputs'
 
+/*
+ * Sets the influence of each input to this neuron on each node whose input/s are gated by this node.  
+ * This is an intermediate step to calculating the extended elegibilities for this node.
+ * Requires the following properties to exist on the neuron:
+ * node
+ *   id
+ *   layerId
+ *   prevState
+ *   activation
+ *   selfConnection
+ *     gateId
+ *     gateLayer
+ * connections.gated
+ *   weight
+ *   toNode
+ *     id
+ *     prevState
+ *     selfConnection
+ *       gateId
+ *       gateLayer
+ *   fromNode
+ *     activation
+ */
 Neuron.prototype.influenceStep = function () {
     this.node.influences = {};
     var fromNode;
     for (var i = 0; i < this.connections.gated.length; ++i) {
-      gatedNode = this.connections.gated[i].toNode || this.node //does not account for gated nodes in multiple layers
+      gatedNode = this.connections.gated[i].toNode || this.node; //toNode will be null for selfConnections
       if (this.node.influences[gatedNode.id] === undefined) {
         //if we haven't seen neuron before then initialize it to 0 or prevState if the to node is selfConnected
         this.node.influences[gatedNode.id] = gatedNode.selfConnection.gateId === this.node.id &&
@@ -154,62 +240,64 @@ Neuron.prototype.influenceStep = function () {
       var fromNode = this.connections.gated[i].fromNode || this.node
       this.node.influences[gatedNode.id] += this.connections.gated[i].weight * fromNode.activation;
     }
-    /*
-    connections.gated
-      to
-      weight
-      activation
-    gatedNodes
-      selfConnection
-        gateId
-      prevState
-      influence (out only)
-    node
-      id
-    */
   }
-  // Neuron.prototype.influenceStep.iteratesOver = 'gates'
 
+/*
+ * Sets the elegibilities in the neuron's node for each input connection.
+ * Requires the following properties to exist on the neuron:
+ * node
+ *   elegibilities
+ *   selfConnection
+ *     weight
+ *     gateNode
+ *       activation
+ * connections.inputs
+ *   fromNode
+ *     activation
+ *   gateNode
+ *     activation
+ */
 Neuron.prototype.elegibilityStep = function () {
   for (var i = 0; i < this.connections.inputs.length; ++i) {
     this.node.elegibilities[i] *= this.node.selfConnection.weight * (this.node.selfConnection.gateNode ? this.node.selfConnection.gateNode.activation : 1);
     this.node.elegibilities[i] += (this.connections.inputs[i].gateNode ? this.connections.inputs[i].gateNode.activation : 1) * this.connections.inputs[i].fromNode.activation;
   }
-  /*
-  node
-    elegibilities
-    sefconnection
-      weight
-      gain
-  connections.inputs
-    gain
-    activation
-    weight
-  */
 }
 
-// Neuron.prototype.elegibilityStep.iteratesOver = 'inputs'
-
+/*
+ * Sets the extendedElegibilities in the neuron's node for the given gated node for each input connection
+ * Requires the following properties to exist on the neuron:
+ * node
+ *   extendedElegibilities
+ *   derivative
+ *   elegibilities
+ *   influences
+ * gatedNodes
+ *   selfConnection
+ *     gateNode
+ *       activation
+ *     weight
+ * @param {gateNeuronId} number - The Id of the node in this neuron's gatedNodes object for which the extended elegibilities are being calculated.
+ */
 Neuron.prototype.extendedElegibilityStep = function (gateNeuronId) { // should have key other than 0 for extendedEls
   for (var i = 0; i < this.node.elegibilities.length; ++i) {
     this.node.extendedElegibilities[gateNeuronId][i] *= this.gatedNodes[gateNeuronId].selfConnection.weight * (this.gatedNodes[gateNeuronId].selfConnection.gateNode ? this.gatedNodes[gateNeuronId].selfConnection.gateNode.activation : 1);
     this.node.extendedElegibilities[gateNeuronId][i] += this.node.derivative * this.node.elegibilities[i] * this.node.influences[gateNeuronId];
   }
-  /*
-  node
-    extendedEligibilities (just one)
-    elegibilities
-    derivative
-  gatedNodes (just one)
-    selfConnection
-      weight
-      gain
-    influence
-  */
 }
 
-// Neuron.prototype.extendedElegibilityStep.iteratesOver = 'inputs'
-
+/*
+ * Sets the projected Error for this neuron's node based on the error responsibility in it's output connections
+ * Requires the following properties to exist on the neuron:
+ * node
+ *   derivitive
+ * connections.outputs
+ *   weight
+ *   toNode
+ *     errorResponsibility
+ *   gateNode
+ *     activation
+ */
 Neuron.prototype.projectedErrorStep = function () {
   this.node.errorProjected = 0;
   for (var i = 0; i < this.connections.outputs.length; ++i) {
@@ -217,18 +305,28 @@ Neuron.prototype.projectedErrorStep = function () {
       (this.connections.outputs[i].gateNode !== null ? this.connections.outputs[i].gateNode.activation : 1) * this.connections.outputs[i].weight
   }
   this.node.errorProjected *= this.node.derivative;
-  /*
-    connections.outputs
-      errorResponsibility
-      gain
-      weight
-    node
-      derivative
-  */
 }
 
-// Neuron.prototype.projectedErrorStep.iteratesOver = 'outputs'
-
+/*
+ * Sets the gated error for this neuron's node based on the error responsibility of each of it's gated nodes
+ * Requires the following properties to exist on the neuron:
+ * node
+ *   derivative
+ *   id
+ *   layerId
+ * gatedNodes
+ *   id
+ *   prevState
+ *   errorResponsibility
+ *   selfConnection
+ *     gateId
+ *     gateLayerId
+ * connections.gated
+ *   toNodeId
+ *   weight
+ *   fromNode
+ *     activation
+ */
 Neuron.prototype.gatedErrorStep = function () {
   this.node.errorGated = 0;
   this.node.influences = {}
@@ -239,7 +337,7 @@ Neuron.prototype.gatedErrorStep = function () {
         gatedNode.selfConnection.gateLayerId === this.node.layerId ? gatedNode.prevState : 0;
     }
 
-    this.node.influences[gatedNode.id] += this.connections.gated[j].weight * this.connections.gated[j].fromNode.activation;
+    this.node.influences[gatedNode.id] += this.connections.gated[j].weight * (this.connections.gated[j].fromNode ? this.connections.gated[j].fromNode.activation : this.node.activation);
   }
   for (var k in this.gatedNodes) {
     this.node.errorGated += this.node.influences[this.gatedNodes[k].id] * this.gatedNodes[k].errorResponsibility;
@@ -247,8 +345,22 @@ Neuron.prototype.gatedErrorStep = function () {
   this.node.errorGated *= this.node.derivative;
 }
 
-// Neuron.prototype.gatedErrorStep.iteratesOver = 'gatedNodes'
-
+/*
+ * Sets the weights in all of this neuron's inputs based on its node's error responsibility, elegibilities and extended elegibilities
+ * Gradient clipping is done per input instead of based on the norm as a stop-gap measure.  This will likely change at a later date.
+ * Requires the following properties to exist on the neuron:
+ * rate
+ * maxGradient
+ * node
+ *   errorProjected
+ *   elegibilities
+ *   extendedElegibilities
+ * connections.inputs
+ *   trainable
+ *   weight
+ * gatedNodes
+ *   errorResponsibility
+ */
 Neuron.prototype.learningStep = function () {
   var gradient;
   for (var i = 0; i < this.connections.inputs.length; ++i) {
@@ -261,8 +373,6 @@ Neuron.prototype.learningStep = function () {
     }
   }
 }
-
-// Neuron.prototype.learningStep.iteratesOver = 'inputs'
 
 var squash = {
   'sigmoid': {
