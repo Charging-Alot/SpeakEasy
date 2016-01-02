@@ -29,7 +29,7 @@ angular.module('speakEasy.chat', [])
 
 
   $scope.message = {};
-
+  var gifIndex = 0; // gifIndex will be used later to give pending gifs a unique id number
   $scope.sendMessage = function () {
     // We don't want to allow users to send messages with odd characters as the robot can't interpret them easily
     var regexTest = $scope.message.text.match(/[<>+_@#$%^&*\[\]{}\\\/|=-]/g);
@@ -50,18 +50,23 @@ angular.module('speakEasy.chat', [])
     // this resets message to blank, but importantly also clears the message field
     $scope.message = {};
     $scope.renderMessage('user', messageHolder.text);
-    chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
+    // Each pending message gif is given a unique number id using i to make them easier
+    // to find and remove later
+    chatBox.append('<img id="pg'+ gifIndex + '" class="pendingGif" src="assets/img/pending.gif">');
     // This makes sure the chatbox follows the pending gif as it causes overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
     var pendingGifs = [];
     // We push the gif we just appended to pendingGifs in order to remove it when necessary
     // pendingGifs will work like a queue so that multiple messages sent quickly will all get
     // their gifs removed correctly
-    pendingGifs.push(angular.element(document.querySelector('.pendingGif')));
+    console.log('i!', gifIndex, 'el', angular.element(document.querySelector('#pg' + gifIndex)))
+    pendingGifs.push(angular.element(document.querySelector('#pg' + gifIndex)));
+    gifIndex++;
     //var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
     ChatFactory.serveMessage(messageHolder)
       .then(function (data) {
+        // remove the oldest pending message gif from the queue and then the dom
         var pendingGif = pendingGifs.shift();
         pendingGif[0].parentNode.removeChild(pendingGif[0]);
         $scope.renderMessage('robot', data.response);
