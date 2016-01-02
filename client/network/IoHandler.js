@@ -3,7 +3,8 @@ if (module) {
 }
 
 /*
- * IoHandler Constructor.  Creates an object which is associated with the input and output to one other tier in the distributed network.
+ * IoHandler Constructor.  
+ * Creates an object which is associated with the input and output to one other tier in the distributed network.
  * Allows for setting callbacks for one or more commands at once using the output queue and stalling input using the input queue.
  * Should be called with the new keyword.
  *

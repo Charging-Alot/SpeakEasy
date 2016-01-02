@@ -1,5 +1,6 @@
 /*
- * Neuron constructor.  Takes all or part of a Neuron object, including it's node and relevant connections
+ * Neuron constructor.  
+ * Takes all or part of a Neuron object, including it's node and relevant connections
  * And builds any structures that were not all ready in the object.
  * Should be called with the new keyword
  * 

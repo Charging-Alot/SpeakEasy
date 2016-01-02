@@ -2,7 +2,8 @@ if (module) {
   var Neuron = require('./NeuronConstructor.js').Neuron
 }
 /*
- * Network constructor.  Takes all or part of a Network object, And builds any structures that were not all ready in the object and returns an object.
+ * Network constructor.  
+ * Takes all or part of a Network object, And builds any structures that were not all ready in the object and returns an object.
  * Should be called with the new keyword.
  *
  * @param {partialNetwork} object - An object containing some or all parts of a single network.  Structured as follows:
