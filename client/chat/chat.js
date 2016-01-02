@@ -66,6 +66,7 @@ angular.module('speakEasy.chat', [])
 
     ChatFactory.serveMessage(messageHolder)
       .then(function (data) {
+        // remove the oldest pending message gif from the queue and then the dom
         var pendingGif = pendingGifs.shift();
         pendingGif[0].parentNode.removeChild(pendingGif[0]);
         $scope.renderMessage('robot', data.response);
