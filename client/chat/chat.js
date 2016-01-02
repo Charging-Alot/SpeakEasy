@@ -61,7 +61,7 @@ angular.module('speakEasy.chat', [])
     // their gifs removed correctly
     console.log('i!', gifIndex, 'el', angular.element(document.querySelector('#pg' + gifIndex)))
     pendingGifs.push(angular.element(document.querySelector('#pg' + gifIndex)));
-    i++;
+    gifIndex++;
     //var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
     ChatFactory.serveMessage(messageHolder)
