@@ -75,8 +75,6 @@ var Network = function (network, rate, maxGradient) {
  * @param {model} object - Must be have the structure of either a network or a neuron with the correct type property
  */
 Network.prototype.update = function (model) {
-  console.log('MOOOOOOOOOO', model)
-  console.log('DOOOOOOOOOD', this)
   this.rate = model.rate
   this.maxGradient = model.maxGradient
   if (model.type !== 'network') {

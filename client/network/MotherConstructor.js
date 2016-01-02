@@ -22,8 +22,8 @@ var Mother = function (network, sendFunction) {
  *
  * @param {jsonString} - String containing a taskObj
  */
-Mother.prototype.input = function (object) {
-  object = JSON.parse(object)
+Mother.prototype.input = function (jsonString) {
+  var object = JSON.parse(jsonString)
   this.toManager.addToIn(object)
 }
 
@@ -55,7 +55,6 @@ Mother.prototype.activate = function (inputArr, callback) {
     var layerCounter = 1;
     var activationCallback = function () {
       // debugger
-      console.log('\n\nderpherp\n\n')
       layerCounter++
       if (layerCounter < this.model.layers.length) {
         this.activateLayer(layerCounter, activationCallback);

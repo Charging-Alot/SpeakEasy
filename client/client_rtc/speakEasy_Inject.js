@@ -218,7 +218,6 @@
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   AdminInfo.prototype.instruct = function (levelId, msg) {
-    console.log("INSTRUCT IS GETTING CALLED")
     if (levelId === 0) {
       var players = this.players;
       for (var player in players) {
@@ -226,7 +225,6 @@
           players[player].busy = true;
           return this.message(player, msg);
         }
-        console.log("END OF FOR LOOP IN INSTRUCT, about to enqueueueueueueue")
       }
       return this.commandQueue.enqueue(msg);
     } else if (levelId === 2) {
@@ -242,7 +240,6 @@
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   AdminInfo.prototype.checkQdQ = function (playerId) {
-    console.log("IN CHECKQDQ THIS IS THE COMMAND Q LENGTHJ", this.commandQueue.length)
     if (this.commandQueue.length) {
       var newCommand = this.commandQueue.dequeue();
       this.players[playerId].busy = true;

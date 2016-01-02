@@ -337,7 +337,7 @@ Neuron.prototype.gatedErrorStep = function () {
         gatedNode.selfConnection.gateLayerId === this.node.layerId ? gatedNode.prevState : 0;
     }
 
-    this.node.influences[gatedNode.id] += this.connections.gated[j].weight * this.connections.gated[j].fromNode.activation;
+    this.node.influences[gatedNode.id] += this.connections.gated[j].weight * (this.connections.gated[j].fromNode ? this.connections.gated[j].fromNode.activation : this.node.activation);
   }
   for (var k in this.gatedNodes) {
     this.node.errorGated += this.node.influences[this.gatedNodes[k].id] * this.gatedNodes[k].errorResponsibility;

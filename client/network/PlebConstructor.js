@@ -32,8 +32,8 @@ Pleb.prototype.update = function (command, section, partialNeuron) {
  * @param {jsonString} string - A json string containing the taskObj to be run
  */
 Pleb.prototype.input = function (jsonString) {
-  object = JSON.parse(jsonString)
-  this.toManager.addToIn(jsonString)
+  var object = JSON.parse(jsonString)
+  this.toManager.addToIn(object)
 }
 
 /*

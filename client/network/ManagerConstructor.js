@@ -59,7 +59,6 @@ Manager.prototype.update = function (command, section, partialModel) {
  */
 Manager.prototype.input = function (jsonString) {
   var object = JSON.parse(jsonString)
-  console.log("\nIN MANAGER INPUT AND THIS IS FIRING\n", object)
   if (object.command === 'activate' || object.command == 'backPropagate') {
     // if (object.value.type === 'network') {
     //   object.value = new Network(object.value, object.value.rate, object.value.maxGradient)
@@ -67,10 +66,8 @@ Manager.prototype.input = function (jsonString) {
     // } else {
     //   object.value = new Neuron(object.value)
     // }
-    console.log("||||||||||||||||||||||||||||||||||||")
     this.toMother.addToIn(object)
   } else {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
     this.toPleb.addToIn(object)
   }
@@ -101,7 +98,6 @@ Manager.prototype.makeNewModel = function (partialModel) {
  * @param {section} number - The section of the command just recieved.
  */
 Manager.prototype.run = function (command, section) {
-  console.log("P{P{P{P{P{P{P{P{P{P{P{", command)
   this[command](section);
 }
 
@@ -134,7 +130,11 @@ Manager.prototype.forEachAsync = function (array, iterator, callback) {
       iterator.call(this, array[i], i, iteratorCallback)
     }
   }.bind(this)
-  iterator.call(this, array[i], i, iteratorCallback)
+  if(array.length) {
+    iterator.call(this, array[i], i, iteratorCallback)
+  } else {
+    callback.call(this)
+  }
 }
 
 /*

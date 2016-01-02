@@ -51,7 +51,6 @@ Seq2SeqServer.prototype.trainCallResponse = function (call, response, callback) 
  * @param {callback} function - Function to be called after the last element of this.call has been trained
  */
 Seq2SeqServer.prototype.trainCall = function (index, callback) {
-  console.log('call')
   this.saveTo = this.enc
   if(index < this.call.length) {
     this.enc.activate(this.call[index], 
@@ -73,7 +72,6 @@ Seq2SeqServer.prototype.trainCall = function (index, callback) {
  * @param {callback} function - Function to be called after the last element of this.response has been trained
  */
 Seq2SeqServer.prototype.trainResponse = function (index, callback) {
-  console.log('response')
   this.saveTo = this.dec
   if(index === 0) {
     this.setDecoderState()
@@ -82,7 +80,7 @@ Seq2SeqServer.prototype.trainResponse = function (index, callback) {
     this.dec.activate(this.response[index], 
       this.dec.backPropagate.bind(this.dec, this.response[index + 1], 
         this.trainResponse.bind(this, index + 1,
-          callback.bind(this)
+          callback
           )
         )
       );
@@ -127,7 +125,6 @@ Seq2SeqServer.prototype.getNewPairs = function () {
  * @param {callback} function - Function to be called after all pairs have been trained
  */
 Seq2SeqServer.prototype.trainPairs = function (callback) {
-  console.log('training #', this.callResponseCounter)
   if(this.callResponseCounter < this.callResponseList.length - 1) {
     ++this.callResponseCounter;
     this.trainCallResponse(
@@ -146,7 +143,6 @@ Seq2SeqServer.prototype.trainPairs = function (callback) {
  * Loads the JSON objects in encoder and decoder, transposes their contents and then stores them in the call/response list
  */
 Seq2SeqServer.prototype.loadPairs = function () {
-  console.log('loading!!!')
   var calls = JSON.parse(fs.readFileSync('./encoder'));
   var responses = JSON.parse(fs.readFileSync('./decoder'));
   this.transposeArrays(calls, responses)
