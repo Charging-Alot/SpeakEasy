@@ -60,9 +60,9 @@
           <br>
           How can you contribute? Talk to it! Remember, SpeakEasy learns by being trained, and it trains on data that resembles conversations. Head over to the <span class="aboutLink" ng-click="goToChat()">chat page</span> and talk to SpeakEasy. It'll keep track of what's being said and incorporate it into its experience.<br>
           <br>
-          Want to do more? Well, training SpeakEasy takes a LOT of computing power. So we've put together a neat little Chrome Extension that'll let us borrow a bit of your computer's processing to help SpeakEasy learn that much more quickly. You can download that **DOWNLOAD LINK** here. Don't worry, it's super easy to turn off any time you want.<br>
+          Want to do more? Well, training SpeakEasy takes a LOT of computing power. So we've put together a neat method of sharing data between computers. If you're on Speakez.tk, we're using a small bit of your computer's processing power to help Marvin learn faster.<br>
           <br>
-          All of this is really exciting for us, we hope it is for you too. Please have a look around the site. Check out the <span class="aboutLink" ng-click="goToMetrics()">metrics page</span> we put together with all kinds of sweet charts and graphs and other info. <span class="aboutLink aboutLess" ng-click="aboutLess()">See Less</span><br>
+          All of this is really exciting for us, we hope it is for you too. Please have a look around the site. Check out the <span class="aboutLink" ng-click="goToAbout()">metrics page</span> we put together with all kinds of sweet charts and graphs and other info. <span class="aboutLink aboutLess" ng-click="aboutLess()">See Less</span><br>
           <br>
           Thanks,
           <br>
@@ -118,16 +118,23 @@
   </div>
 </div>
 <footer>
-    <div layout="row" layout-align="center center">
-        <h2>My Awesome Footer</h2>
-        <a href="https://github.com/Charging-Alot/SpeakEasy" target="_blank" style="text-decoration: none;">
-          <md-button aria-label="GitHub" class="md-raised md-button md-ink-ripple" style="text-decoration: none;text-transform:none;">
-          GitHub
-            <i class="zmdi zmdi-github zmdi-hc-lg speedDialIcon"></i>
+    <div class="footerMain" layout="row">
+      <div class="footerLeft">
+        <p>Powered by:<br>
+           Google TensorFlow<br>
+           WebRTC</p>
+      </div>
+      <div class="footerMid">
+        <p>SpeakEasy</p>
+      </div>
+      <a  class="footerRight" href="https://github.com/Charging-Alot/SpeakEasy" target="_blank" style="text-decoration: none;">
+<!--           <md-button aria-label="GitHub" class="md-raised md-button md-ink-ripple" style="text-decoration: none;text-transform:none;">
+          GitHub -->
+          <i class="zmdi zmdi-github zmdi-hc-lg speedDialIcon"></i> GitHub
             <md-tooltip md-direction="top">
               Check us out on GitHub!
             </md-tooltip>
-          </md-button>
-        </a>
+          <!-- </md-button> -->
+      </a>
     </div>
 </footer>

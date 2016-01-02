@@ -22,9 +22,9 @@ angular.module('speakEasy')
     $state.go('chat');
   }
 
-  $scope.goToMetrics = function () {
-    $state.go('metrics');
-  }
+  // $scope.goToMetrics = function () {
+  //   $state.go('metrics');
+  // }
 
   $scope.signout = function () {
     Auth.signout();

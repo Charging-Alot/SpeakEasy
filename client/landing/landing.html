@@ -43,7 +43,7 @@
             </md-card-content>
           </md-card>
         </div>
-        <div flex="30" class=" landingCardLink md-padding" ng-click="goToMetrics()">
+        <div flex="30" class=" landingCardLink md-padding" ng-click="goToInfo()"> <!-- should be goToMetrics() -->
           <md-card class="mainCard">
             <div class="cardImage landingRightImage">
               <div class="cardHeader">
@@ -62,17 +62,24 @@
   </div>
 </div>
 <footer>
-    <div layout="row" layout-align="center center">
-        <h2>My Awesome Footer</h2>
-        <a href="https://github.com/Charging-Alot/SpeakEasy" target="_blank" style="text-decoration: none;">
-          <md-button aria-label="GitHub" class="md-raised md-button md-ink-ripple" style="text-decoration: none;text-transform:none;">
-          GitHub
-            <i class="zmdi zmdi-github zmdi-hc-lg speedDialIcon"></i>
+    <div class="footerMain" layout="row">
+      <div class="footerLeft">
+        <p>Powered by:<br>
+           Google TensorFlow<br>
+           WebRTC</p>
+      </div>
+      <div class="footerMid">
+        <p>SpeakEasy</p>
+      </div>
+      <a  class="footerRight" href="https://github.com/Charging-Alot/SpeakEasy" target="_blank" style="text-decoration: none;">
+          <!-- <md-button aria-label="GitHub" class="md-raised md-button md-ink-ripple" style="text-decoration: none;text-transform:none;">
+          GitHub -->
+          <i class="zmdi zmdi-github zmdi-hc-lg speedDialIcon"></i> GitHub
             <md-tooltip md-direction="top">
               Check us out on GitHub!
             </md-tooltip>
-          </md-button>
-        </a>
+          <!-- </md-button> -->
+      </a>
     </div>
 </footer>
   

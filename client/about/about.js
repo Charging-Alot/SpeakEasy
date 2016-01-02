@@ -18,6 +18,10 @@ angular.module('speakEasy.about', [])
     $state.go('chat');
   }
 
+  $scope.goToAbout = function () {
+    $state.go('about');
+  }
+
   // Context will be defined later with a team member object in the info object that will
   // determine changes to $scope variables rendered in our personal bio window
   var context;
@@ -56,9 +60,9 @@ angular.module('speakEasy.about', [])
     sam: {
       name: 'Sam Crawford',
       portrait: "../assets/img/samheadshot.jpg",
-      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
-      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
-      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      p1: "Sam is ecstatic to be able to bring you speakez.tk, a site he built from back to front. He is proud to have had the opportunity to provide a home for the incredible work done by the rest of the SpeakEasy team and a medium for Marvin to share his unique voice with the world.",
+      p2: "Sam graduated from Skidmore College with a Bachelor's of Science in English but has embraced his passion for problem solving and creating fantastic products by becoming a software engineer.",
+      //p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
       gitHubLink: 'https://github.com/RS-Crawford',
       linkedInLink: 'https://www.linkedin.com/in/robertscrawford'
     }

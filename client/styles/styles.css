@@ -194,7 +194,7 @@ md-card-image {
 
 /* The 3 classes below are for landing page, the URLs are the pictures that are displayed there */
 .landingLeftImage { /* This is for the leftmost card */
-  background-size: 100% 100% !important;
+  background-size: cover !important;
   background: 
     linear-gradient(
       to bottom,
@@ -226,7 +226,7 @@ md-card-image {
 }
 
 .landingRightImage { /* This is for the rightmost card */
-  background-size: 100% 100% !important;
+  background-size: cover !important;
   background: 
     linear-gradient(
       to bottom,
@@ -244,6 +244,22 @@ md-card-image {
 
 
 /***************/
+
+/* FOOTER **************************/
+
+.footerLeft {
+  margin: 0 0 0 2%;
+}
+
+.footerMid {
+  margin: auto;
+}
+
+.footerRight {
+  margin: 3% 2% 0 0;
+}
+
+/***************************/
 
 /* CHAT PAGE ***************/
 
