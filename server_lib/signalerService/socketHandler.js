@@ -1,7 +1,8 @@
 // require('reliable-signaler')(httpServer);
 
 var sysLog = require('sysLog');
-var AdminListCon = require("adminList");
+var AdminListCon = require('adminList');
+
 
 exports.easySignaler = easySignaler;
 
@@ -13,9 +14,27 @@ function easySignaler(app) {
   });
 
   var AdminList = new AdminListCon();
+  AdminList.seq2seq.trainCallResponse([
+    [1, 1, 1],
+    [0, 0, 0]
+  ], [
+    [1, 1, 1],
+    [1, 1, 1]
+  ], function () {
+    console.log("HOLY SHIT IT WORKS?")
+  });
 
   io.on('connection', function (socket) {
     var currentUser = socket;
+    /*
+     * Removes admin from the AdminList
+     *
+     * @param {string}  - The unique identifier for the new user
+     */
+    socket.on('ADMINREADY', function () {
+      console.log("SOCKET EVENT ADMINREADY is firing")
+      AdminList.checkQandDq(socket);
+    });
     /*
      * Removes admin from the AdminList
      *
@@ -34,6 +53,7 @@ function easySignaler(app) {
      * @param {string} userId - The unique identifier for the new user
      */
     socket.on('establish_role', function () {
+      console.log("ESTABLISH ROLLE IS FIRING!@!!!!@@!@!!")
       AdminList.introduce(socket);
     });
     /*
@@ -42,6 +62,7 @@ function easySignaler(app) {
      * @param {string} adminSocketId - The unique identifier admins socket in the AdminList
      */
     socket.on('playerrecieved', function (data) { //having two of these might be overkill
+      console.log("SOCKET EVENT playerrecieved is firing")
       AdminList.playerRecieved(socket, data)
     });
     /*
@@ -50,11 +71,19 @@ function easySignaler(app) {
      * @param {string} player_id - The unique identifier of the player in the admin's player collection
      */
     socket.on('playerlost', function (player_id) {
+      console.log("SOCKET EVENT playerlost is firing")
       AdminList.removePlayer(socket.id, player_id);
       //remove player id from admin's player list to open for new additions
     });
 
+    socket.on('updatedModel', function (data) {
+      console.log("SOCKET EVENT updatedModel is firing")
+      AdminList.updatedModel(socket, data)
+    });
+
+
     socket.on('setup', function (message) {
+      console.log("SOCKET EVENT setup is firing")
       socket.broadcast.emit('setup', message);
     });
   });

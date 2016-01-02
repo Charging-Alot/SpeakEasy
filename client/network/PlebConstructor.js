@@ -1,4 +1,4 @@
-if(module) {
+if (module) {
   var Neuron = require('./neuronConstructor.js').Neuron
   var IoHandler = require('./IoHandler.js').IoHandler;
 }
@@ -15,6 +15,7 @@ Pleb.prototype.update = function (command, section, partialNeuron) {
 }
 
 Pleb.prototype.input = function (object) {
+  object = JSON.parse(object)
   this.toManager.addToIn(object)
 }
 
@@ -31,29 +32,29 @@ Pleb.prototype.queueCommandManager = function (command, section, callback) {
   value.node.layerId = this.node.layerId;
   value.node.subNetworkId = this.node.subNetworkId;
   value.node.subNetworkLayerId = this.node.subNetworkLayerId;
-  if(command === 'activationStep') {
+  if (command === 'activationStep') {
     value.node.state = this.node.state;
     value.node.activation = this.node.activation;
     value.node.derivative = this.node.derivative;
-  } else if(command === 'influenceStep') {
+  } else if (command === 'influenceStep') {
     value.node.influences = this.node.influences;
-  } else if(command === 'elegibilityStep') {
+  } else if (command === 'elegibilityStep') {
     value.node.elegibilities = this.node.elegibilities;
-  } else if(command === 'extendedElegibilityStep') {
+  } else if (command === 'extendedElegibilityStep') {
     value.node.extendedElegibilities = this.node.extendedElegibilities;
-  } else if(command === 'projectedErrorStep') {
+  } else if (command === 'projectedErrorStep') {
     value.node.errorProjected = this.node.errorProjected;
-  } else if(command === 'gatedErrorStep') {
+  } else if (command === 'gatedErrorStep') {
     value.node.errorGated = this.node.errorGated
-  } else if(command === 'learningStep') {
+  } else if (command === 'learningStep') {
     value.connections.inputs = this.connections.inputs
   }
-  if(callback) {
+  if (callback) {
     callback = callback.bind('this')
   }
   this.toManager.addToOut(command, section, value, callback);
 }
 
-if(module) {
+if (module) {
   exports.Pleb = Pleb
 }

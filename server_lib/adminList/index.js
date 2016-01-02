@@ -1,15 +1,30 @@
 var sysLog = require("sysLog");
+var seq2seqCons = require('../../client/network/Seq2SeqConstructor.js').Seq2SeqServer;
+var Queue = require('../../client/network/Queue.js').Queue;
+
+
 
 module.exports = function AdminList(adminSize) {
+  this.commandQueue = new Queue();
   this.adminSize = adminSize || 3;
   this.length = 0;
-  this.storage = {}; //stores admin socke.id and number of connections each admin currently has.
+  this.storage = {}; //stores admin socket.id and number of connections each admin currently has.
+  this.seq2seq = new seq2seqCons([3, 3, 3], adminInstruct.bind(this));
 
-  /* 
-   * Configurable player data
-   *  
-   * @return {object} object - Client side player configuration data object
-   */
+  this.checkQandDq = function (socket) { //one more ghetoo fxn
+      console.log("checkQandDq is firing!!!!!!!!!!!poooo")
+      if (this.commandQueue.length) {
+        this.storage[socket.id].busy = true;
+        var newCommand = this.commandQueue.dequeue();
+        socket.emit("receiveInstruction", newCommand);
+        // socket.emit("receiveInstruction", "newCommand");
+      }
+    }
+    /*
+     * Configurable player data
+     *  
+     * @return {object} object - Client side player configuration data object
+     */
   function playerData(playerId, manId) {
     return {
       PlayerSocketId: playerId,
@@ -28,7 +43,9 @@ module.exports = function AdminList(adminSize) {
    * @return {object} object - The storage entry containing the socket and a collection of players (Unique user ids)
    */
   this.newAdminEntry = function (socket) {
+      console.log("newAdminEntry is firing!!!!!!!!!!!poooo")
       var newManEntry = {
+        busy: true,
         socket: socket,
         players: [],
         pending: []
@@ -48,9 +65,11 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.introduce = function (socket) {
-      // if (socket.id in this.storage) throw new Error("SocketId already in use by other admin");
+      console.log("INTRODUCE IS FIRINGINGINGIGNIN!!!!poooo")
+        // if (socket.id in this.storage) throw new Error("SocketId already in use by other admin");
       if (!this.length) { //if nobody is currently a admin, meaning no users are connected
         this.newAdminEntry(socket); // returns {socket:socket, players:[]};
+        // this.checkQandDq(socket);
         return this;
       }
       for (var adminId in this.storage) {
@@ -62,6 +81,7 @@ module.exports = function AdminList(adminSize) {
         }
       }
       this.newAdminEntry(socket);
+      // this.checkQandDq(socket);
       return this;
     }
     /* 
@@ -72,6 +92,7 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.removePlayer = function (adminId, playerId) {
+      console.log("removePlayer is firing!!!!!!!!!!!poooo")
       var storage = this.storage;
       var admin = storage[adminId];
       var playerIndex = admin.players.indexOf(playerId);
@@ -89,6 +110,7 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.removeAdmin = function (adminId) {
+      console.log("removeAdmin is firing!!!!!!!!!!!poooo")
       if (!adminId) {
         sysLog("No manger id provided in `removeadmin`");
         return this;
@@ -109,25 +131,44 @@ module.exports = function AdminList(adminSize) {
      * 
      */
   this.playerRecieved = function (manSocket, data) {
-      var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
-        if (pendingObj.socket.id === data.PlayerSocketId) return true;
-        return false;
-      });
-      if (pendingIdx !== -1) {
-        this.storage[manSocket.id].players.push(data.PlayerSocketId);
-        this.storage[manSocket.id].pending[pendingIdx].socket.disconnect();
-        this.storage[manSocket.id].pending.splice(pendingIdx, 1);
-        return manSocket.emit("playerconfirmed", data);
-      }
-      manSocket.emit('playereject', data);
+    console.log("playerRecieved is firing!!!!!!!!!!!poooo")
+    var pendingIdx = where(this.storage[manSocket.id].pending, function (pendingObj) {
+      if (pendingObj.socket.id === data.PlayerSocketId) return true;
+      return false;
+    });
+    if (pendingIdx !== -1) {
+      this.storage[manSocket.id].players.push(data.PlayerSocketId);
+      this.storage[manSocket.id].pending[pendingIdx].socket.disconnect();
+      this.storage[manSocket.id].pending.splice(pendingIdx, 1);
+      return manSocket.emit("playerconfirmed", data);
     }
-    // 
-    // 
-    // 
-    // 
+    manSocket.emit('playereject', data);
+  }
 
+  function adminInstruct(levelId, data) { // this is really ghetto.
+    // this.adminInstruct = function (levelId, data) {
+    var storage = this.storage;
+    for (var adminId in storage) {
+      if (!(storage[adminId].busy)) {
+        storage[adminId].busy = true;
+        return storage[adminId].socket.emit("receiveInstruction", data);
+      }
+    }
+    return this.commandQueue.enqueue(data);
+  }
+
+  this.updatedModel = function (socket, data) {
+    console.log("updatedModel is firing!!!!!!!!!!!poooo")
+    this.seq2seq.input(data);
+    if (this.commandQueue.length) {
+      var newData = this.commandQueue.dequeue();
+      return socket.emit("receiveInstruction", newData);
+    }
+    this.storage[socket.id].busy = false;
+  }
 
   this.clearPending = function (max) { //need to test
+    console.log("clearPending is firing!!!!!!!!!!!poooo")
     var max = max || 3;
     var curTime = new Date().getTime();
     for (var admin in this.storage) {

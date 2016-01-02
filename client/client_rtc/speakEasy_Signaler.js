@@ -77,6 +77,14 @@ function socketListener(SpeakEasy) {
       };
       console.error("Received player eject but user not an admin...")
     });
+
+    SpeakEasy.socket.on("receiveInstruction", function (data) {
+      if (SpeakEasy.AdminInfo) {
+        console.log("IN RECEUIVE INSTRUCTION AND THIS IS DATA", data)
+        return SpeakEasy.AdminInfo.controller.input(data);
+      };
+      console.log("Somehow a player received instruction that is was not supposed to receive...")
+    });
   }
 
   //======================================== Connection error handling!!!!!

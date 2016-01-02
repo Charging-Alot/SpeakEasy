@@ -1,6 +1,6 @@
-if(module) {
+if (module) {
   var Network = require('./NetworkConstructor.js').Network;
-  var Neuron = require('./neuronConstructor.js').Neuron;
+  var Neuron = require('./NeuronConstructor.js').Neuron;
   var IoHandler = require('./IoHandler.js').IoHandler;
 }
 
@@ -12,22 +12,28 @@ var Mother = function (network, sendFunction) {
 }
 
 Mother.prototype.input = function (object) {
+  object = JSON.parse(object)
   this.toManager.addToIn(object)
 }
 
 Mother.prototype.update = function (command, section, model) {
   // model.gatedNodes = {};
-  this.model.update(model);
+  if (model.type === 'network') {
+    this.model.layers[model.layerId][model.id].update(model)
+  } else {
+    this.model.update(model);
+  }
 }
 
 Mother.prototype.activate = function (inputArr, callback) {
-  if(this.model.initialized) {
+  if (this.model.initialized) {
     this.model.activateFirstLayer(inputArr);
     var layerCounter = 1;
     var activationCallback = function () {
       // debugger
+      console.log('\n\nderpherp\n\n')
       layerCounter++
-      if(layerCounter < this.model.layers.length) {
+      if (layerCounter < this.model.layers.length) {
         this.activateLayer(layerCounter, activationCallback);
       } else {
         callback();
@@ -40,16 +46,16 @@ Mother.prototype.activate = function (inputArr, callback) {
 }
 
 Mother.prototype.activateLayer = function (layerId, callback) {
-  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
+  for (var i = 0; i < this.model.layers[layerId].length; ++i) {
     this.queueCommandManager('activate', i, this.model.layers[layerId][i])
   }
   this.toManager.runAllOutputs(callback)
 }
 
 Mother.prototype.queueCommandManager = function (command, section, neuron, callback) {
-  if(command === 'activate' ) {
+  if (command === 'activate') {
     var partialNeuron = neuron
-  } else if(command === 'backPropagate') {
+  } else if (command === 'backPropagate') {
     partialNeuron = neuron
   }
   partialNeuron.rate = this.rate;
@@ -58,12 +64,12 @@ Mother.prototype.queueCommandManager = function (command, section, neuron, callb
 }
 
 Mother.prototype.backPropagate = function (targetArr, callback) {
-  if(this.model.initialized) {
+  if (this.model.initialized) {
     this.model.setLastLayerError(targetArr);
     var layerCounter = this.model.layers.length - 1;
     var backPropagationCallback = function () {
       layerCounter--;
-      if(layerCounter >= 0) {
+      if (layerCounter >= 0) {
         this.backPropagateLayer(layerCounter, backPropagationCallback);
       } else {
         callback();
@@ -72,18 +78,16 @@ Mother.prototype.backPropagate = function (targetArr, callback) {
     this.backPropagateLayer(layerCounter, backPropagationCallback); //activates first non input layer
   } else {
     console.log("You must call initNeurons on model before backPropagate! (don't forget to activate first as well)");
-  } 
+  }
 }
 
 Mother.prototype.backPropagateLayer = function (layerId, callback) {
-  for(var i = 0; i < this.model.layers[layerId].length; ++i) {
+  for (var i = 0; i < this.model.layers[layerId].length; ++i) {
     this.queueCommandManager('backPropagate', i, this.model.layers[layerId][i])
   }
   this.toManager.runAllOutputs(callback);
 }
 
-if(module) {
+if (module) {
   exports.Mother = Mother
 }
-
-
