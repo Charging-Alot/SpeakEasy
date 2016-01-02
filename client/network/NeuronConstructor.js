@@ -276,7 +276,7 @@ Neuron.prototype.elegibilityStep = function () {
  *     gateNode
  *       activation
  *     weight
- * @param {gateNeuronId} number - the Id of the node in this neuron's gatedNodes object for which the extended elegibilities are being calculated.
+ * @param {gateNeuronId} number - The Id of the node in this neuron's gatedNodes object for which the extended elegibilities are being calculated.
  */
 Neuron.prototype.extendedElegibilityStep = function (gateNeuronId) { // should have key other than 0 for extendedEls
   for (var i = 0; i < this.node.elegibilities.length; ++i) {

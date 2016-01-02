@@ -6,9 +6,9 @@ if(module) {
  * Note that this is a subnetwork and not a neuron.
  * Should be called with the new keyword.
  *
- * @param {network} null - a place holder variable to maintain the pattern of the network constructor
- * @param {rate} number - the learning rate for this node
- * @param {maxGradient} number - the max gradient to be used for gradient clipping
+ * @param {network} null - A place holder variable to maintain the pattern of the network constructor
+ * @param {rate} number - The learning rate for this node
+ * @param {maxGradient} number - The max gradient to be used for gradient clipping
  * @return network object
  */
 var LSTM = function (network, rate, maxGradient) {
