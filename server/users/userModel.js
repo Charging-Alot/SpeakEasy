@@ -19,12 +19,12 @@ var UserSchema = new mongoose.Schema({
   salt: String
 });
 
-UserSchema.methods.comparePasswords = function (pwd) {
+UserSchema.methods.comparePasswords = function (pwd, callback) {
   bcrypt.compare(pwd, this.password, function (err, isMatch) {
     if (err) {
-      throw (err);
+      callback(err, null);
     } else {
-      return (isMatch);
+      callback(null, isMatch);
     }
   });
 };

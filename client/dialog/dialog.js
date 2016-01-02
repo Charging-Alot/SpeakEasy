@@ -23,19 +23,17 @@ angular.module('speakEasy')
         }
       })
       .catch(function (error, message) {
-        console.error(error, message);
-        $scope.dialogMessage = message;
+        var errorElement = angular.element(document.querySelector('.dialogErrorMessage'));
+        errorElement[0].style.display = 'block';
+        $scope.dialogMessage = error.data.message;
       });
   };
 
-  $scope.closeDialog = function () {
-    console.log("Def firing")
-    Dialog.closeWindow();
-  }
 
   $scope.signup = function () {
     Auth.signup($scope.user)
       .then(function (token) {
+        console.log('token in signup', token)
         $scope.user = {};
         $window.localStorage.setItem('com.speakEasy', token);
         Auth.elementSwap('.logoutButton', '.loginButton');
@@ -49,6 +47,10 @@ angular.module('speakEasy')
       });
   };
 
+  $scope.closeDialog = function () {
+    Dialog.closeWindow();
+  }
+  
   $scope.goToSignup = function (ev) {
     Dialog.signupWindow(ev, $scope);
   };
