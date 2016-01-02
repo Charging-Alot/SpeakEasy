@@ -7,7 +7,6 @@ angular.module('speakEasy')
   $scope.login = function () {
     Auth.login($scope.user).then(function (data) {
         if ( data.token ) {
-          console.log('TOKENNN', data.token)
           $scope.user = {};
           $window.localStorage.setItem('com.speakEasy', data.token);
           Auth.elementSwap('.logoutButton', '.loginButton');
@@ -16,6 +15,10 @@ angular.module('speakEasy')
           }
           $scope.closeDialog();
         } else if ( data.message ) {
+          // We need to display the error message, so we find it and change its display
+          var errorElement = angular.element(document.querySelector('.dialogErrorMessage'));
+          errorElement[0].style.display = 'block';
+          // This sets the on-page text to the error message that was returned
           $scope.dialogMessage = data.message;
         }
       })
