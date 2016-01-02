@@ -8,7 +8,7 @@ function RespObj(status, data) {
 
 module.exports = {
   signin: function (req, res) {
-    if ( !req.body.email || !req.body.password ) {
+    if (!req.body.email || !req.body.password) {
       return res.status(404).send(new RespObj(false, "No email and/or password."))
     }
     var email = req.body.email;
@@ -35,7 +35,6 @@ module.exports = {
   },
 
   signup: function (req, res) {
-    console.log("ALL THE FIZZLES", req.body)
     var pwdConf = req.body.passwordConfirmation;
     var email = req.body.email;
     var password = req.body.password;
@@ -45,10 +44,14 @@ module.exports = {
     if (password !== pwdConf) return res.status(400).send(new RespObj(false, "Your passwords did not match."))
 
     query.findOne(function (err, user) {
-      if (err) throw (err);
+      if (err) {
+        console.log("ERROR IN CREATE USER", err);
+        return res.status(400).send(new RespObj(false, "There was an issue handling your request."))
+      }
       if (user) {
         res.status(400).send(new RespObj(false, "User email already in use."))
       } else {
+
         User.create({
           email: email,
           password: password
