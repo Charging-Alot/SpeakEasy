@@ -1,6 +1,6 @@
 <div ng-controller="toolBarCtrl"  ng-cloak>
   <div id="container" layout="row">
-      <canvas width='1200' height='300' id="hero-bar" class="chart chart-line chart-xl" chart-data="data"chart-options="options" chart-labels="labels" style="display: block;"></canvas>
+      <canvas width='1200' height='370' id="hero-bar" class="chart chart-line chart-xl" chart-data="data" chart-options="options" chart-labels="labels" style="display: block;" chart-colours="chartColors"></canvas>
   </div>
 
   <div class="mainLandingText">
@@ -8,21 +8,14 @@
     <h2>Machine Learning, that speaks for itself</h2>
     <h3 class="landingInfo">SpeakEasy is designed to interpret and respond to human speech.<br> 
       The more computers in the network, the faster it learns.</h3>
-    <a href="https://github.com/Charging-Alot/SpeakEasy" target="_blank" style="text-decoration: none;">
-      <md-button aria-label="GitHub" class="md-raised md-button md-ink-ripple" style="text-decoration: none;text-transform:none;">
-      GitHub
-        <i class="zmdi zmdi-github zmdi-hc-lg speedDialIcon"></i>
-        <md-tooltip md-direction="bottom">
-          Check us out on GitHub!
-        </md-tooltip>
-      </md-button>
-    </a>
+    <button class="landingLoginButton landingButton" ng-click="goToLogin($event)">Login</button>
+    <button class="landingChatButton landingButton" ng-click="goToChat($event)">Chat</button>
   </div>
 
   <div>
     <md-content class="md-padding" layout="row" layout-wrap layout-align="center start" style="margin:-1%;">
       <div layout="row" layout-align="center center">
-        <div flex="30" class="md-padding" ng-click="goToChat()">
+        <div flex="30" class=" landingCardLink md-padding" ng-click="goToChat()">
           <md-card class="mainCard">
             <div class="cardImage landingLeftImage">
               <div class="cardHeader">
@@ -36,7 +29,7 @@
             </md-card-content>
           </md-card>
         </div>
-        <div flex="30" class="md-padding" ng-click="goToInfo()">
+        <div flex="30" class="landingCardLink md-padding" ng-click="goToInfo()">
           <md-card class="mainCard">
             <div class="cardImage landingMidImage">
               <div class="cardHeader">
@@ -50,7 +43,7 @@
             </md-card-content>
           </md-card>
         </div>
-        <div flex="30" class="md-padding" ng-click="goToMetrics()">
+        <div flex="30" class=" landingCardLink md-padding" ng-click="goToMetrics()">
           <md-card class="mainCard">
             <div class="cardImage landingRightImage">
               <div class="cardHeader">

@@ -66,18 +66,21 @@
     </md-whiteframe>
     <div flex="55"></div>
     <md-card flex="35" class="chatGraphs" layout-align="center" layout="column">
-      <h4>Cool Chart</h4>
+      <h4>Perplexity Over Time While Training</h4>
       <div class="chatGraphWrap">
-        <canvas id="line" class="chart chart-line" chart-data="data"
-        chart-labels="labels" chart-legend="true" chart-series="series">
+        <canvas id="line" class="chart chart-line" chart-data="data" chart-colours="chartColors"
+        chart-labels="labels" chart-legend="false" chart-series="series">
         </canvas>
       </div>
-      <h4>Awesome Chart</h4>
-      <div class="chatGraphWrap">
-        <canvas id="line" class="chart chart-line" chart-data="data"
-        chart-labels="labels" chart-legend="true" chart-series="series">
-        </canvas>
-      </div>
+      <p class='chatGraphInfo'>
+        "Perplexity" is used to determine how 'correct' or 'incorrect' Marvin's response to a given statement is.
+        The higher the perplexity, the more wrong the response.
+      </p>
+      <p class='chatGraphInfo'>
+        Marvin is trained with the same data set and is
+        expected to respond a certain way every time. As he sees the same inputs over and over, he gets better and
+        better at giving the right responses. At first, he's way off. Eventually, he always in the same range of correctness.
+      </p>.
     </md-card>
     <!-- <div flex="10"></div> -->
   </md-content>
