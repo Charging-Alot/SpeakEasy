@@ -85,7 +85,6 @@ angular.module('speakEasy.services', [])
   };
 
   var signup = function (user) {
-    console.log('Auths signup')
     return $http({
         method: 'POST',
         url: '/api/users/signup',

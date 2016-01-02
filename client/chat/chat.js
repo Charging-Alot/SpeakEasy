@@ -8,7 +8,7 @@ angular.module('speakEasy.chat', [])
     message = { 'prompt': message.text };
     return $http({
         method: 'POST',
-        url:  '/marvin', //'/api/chat/chat', OLD TESTING PATH
+        url:  '/marvin',
         data: message
       })
       .then(function (resp) {
@@ -50,19 +50,17 @@ angular.module('speakEasy.chat', [])
     // this resets message to blank, but importantly also clears the message field
     $scope.message = {};
     $scope.renderMessage('user', messageHolder.text);
-    // Each pending message gif is given a unique number id using i to make them easier
+    // Each pending message gif is given a unique number id using gifIndex to make them easier
     // to find and remove later
     chatBox.append('<img id="pg'+ gifIndex + '" class="pendingGif" src="assets/img/pending.gif">');
     // This makes sure the chatbox follows the pending gif as it causes overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
     var pendingGifs = [];
     // We push the gif we just appended to pendingGifs in order to remove it when necessary
-    // pendingGifs will work like a queue so that multiple messages sent quickly will all get
+    // pendingGifs is a queue so that multiple messages sent quickly will all get
     // their gifs removed correctly
-    console.log('i!', gifIndex, 'el', angular.element(document.querySelector('#pg' + gifIndex)))
     pendingGifs.push(angular.element(document.querySelector('#pg' + gifIndex)));
     gifIndex++;
-    //var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
     ChatFactory.serveMessage(messageHolder)
       .then(function (data) {
@@ -107,13 +105,6 @@ angular.module('speakEasy.chat', [])
   $scope.renderMessage('robot', "Hi! I'm Marvin. Talk to me by entering messages below!");
 
   // Chart data goes down here
-  // $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  // $scope.series = ['Series A', 'Series B'];
-  // $scope.data = [
-  //   [65, 59, 80, 81, 56, 55, 40],
-  //   [28, 48, 40, 19, 86, 27, 90]
-  // ];
-
   $scope.chartColors = 
     [{ 
       "fillColor": "#E3F2FD",

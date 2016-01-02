@@ -4,14 +4,12 @@ module.exports = {
   errorLogger: function (error, req, res, next) {
     // log the error then send it to the next middleware in
     // middleware.js
-    console.log('serverside errorlogger')
     console.error(error.stack);
     next(error);
   },
   errorHandler: function (error, req, res, next) {
     // send error message to client
     // message for gracefull error handling on app
-    console.log('serverside error')
     res.status(500).send({error: error.message})
   },
 
@@ -33,5 +31,14 @@ module.exports = {
       return next(error);
     }
 
+  },
+
+  encode: function (user) {
+    var key = user.email;
+    var payload = { key: key };
+    var secret = 'The fox is in the henhouse.';
+    var token = jwt.encode(payload, secret);
+    return token;
   }
+
 };

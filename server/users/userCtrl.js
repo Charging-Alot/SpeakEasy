@@ -1,9 +1,12 @@
 var User = require('./userModel.js');
 var jwt = require('jwt-simple');
+var helper = require('../config/helpers.js');
+var sysLog = require('sysLog');
 
-function RespObj(status, data) {
+function RespObj(status, data, token) {
   this.status = status;
   this.message = data;
+  this.token = token;
 }
 
 module.exports = {
@@ -17,17 +20,22 @@ module.exports = {
       email: email
     });
     query.findOne(function (err, user) {
-      console.log('findingerror!', err, user)
       if (err || !user) {
-        console.log('throwing signin error!!')
         res.status(200).send(new RespObj(false, "User was not found, please signup below!"));
         //throw (err);
       } else {
-        if (user.comparePasswords(password)) {
-          res.status(200).send(new RespObj(true, email));
-        } else {
-          res.status(200).send(new RespObj(false, "Sorry, that password was incorrect."));
-        }
+        //console.log('pw compare', user.comparePasswords(password))
+        user.comparePasswords(password, function (err, success) {
+          if (err) {
+            res.status(404).send(new RespObj(false, "That was an error handling your request."));
+          } else if (!success) {
+            res.status(404).send(new RespObj(false, "Sorry, that password was incorrect."));
+          } else {
+            var token = helper.encode(user);
+            var response = new RespObj(true, email, token);
+            res.status(200).send(response);
+          }
+        });
       }
 
     });
@@ -45,7 +53,7 @@ module.exports = {
 
     query.findOne(function (err, user) {
       if (err) {
-        console.log("ERROR IN CREATE USER", err);
+        sysLog(err);
         return res.status(400).send(new RespObj(false, "There was an issue handling your request."))
       }
       if (user) {
@@ -56,8 +64,11 @@ module.exports = {
           email: email,
           password: password
         }, function (err, user) {
-          if (err) throw (err);
-          res.status(200).send(new RespObj(true, email));
+          sysLog(err);
+          var token = helper.encode(user);
+          var response = new RespObj(true, email, token);
+          res.status(200).send(response);
+          //res.status(200).send(new RespObj(true, email));
         });
       }
     });
