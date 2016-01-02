@@ -24,31 +24,32 @@ angular.module('speakEasy.about', [])
 
   // Each member of the team has an object in info with our name, pic, links etc.  This info is used to set
   // $scope variables by on-click functions defined below and is used to render portrait.html dynamically
+
   var info = {
     andy: {
       name: 'Andrew Vickory',
       portrait: "../assets/img/andyheadshot.jpg",
-      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
-      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
-      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      p1: "Andrew is excited to be a part of SpeakEasy and to share his love of algorithms with the world. He was responsible for writing the distributed learning algorithm which we use to train Marvin how to speak.",
+      p2: "A San Francisco transplant from Portland, Oregon, Andrew recently completed a bachelor degree in mechanical engineering at Carnegie Mellon University, and, realizing that he was unlikely to become Iron Man in the near futue, decided to take a detour into machine learning and computer science.",
+      //p3: "He is a proud alumnus of the Hack Reactor Immersive Software Engineering program.",
       gitHubLink: 'https://github.com/AVickory',
       linkedInLink: 'https://www.linkedin.com/in/andrewvickory'
     },
     will: {
       name: 'Will Dembinski',
       portrait: "../assets/img/willheadshot.jpg",
-      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
-      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
-      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      p1: "Will spearheaded our server deployment team and implemented the 'distributed' portion of SpeakEasy's distributed Neural Network using WebRTC. He believes that machine learning is literally the future of computing.",
+      p2: "He's also enormously interested in all forms of cryptography and considers himself the world's foremost public-key encryption enthusiast.",
+      p3: "He graduated from UCSB with a BS in Biospychology and a BA in Spanish Language.",
       gitHubLink: 'https://github.com/willdembinski',
       linkedInLink: 'https://www.linkedin.com/in/willdembinski'
     },
     laura: {
       name: 'Laura Gelston',
       portrait: "../assets/img/lauraheadshot.jpg",
-      p1: "Our Chrome Extension will borrow a small bit of your processing power, which will be used to help SpeakEasy learn faster.",
-      p2: "You'll be able to turn this off at any time with the click of a button within the Extension's menu.",
-      p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
+      p1: "Laura used Google’s Tensorflow library to build our python-based model that detects patterns in conversational data she mined from Reddit comments.",
+      p2: "She graduated with an MS in Molecular Microbiology and Immunology from Johns Hopkins in 2013 and is interested in technologies that drive research and improve public health.",
+      //p3: "Here's more stuff to fill in the page. And just a little bit more to see.",
       gitHubLink: 'https://github.com/gelsto',
       linkedInLink: 'https://www.linkedin.com/in/laura-gelston-2782852b'
     },
