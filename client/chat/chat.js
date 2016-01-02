@@ -50,14 +50,18 @@ angular.module('speakEasy.chat', [])
     // this resets message to blank, but importantly also clears the message field
     $scope.message = {};
     $scope.renderMessage('user', messageHolder.text);
-    chatBox.append('<img class="pendingGif" src="assets/img/pending.gif">');
+    // Each pending message gif is given a unique number id using i to make them easier
+    // to find and remove later
+    var i = 0;
+    chatBox.append('<img id="pg'+ i + '" class="pendingGif" src="assets/img/pending.gif">');
     // This makes sure the chatbox follows the pending gif as it causes overflow
     chatWrap[0].scrollTop = chatWrap[0].scrollHeight;
     var pendingGifs = [];
     // We push the gif we just appended to pendingGifs in order to remove it when necessary
     // pendingGifs will work like a queue so that multiple messages sent quickly will all get
     // their gifs removed correctly
-    pendingGifs.push(angular.element(document.querySelector('.pendingGif')));
+    pendingGifs.push(angular.element(document.querySelector('#pg' + i)));
+    i++;
     //var pendingGif = angular.element(document.querySelector('.pendingGif'));
 
     ChatFactory.serveMessage(messageHolder)
