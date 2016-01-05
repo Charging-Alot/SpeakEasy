@@ -47,7 +47,7 @@ Pleb.prototype.run = function (command, section) {
   this[command](section);
   this.queueCommandManager(command, section);
   this.toManager.runAllOutputs();
-  this.toManager.runAllInputs();
+  // this.toManager.runAllInputs();
 }
 
 /*

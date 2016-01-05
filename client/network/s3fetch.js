@@ -1,6 +1,6 @@
 var s3 = require('./awsConfig');
-var trainableVariables = {};
-var dataSet = [];
+module.trainableVariables = {};
+module.dataSet = [];
 
 // These are the trainable variables stored on S3 
 var VARIABLES = [
@@ -39,7 +39,7 @@ var s3Fetch = function(item, folder) {
 
 // Fetches all trainable variables and stores them in trainableVariables object under their name 
 // NOTE: this is a BEAR for your memory and takes 10 minutes
-var fetchEntireModel = function() {
+module.exports.fetchEntireModel = function() {
   var start = Date.now();
   var variablePromises = [];
   VARIABLES.forEach(function(_, index) {
@@ -55,14 +55,14 @@ var fetchEntireModel = function() {
 }
 
 // Returns an object with "encoder" and "decoder" properties containing embedded input arrays
-var fetchTrainingPair = function() {
+module.exports.fetchTrainingPair = function() {
   // Choose a random piece of data
   var randomIndex = Math.floor(Math.random() * dataSet.length);
   return s3Fetch(dataSet[randomIndex].Key);
 }
 
 // This can go away and become a global data length variable once all the data is uploaded and serialized (right now the files don't necessarily go in order beause the session fails on big inputs)
-var countDataAvailable = function() {
+module.exports.countDataAvailable = function() {
   return new Promise(function(resolve, reject) {
     s3.listObjects({
       Bucket: 'speakeasy-data',
@@ -74,10 +74,10 @@ var countDataAvailable = function() {
   });
 }
 
-///// Example of how to use this module:
-countDataAvailable().then(function(data) {
-  // Need to fetch dataSet first 
-  dataSet = data;
-  // Do whatever you want
-  fetchTrainingPair();
-});
+// ///// Example of how to use this module:
+// countDataAvailable().then(function(data) {
+//   // Need to fetch dataSet first 
+//   dataSet = data;
+//   // Do whatever you want
+//   fetchTrainingPair();
+// });

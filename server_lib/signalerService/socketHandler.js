@@ -14,14 +14,21 @@ function easySignaler(app) {
   });
 
   var AdminList = new AdminListCon();
-  AdminList.seq2seq.trainCallResponse([
-    [1, 1, 1],
-    [0, 0, 0]
-  ], [
-    [1, 1, 1],
-    [1, 1, 1]
-  ], function () {
-    console.log("HOLY SHIT IT WORKS?")
+  // AdminList.seq2seq.trainCallResponse([
+  //   [1, 1, 1],
+  //   [0, 0, 0]
+  // ], [
+  //   [1, 1, 1],
+  //   [1, 1, 1]
+  // ], function () {
+  //   console.log("HOLY SHIT IT WORKS?")
+  // });
+  console.log('loading training pairs...')
+  AdminList.seq2seq.loadPairs();
+  console.log('training pairs loaded')
+  console.log('training...')
+  AdminList.seq2seq.trainCallResponse(AdminList.seq2seq.callResponseList[0].call, AdminList.seq2seq.callResponseList[0].response, function () {
+    console.log("I'm Marvin!  I'm a real boy!")
   });
 
   io.on('connection', function (socket) {

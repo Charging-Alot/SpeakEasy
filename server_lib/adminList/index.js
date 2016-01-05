@@ -9,7 +9,9 @@ module.exports = function AdminList(adminSize) {
   this.adminSize = adminSize || 3;
   this.length = 0;
   this.storage = {}; //stores admin socket.id and number of connections each admin currently has.
-  this.seq2seq = new seq2seqCons([3, 3, 3], adminInstruct.bind(this));
+  console.log('building Seq2SeqServer...')
+  this.seq2seq = new seq2seqCons([100, 100, 100, 100, 100], adminInstruct.bind(this));
+  console.log('Seq2SeqServer built')
 
   this.checkQandDq = function (socket) { //one more ghetoo fxn
       if (this.commandQueue.length) {

@@ -1,7 +1,8 @@
 if(module) {
   var Mother = require('./MotherConstructor.js').Mother;
   var MakeLSTMNetwork = require('./LSTMNetworkConstructor.js').MakeLSTMNetwork;
-  var fs = require('fs');
+  // var s3Fetcher = require('./s3fetch.js')
+  var fs = require('fs')
 }
 /*
  * Sequence to Sequence Server Constructor
@@ -39,8 +40,12 @@ Seq2SeqServer.prototype.input = function (jsonString) {
  */
 Seq2SeqServer.prototype.trainCallResponse = function (call, response, callback) {
   var i = 0;
-  this.call = call;
-  this.response = response;
+  if(!call) {
+    this.makeRandomCallResponsePair();
+  } else {
+    this.call = call;
+    this.response = response;
+  }
   this.trainCall(0, this.trainResponse.bind(this, 0, callback));
 }
 
@@ -51,6 +56,7 @@ Seq2SeqServer.prototype.trainCallResponse = function (call, response, callback) 
  * @param {callback} function - Function to be called after the last element of this.call has been trained
  */
 Seq2SeqServer.prototype.trainCall = function (index, callback) {
+  console.log('call', index)
   this.saveTo = this.enc
   if(index < this.call.length) {
     this.enc.activate(this.call[index], 
@@ -72,6 +78,7 @@ Seq2SeqServer.prototype.trainCall = function (index, callback) {
  * @param {callback} function - Function to be called after the last element of this.response has been trained
  */
 Seq2SeqServer.prototype.trainResponse = function (index, callback) {
+  console.log('response', index)
   this.saveTo = this.dec
   if(index === 0) {
     this.setDecoderState()
@@ -125,7 +132,13 @@ Seq2SeqServer.prototype.getNewPairs = function () {
  * @param {callback} function - Function to be called after all pairs have been trained
  */
 Seq2SeqServer.prototype.trainPairs = function (callback) {
-  if(this.callResponseCounter < this.callResponseList.length - 1) {
+  if(!this.callResponseList.length) {
+    this.trainCallResponse(
+      null, 
+      null, 
+      this.trainPairs.bind(this, callback)
+      )
+  } else if(this.callResponseCounter < this.callResponseList.length - 1) {
     ++this.callResponseCounter;
     this.trainCallResponse(
       this.callResponseList[this.callResponseCounter].call, 
@@ -143,8 +156,8 @@ Seq2SeqServer.prototype.trainPairs = function (callback) {
  * Loads the JSON objects in encoder and decoder, transposes their contents and then stores them in the call/response list
  */
 Seq2SeqServer.prototype.loadPairs = function () {
-  var calls = JSON.parse(fs.readFileSync('./encoder'));
-  var responses = JSON.parse(fs.readFileSync('./decoder'));
+  var calls = JSON.parse(fs.readFileSync('./client/network/encoder'));
+  var responses = JSON.parse(fs.readFileSync('./client/network/decoder'));
   this.transposeArrays(calls, responses)
 }
 
@@ -168,6 +181,21 @@ Seq2SeqServer.prototype.transposeArrays = function (calls, responses) {
       this.callResponseList[l].response[k] = responses[k][l];
     }
   }
+}
+
+Seq2SeqServer.prototype.makeRandomCallResponsePair = function () {
+  for(var i = 0; i < Math.floor(Math.random()*20); ++i) {
+    this.call.push(makeInputArray());
+    this.response.push(makeInputArray());
+  }
+}
+
+Seq2SeqServer.prototype.makeInputArray = function () {
+  var inputArr = [];
+  for(var i = 0; i < this.enc.model.layers[0].length; ++i) {
+    inputArr.push(Math.random());
+  }
+  return inputArr;
 }
 
 if(module) {
