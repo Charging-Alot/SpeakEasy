@@ -65,13 +65,14 @@
       return this.initiatePlayer(data, rtcId)
     }
     if (this.AdminInfo) { //if player response to instruction
+      console.log("PLAYER RESPONSE MESSAGE: ", data, rtcId);
       this.AdminInfo.controller.input(data);
       if (this.AdminInfo.commandQueue.length) {
         var newMsg = this.AdminInfo.commandQueue.dequeue();
         return this.AdminInfo.message(rtcId, newMsg);
       }
       this.AdminInfo.players[rtcId].busy = false;
-      return console.log("PLAYER RESPONSE MESSAGE: ", data, rtcId);
+      return
     } else if (this.PlayerInfo) {
       this.PlayerInfo.controller.input(data);
       return console.log("PLAYER RECIEVED MEASSAGE: ", data, rtcId);
